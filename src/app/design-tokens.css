@@ -1,0 +1,181 @@
+/* Verified source palette: orvillemalijan.com/_astro/about.ACz2QUlV.css.
+   Semantic colours, sizes and dark mode below are LSU reading-interface refinements. */
+:root {
+  --brand-paper: #f5eee0;
+  --brand-paper-2: #ebe1cc;
+  --brand-card: #fffaf0;
+  --brand-ink: #2b2622;
+  --brand-muted: #5a5248;
+  --brand-cobalt: #4862a8;
+  --brand-tomato: #d9735c;
+  --brand-tomato-ink: #a3442f;
+  --brand-mustard: #e6bc5c;
+  --brand-green: #3e6a55;
+  --brand-pink: #ebbcc3;
+  --brand-line: #3a332d;
+  --brand-shadow: #ddcfb4;
+  --brand-charcoal: #35302b;
+
+  --bg: #f8f9fc;
+  --surface: #fff;
+  --tint: #eef1f8;
+  --ink: var(--brand-ink);
+  --muted: var(--brand-muted);
+  --line: #d9dce7;
+  --control-line: #818594;
+  --action: #344fb4;
+  --action-hover: #263c90;
+  --on-action: #fff;
+  --accent: var(--brand-tomato-ink);
+  --soft: #e9edf6;
+  --soft-green: #e8eee6;
+  --soft-mustard: #f8edcf;
+  --soft-tomato: #fae6df;
+  --soft-pink: #f7e7e9;
+  --success: var(--brand-green);
+  --success-bg: #e8eee6;
+  --error: var(--brand-tomato-ink);
+  --error-bg: #fbebe5;
+  --warning: #75571d;
+  --warning-bg: #f8edcf;
+  --contrast: var(--brand-charcoal);
+  --on-contrast: var(--brand-paper);
+  --on-contrast-muted: #dfd5c4;
+  --contrast-accent: var(--brand-mustard);
+  --contrast-line: #776d60;
+  --contrast-panel: #403931;
+  --diagram-bg: var(--brand-card);
+  --diagram-ink: var(--brand-ink);
+  --diagram-muted: var(--brand-muted);
+  --diagram-line: #c9bca4;
+  --diagram-grid: #ddcfb440;
+  --diagram-pump: var(--brand-cobalt);
+  --diagram-sodium: var(--brand-tomato-ink);
+  --diagram-potassium: var(--brand-cobalt);
+  --diagram-sodium-bg: var(--soft-tomato);
+  --diagram-potassium-bg: var(--soft);
+  --focus: var(--action);
+  --scene-blue: #344fb4;
+  --scene-ink: #2b2622;
+  --scene-paper: #fff;
+  --art-paper: #fffaf0;
+  --art-ink: #2b2622;
+  --art-blue: #344fb4;
+  --art-yellow: #e6bc5c;
+  --art-orange: #d9735c;
+  --art-pink: #ebbcc3;
+  --art-shadow: #2b26221f;
+  --topic-radius: 22px;
+  --section-radius: 32px;
+  --motion-lift: -4px;
+  --graphic-wave: #4862a833;
+  --warning-line: #bba16a;
+  --overlay: #2b262299;
+
+  --font-sans: 'Bricolage Grotesque', Arial, Helvetica, sans-serif;
+  --font-serif: var(--font-sans);
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --text-hero: clamp(3.25rem, 5.25vw, 4.65rem);
+  --text-title: clamp(2rem, 3vw, 2.5rem);
+  --text-section: clamp(1.625rem, 2.4vw, 2rem);
+  --text-subheading: 1.375rem;
+  --text-card: 1.25rem;
+  --text-question: 1.625rem;
+  --text-lead: 1.125rem;
+  --text-body: 1rem;
+  --text-reading: 1.0625rem;
+  --text-small: 0.875rem;
+  --text-caption: 0.8125rem;
+  --text-micro: 0.75rem;
+  --text-brand: 1.125rem;
+  --text-brand-mobile: 1.0625rem;
+  --text-notation: 1.25rem;
+  --text-diagram-small: 0.6875rem;
+  --error-hover: #8c3928;
+  --weight-body: 400;
+  --weight-medium: 500;
+  --weight-heading: 600;
+  --leading-heading: 1.2;
+  --leading-body: 1.65;
+  --leading-reading: 1.8;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --radius-small: 4px;
+  --radius-control: 8px;
+  --radius-card: 12px;
+  --radius-pill: 999px;
+  --shadow: 0 4px 0 #2b262218;
+  --shadow-lift: 0 7px 20px #2b26220d;
+  --shadow-dialog: 0 20px 60px #2b262233;
+  --motion-fast: 160ms;
+  --motion-ease: ease-out;
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --bg: #191d28;
+  --surface: #242a38;
+  --tint: #202636;
+  --ink: #f5eee0;
+  --muted: #c4b9a8;
+  --line: #454f65;
+  --control-line: #929bb0;
+  --action: #b6c5ed;
+  --action-hover: #d2dcf4;
+  --on-action: #25211d;
+  --accent: #efa58e;
+  --soft: #343e58;
+  --soft-green: #2e3d31;
+  --soft-mustard: #443a25;
+  --soft-tomato: #4b3129;
+  --soft-pink: #483238;
+  --success: #b4d4bd;
+  --success-bg: #2e3d31;
+  --error: #f1aa98;
+  --error-bg: #4b3129;
+  --error-hover: #f4c0b2;
+  --warning: #ead29a;
+  --warning-bg: #443a25;
+  --diagram-bg: #332e28;
+  --diagram-ink: var(--ink);
+  --diagram-muted: var(--muted);
+  --diagram-line: #7c705f;
+  --diagram-grid: #ddcfb414;
+  --diagram-pump: #8a9bc7;
+  --diagram-sodium: #efa58e;
+  --diagram-potassium: #b6c5ed;
+  --diagram-sodium-bg: var(--soft-tomato);
+  --diagram-potassium-bg: var(--soft);
+  --focus: #b6c5ed;
+  --graphic-wave: #e6bc5c33;
+  --warning-line: #9d8550;
+  --shadow: 0 3px 0 #15120f;
+  --shadow-lift: 0 7px 20px #15120f33;
+  color-scheme: dark;
+}
+
+@media (max-width: 900px) {
+  :root {
+    --text-hero: clamp(2.6rem, 5.3vw, 3.6rem);
+  }
+}
+
+@media (max-width: 680px) {
+  :root {
+    --text-hero: clamp(2.15rem, 9vw, 3rem);
+    --text-title: 2rem;
+    --text-section: 1.625rem;
+    --text-subheading: 1.25rem;
+    --text-card: 1.125rem;
+    --text-question: 1.375rem;
+    --text-reading: 1rem;
+  }
+}

@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client"
+  output = "../src/generated/prisma"
+}
+datasource db {
+  provider = "postgresql"
+}
+enum Status {
+  DRAFT
+  IN_REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+enum Difficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+model Discipline {
+  id String @id @default(cuid())
+  name String @unique
+  slug String @unique
+  categories Category[]
+}
+model Category {
+  id String @id @default(cuid())
+  name String
+  slug String @unique
+  description String @default("")
+  disciplineId String
+  discipline Discipline @relation(fields: [disciplineId], references: [id])
+  questions Question[]
+  lessons Lesson[]
+  @@index([disciplineId])
+}
+model Lesson {
+  id String @id @default(cuid())
+  title String
+  slug String @unique
+  description String
+  categoryId String
+  category Category @relation(fields: [categoryId], references: [id])
+  subtopic String @default("")
+  difficulty Difficulty @default(BEGINNER)
+  readingMinutes Int @default(5)
+  objectives String[]
+  blocks Json
+  takeaways String[]
+  references Json
+  status Status @default(DRAFT)
+  isDemo Boolean @default(false)
+  reviewedAt DateTime?
+  reviewedBy String?
+  author String @default("")
+  version Int @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  questions QuestionLesson[]
+  @@index([status, categoryId])
+}
+model Question {
+  id String @id @default(cuid())
+  text String
+  type String @default("SINGLE_BEST_ANSWER")
+  explanation String
+  categoryId String
+  category Category @relation(fields: [categoryId], references: [id])
+  subtopic String @default("")
+  difficulty Difficulty @default(BEGINNER)
+  tags String[]
+  options AnswerOption[]
+  references Json
+  lessons QuestionLesson[]
+  status Status @default(DRAFT)
+  isDemo Boolean @default(false)
+  author String @default("")
+  reviewedBy String?
+  reviewedAt DateTime?
+  version Int @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([status, reviewedAt, categoryId, difficulty])
+}
+model AnswerOption {
+  id String @id @default(cuid())
+  questionId String
+  question Question @relation(fields:[questionId], references:[id], onDelete:Cascade)
+  text String
+  isCorrect Boolean @default(false)
+  explanation String @default("")
+  position Int
+  @@unique([questionId, position])
+}
+model QuestionLesson {
+  questionId String
+  lessonId String
+  anchor String @default("")
+  question Question @relation(fields:[questionId], references:[id], onDelete:Cascade)
+  lesson Lesson @relation(fields:[lessonId], references:[id], onDelete:Cascade)
+  @@id([questionId, lessonId])
+}
+model Learner {
+  id String @id @default(cuid())
+  createdAt DateTime @default(now())
+  attempts Attempt[]
+}
+model Attempt {
+  id String @id @default(cuid())
+  ownerHash String
+  learnerId String?
+  learner Learner? @relation(fields:[learnerId], references:[id])
+  mode String @default("PRACTICE")
+  isDemo Boolean @default(false)
+  questionIds String[]
+  snapshot Json
+  answers Json @default("{}")
+  result Json?
+  submittedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([ownerHash, createdAt])
+}
+model AdminSession {
+  tokenHash String @id
+  actor String
+  expiresAt DateTime
+}
+model AuditLog {
+  id String @id @default(cuid())
+  actor String
+  action String
+  entity String
+  entityId String
+  before Json?
+  after Json?
+  createdAt DateTime @default(now())
+  @@index([entity, entityId])
+}
+model RateLimit {
+  key String @id
+  count Int @default(1)
+  expiresAt DateTime
+}
