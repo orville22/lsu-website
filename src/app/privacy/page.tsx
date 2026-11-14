@@ -1,67 +1,109 @@
+import type { Metadata } from 'next';
 import { PageIntro, Breadcrumbs } from '@/components/ui';
-export const metadata = {
-  title: 'Privacy policy template',
-  robots: { index: false, follow: true },
+import { siteConfig } from '@/lib/site-config';
+export const metadata: Metadata = {
+  title: 'Privacy',
+  description: 'What Lab Science Unfiltered stores, why, where and for how long.',
+  alternates: { canonical: '/privacy' },
 };
+/*
+ * Keep this page in step with the code. If you add analytics, accounts, email
+ * sign-up, comments or another third-party service, update it before release.
+ */
 export default function Privacy() {
+  const contact = (
+    <a className="text-link" href={siteConfig.contactUrl} target="_blank" rel="noreferrer">
+      contact form
+    </a>
+  );
   return (
     <div className="container prose-page">
       <Breadcrumbs items={[{ label: 'Privacy' }]} />
       <PageIntro
-        eyebrow="PRIVACY POLICY · PRE-DEPLOYMENT TEMPLATE"
+        eyebrow={`Privacy · Updated ${siteConfig.privacyUpdated}`}
         title="Learn with a little less data."
-        description="This template describes the MVP’s current behaviour. The site owner must review it, add operator and contact details, and choose retention periods before deployment."
+        description="You don’t need an account to use Lab Science Unfiltered. There is no advertising, no analytics and no tracking cookies. This page explains the small amount of information the site does handle."
       />
-      <h2>What the platform stores</h2>
+
+      <h2>Who runs this site</h2>
       <p>
-        No learner registration is required. An anonymous browser cookie identifies quiz attempts
-        for 30 days. The database stores a hash of this identifier, selected questions, answers,
-        scores and timestamps. Quiz answers are also saved in this browser’s local storage so a
-        refresh can recover unsent changes.
+        Lab Science Unfiltered (LSU) is an independent educational website operated by Orville
+        Malijan in Melbourne, Australia. For any privacy question or request, use the {contact}.
       </p>
-      <h2>Administrator access</h2>
+
+      <h2>What we collect and why</h2>
       <p>
-        Administrators sign in using an environment-configured username and password hash. An
-        HttpOnly session cookie expires after eight hours. Content changes record the administrator
-        identifier and before/after content in an audit log. Passwords are never stored in
-        plaintext.
+        <strong>Reading lessons.</strong> We don’t ask for your name or email, and we don’t record
+        which lessons you read.
       </p>
-      <h2>Operational data and retention</h2>
       <p>
-        Rate-limit records use hashed request identifiers. IP addresses are only considered when a
-        trusted reverse proxy has been configured. Hosting providers may record access logs. Before
-        launch, document the hosting provider, lawful basis where applicable, log handling, contact
-        address and retention periods. A maintenance command removes expired sessions and limiter
-        records and anonymous attempts older than the configured retention period.
+        <strong>Practice quizzes.</strong> When you start a quiz, your browser receives a random
+        identifier in a cookie (<code>lsu_visitor</code>, lasting 30 days) so you can come back to
+        your quiz and see your results. We store only a one-way hash of that identifier, together
+        with the questions you were given, your answers, your score and the times involved. This is
+        not linked to your name or any account.
       </p>
-      <h2>Embedded media and links</h2>
       <p>
-        YouTube videos use youtube-nocookie.com and load only after a visitor chooses to load a
-        video. Loading a video connects to YouTube, whose policies apply. An administrator may add
-        externally hosted lesson images; loading those images connects to their host. External links
-        have their own privacy practices.
+        <strong>Stored in your browser only.</strong> Quiz answers are also kept in your browser’s
+        local storage so a refresh doesn’t lose them, and your light or dark theme choice is
+        remembered the same way. This stays on your device and is not sent to us beyond the answers
+        you save or submit.
       </p>
+      <p>
+        <strong>Preventing abuse.</strong> To limit automated misuse, the site keeps short-lived
+        request counters. These are stored as keyed hashes, reset within an hour and are then
+        deleted. The site does not store your IP address in its database.
+      </p>
+      <p>
+        <strong>Hosting.</strong> Like any website host, our hosting provider processes technical
+        information such as your IP address and browser type to deliver pages and protect the
+        service, and may keep short-term logs under its own policies.
+      </p>
+      <p>
+        <strong>Administrators.</strong> Site administrators sign in with a separate session cookie
+        (<code>lsu_admin</code>) that expires after eight hours. Edits to content are recorded in an
+        audit log.
+      </p>
+
+      <h2>Where it is stored</h2>
+      <p>
+        The site is hosted by Vercel and its database by Neon. Both currently run in the United
+        States, so the information described above is stored and processed outside Australia.
+      </p>
+
+      <h2>How long we keep it</h2>
+      <ul>
+        <li>Quiz attempts are deleted automatically 30 days after they were last used.</li>
+        <li>Request counters and expired administrator sessions are deleted automatically.</li>
+        <li>Information in your browser stays until you clear your cookies and site data.</li>
+      </ul>
+
+      <h2>Videos, images and links</h2>
+      <p>
+        Lesson videos use YouTube’s privacy-enhanced mode and load only when you choose to play
+        them; YouTube’s policies then apply. Some lessons show images hosted elsewhere, and
+        references link to external sites such as journals, PubMed and doi.org. Those services have
+        their own privacy practices.
+      </p>
+
+      <h2>Please don’t share patient information</h2>
+      <p>
+        LSU is for education. Don’t enter personal health information or anything that could
+        identify a patient. Examples used in lessons are fictional or de-identified.
+      </p>
+
       <h2>Your choices</h2>
       <p>
-        You can clear LSU cookies and local storage in your browser to remove the browser identifier
-        and locally saved answers. Server records remain until the operator’s retention process
-        removes them. The operator must add a contact method for applicable access and deletion
-        requests before launch.
+        Clearing cookies and site data for this website removes the quiz identifier and anything
+        saved in your browser. Because quiz records are stored only against a hashed identifier, we
+        can’t link them to you, and they are deleted automatically after 30 days. If you have a
+        question, a concern or a request, use the {contact}.
       </p>
-      <h2>Educational use</h2>
       <p>
-        Do not enter personal health information or identifiable patient details into the platform.
-        Educational examples are fictional or appropriately anonymised. Case reflection text remains
-        only in page memory and is discarded when you leave or reload the page.
+        We aim to handle personal information in line with the Australian Privacy Principles. If the
+        site starts collecting anything new, such as accounts or email sign-up, this page will be
+        updated first and the date above will change.
       </p>
-      <h2>Information to complete before publication</h2>
-      <ul>
-        <li>Operator’s legal name, country and privacy contact.</li>
-        <li>Production hosting and database providers.</li>
-        <li>Chosen retention periods and scheduled cleanup.</li>
-        <li>Applicable user rights, jurisdiction and effective date.</li>
-        <li>Any analytics or services added after this MVP.</li>
-      </ul>
     </div>
   );
 }

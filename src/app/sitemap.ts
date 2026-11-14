@@ -11,6 +11,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...(show.practice ? ['/practice'] : []),
     ...(show.cases ? ['/cases'] : []),
     ...(show.watch ? ['/watch'] : []),
+    '/privacy',
   ];
   const lessons = await db.lesson.findMany({
     where: { status: 'PUBLISHED', reviewedAt: { not: null } },

@@ -14,4 +14,8 @@ export const siteConfig = {
   watchEnabled: false,
   /** Public YouTube channel URL, shown in the navigation and footer when set. */
   youtubeUrl: null as string | null,
+  /** Where visitors contact LSU (privacy requests, corrections). Shown in the footer and privacy page. */
+  contactUrl: 'https://orvillemalijan.com',
+  /** Date the privacy page last changed in substance. */
+  privacyUpdated: '15 November 2026',
 };

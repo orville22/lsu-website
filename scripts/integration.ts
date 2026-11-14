@@ -11,6 +11,7 @@ const db = new PrismaClient({
 const origin = 'http://localhost:3100';
 const password = randomBytes(24).toString('hex');
 const salt = randomBytes(16).toString('hex');
+const cronSecret = randomBytes(32).toString('hex');
 const actor = `integration-${randomBytes(5).toString('hex')}`;
 const marker = actor;
 let output = '';
@@ -37,6 +38,7 @@ const server = spawn(
       SITE_URL: origin,
       ADMIN_USERNAME: actor,
       ADMIN_PASSWORD_HASH: `${salt}:${scryptSync(password, salt, 64).toString('hex')}`,
+      CRON_SECRET: cronSecret,
     },
     stdio: ['ignore', 'pipe', 'pipe'],
   },
@@ -429,6 +431,28 @@ try {
   ])
     assert.equal((await fetch(origin + page)).status, 200, page);
   pass('public routes, sitemap, robots and social image');
+  {
+    const cron = (auth?: string) =>
+      fetch(origin + '/api/cron/cleanup', auth ? { headers: { Authorization: auth } } : {});
+    assert.equal((await cron()).status, 401);
+    assert.equal((await cron('Bearer wrong')).status, 401);
+    const stale = await db.attempt.create({
+      data: {
+        ownerHash: `${marker}-stale`,
+        questionIds: [],
+        snapshot: [],
+        updatedAt: new Date(Date.now() - 400 * 86400000),
+      },
+    });
+    attempts.push(stale.id);
+    const ran = await cron(`Bearer ${cronSecret}`);
+    assert.equal(ran.status, 200);
+    assert.ok((await ran.json()).oldAnonymousAttempts >= 1);
+    assert.equal(await db.attempt.count({ where: { id: stale.id } }), 0);
+    const privacy = await (await fetch(origin + '/privacy')).text();
+    assert.ok(!privacy.includes('TEMPLATE') && privacy.includes('United States'));
+    pass('scheduled retention cleanup is secret-protected and removes stale attempts');
+  }
   console.log(`${checks} database-backed integration checks passed.`);
 } catch (e) {
   console.error(e);

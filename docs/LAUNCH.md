@@ -56,3 +56,12 @@ References are numbered in the order listed. Each has a Vancouver-formatted **ci
 ```sh
 DATABASE_URL="<Neon unpooled URL>" npm run db:migrate
 ```
+
+## Go-live checklist
+
+1. Apply pending migrations to Neon (unpooled connection): `npm run db:migrate`.
+2. Remove the seeded AI demo content: `npm run db:remove-demo`, check the list, then `npm run db:remove-demo -- --confirm`.
+3. In Vercel → Settings → Environment Variables (Production), add `CRON_SECRET` (`openssl rand -hex 32`). Without it, the daily cleanup the privacy page promises will not run.
+4. Set `ADMIN_USERNAME` and `ADMIN_PASSWORD_HASH` (`npm run admin:password`) so you can sign in and publish.
+5. Check `contactUrl` in `src/lib/site-config.ts` points at your contact page.
+6. Publish the first reviewed lessons.

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowUpRight, FlaskConical } from 'lucide-react';
 import { Navigation, type NavLink } from '@/components/navigation';
 import { siteState } from '@/lib/visibility';
+import { siteConfig } from '@/lib/site-config';
 import './globals.css';
 import './experience.css';
 export const metadata: Metadata = {
@@ -86,6 +87,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <Link href="/#about">About LSU</Link>
               <a href="https://orvillemalijan.com" target="_blank" rel="noreferrer">
                 Founder’s portfolio <ArrowUpRight size={13} />
+              </a>
+              <a href={siteConfig.contactUrl} target="_blank" rel="noreferrer">
+                Contact <ArrowUpRight size={13} />
               </a>
               <Link href="/privacy">Privacy</Link>
             </div>

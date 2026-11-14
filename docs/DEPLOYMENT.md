@@ -8,12 +8,12 @@ Vercel stores `DATABASE_URL`, the provider connection variables, `SITE_URL`, and
 
 ## Prepare
 
-1. Review the scientific drafts and publish only approved content. Demo routes are visibly labelled and excluded from indexing. Remove or restrict demo previews if the owner does not want draft examples on a public production installation.
-2. Complete `/privacy` with the real operator, providers, contact method, retention policy, jurisdiction and effective date.
+1. Remove the seeded AI demonstration content from production with `npm run db:remove-demo` (dry run), then `npm run db:remove-demo -- --confirm`. Unpublished previews are administrator-only.
+2. `/privacy` describes the current behaviour, providers (Vercel, Neon; United States) and retention. Keep it in step with any new data collection; the contact link and date live in `src/lib/site-config.ts`.
 3. Provision a separate authenticated PostgreSQL database with verified TLS where needed. Restrict network access and use a least-privilege runtime role; use a migration role for schema changes when possible.
 4. Configure HTTPS and the exact public `SITE_URL`. Set `DATABASE_URL`, `ADMIN_USERNAME`, `ADMIN_PASSWORD_HASH` and a random `SESSION_SECRET` in the host’s secret manager. Never expose these with NEXT_PUBLIC_ prefixes.
 5. Configure the reverse proxy to enforce a 1 MB request-body limit, remove client-supplied forwarded headers, and overwrite X-Forwarded-For. Only then set TRUST_PROXY=true. Otherwise leave it false and understand that rate limiting is shared across users.
-6. Select a database backup/restore plan and retention period. Schedule `npm run db:cleanup` with the chosen `ANONYMOUS_RETENTION_DAYS`. This project does not create a schedule.
+6. Select a database backup/restore plan. Retention cleanup runs daily through Vercel Cron (`vercel.json` → `/api/cron/cleanup`, 17:00 UTC). Set `CRON_SECRET` (32+ random characters) in Vercel's production environment or the endpoint refuses to run. `npm run db:cleanup` remains available for manual runs.
 
 ## Build and release
 
