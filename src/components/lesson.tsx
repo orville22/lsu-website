@@ -58,19 +58,14 @@ export async function Lesson({
         <aside className="article-sidebar">
           <p>In this lesson</p>
           <a href="#objectives">Learning objectives</a>
-          {blocks.map((b) => (
-            <a key={b.id} href={`#${b.id}`}>
-              {'heading' in b
-                ? b.heading
-                : b.type === 'equation'
-                  ? 'Equation'
-                  : b.type === 'table'
-                    ? b.caption
-                    : b.type === 'video'
-                      ? b.title
-                      : 'Illustration'}
-            </a>
-          ))}
+          {/* Contents lists headed sections only; equations, tables and media sit within them. */}
+          {blocks.map((b) =>
+            b.type === 'text' && b.heading ? (
+              <a key={b.id} href={`#${b.id}`}>
+                {b.heading}
+              </a>
+            ) : null,
+          )}
           <a href="#takeaways">Key takeaways</a>
           {practiceHref && <a href="#practice">Test your understanding</a>}
           {refs.length > 0 && <a href="#references">References</a>}
@@ -115,7 +110,7 @@ export async function Lesson({
             >
               {b.type === 'text' || b.type === 'callout' ? (
                 <>
-                  <h2>{b.heading}</h2>
+                  {b.heading && <h2>{b.heading}</h2>}
                   <RichText text={b.text} />
                 </>
               ) : b.type === 'equation' ? (

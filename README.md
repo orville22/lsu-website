@@ -90,7 +90,7 @@ Unit tests do not need a database. Integration tests require the migrated/seeded
 - [Brand guidelines](BRAND_GUIDELINES.md) and [brand verification/screenshots](docs/BRAND_VERIFICATION.md)
 - [Architecture and decisions](docs/ARCHITECTURE.md)
 - [Database migration guide](docs/DATABASE.md)
-- [Import format](docs/IMPORTS.md) and [CSV template](public/question-import-template.csv)
+- [Import formats](docs/IMPORTS.md): [Markdown lesson template](public/lesson-import-template.md) and [question CSV template](public/question-import-template.csv)
 - [Deployment guide](docs/DEPLOYMENT.md)
 - [Public launch: visibility, short lessons, lesson text format and references](docs/LAUNCH.md)
 - [Verification and remaining work](docs/VERIFICATION.md)

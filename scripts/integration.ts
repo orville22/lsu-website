@@ -263,6 +263,115 @@ try {
     assert.ok(!body.includes('Unpublished preview'));
     pass('citation gate, short-lesson badge and Vancouver references render');
   }
+  {
+    // Markdown lesson import: preview, draft, replace-and-publish at the same address.
+    const md = (length: string, extra = '') => `---
+title: ${marker} Imported lesson
+slug: ${marker}-imported
+category: ${marker}
+length: ${length}
+description: A synthetic imported lesson for integration testing.
+---
+
+## Learning objectives
+- Test the importer [1].
+
+## Fixture section
+Synthetic text with **bold** [1].${extra}
+
+## Key takeaways
+- Fixture only.
+
+## References
+1. Fixture A. Synthetic reference. Test J. 2020;1:1-2. doi:10.1000/xyz123
+`;
+    const preview = await okJson(
+      await api('/api/admin/lesson-import', 'POST', { markdown: md('short') }, cookie),
+    );
+    assert.deepEqual(preview.errors, []);
+    assert.equal(preview.summary.existing, null);
+    assert.equal(await db.lesson.count({ where: { slug: `${marker}-imported` } }), 0);
+    const unknown = await okJson(
+      await api(
+        '/api/admin/lesson-import',
+        'POST',
+        { markdown: md('short').replace(`category: ${marker}`, 'category: nope') },
+        cookie,
+      ),
+    );
+    assert.ok(unknown.errors.some((e: string) => /Unknown category/.test(e)));
+    assert.equal(
+      (await api('/api/admin/lesson-import', 'POST', { markdown: md('short') })).status,
+      401,
+    );
+    const draft = await okJson(
+      await api(
+        '/api/admin/lesson-import',
+        'POST',
+        { markdown: md('short'), commit: true },
+        cookie,
+      ),
+    );
+    createdLessons.push(draft.id);
+    assert.equal(draft.status, 'DRAFT');
+    assert.equal(draft.url, `/demo/learn/${marker}-imported`);
+    // Same slug without "replace" is refused; with replace + publish it updates in place.
+    assert.equal(
+      (
+        await api(
+          '/api/admin/lesson-import',
+          'POST',
+          { markdown: md('full'), commit: true },
+          cookie,
+        )
+      ).status,
+      409,
+    );
+    const unreviewed = await api(
+      '/api/admin/lesson-import',
+      'POST',
+      { markdown: md('full'), commit: true, replace: true, publish: true },
+      cookie,
+    );
+    assert.equal(unreviewed.status, 400);
+    const badCite = await api(
+      '/api/admin/lesson-import',
+      'POST',
+      {
+        markdown: md('full', ' Another claim [2].'),
+        commit: true,
+        replace: true,
+        publish: true,
+        reviewed: true,
+      },
+      cookie,
+    );
+    assert.equal(badCite.status, 400);
+    const published = await okJson(
+      await api(
+        '/api/admin/lesson-import',
+        'POST',
+        { markdown: md('full'), commit: true, replace: true, publish: true, reviewed: true },
+        cookie,
+      ),
+    );
+    assert.equal(published.id, draft.id);
+    assert.equal(published.status, 'PUBLISHED');
+    const row = await db.lesson.findUniqueOrThrow({ where: { id: draft.id } });
+    assert.equal(row.depth, 'FULL');
+    assert.equal(row.version, 2);
+    assert.equal(row.isDemo, false);
+    assert.ok(row.reviewedAt);
+    const page = await (await fetch(origin + published.url)).text();
+    assert.ok(page.includes('<strong>bold</strong>') && page.includes('href="#ref-1"'));
+    assert.ok(page.includes('https://doi.org/10.1000/xyz123'));
+    assert.ok(
+      (await db.auditLog.count({
+        where: { entityId: draft.id, action: { startsWith: 'IMPORT' } },
+      })) === 2,
+    );
+    pass('Markdown lesson import: preview, draft, replace-and-publish in place, gates and audit');
+  }
   const startResponse = await api('/api/attempts', 'POST', { categoryId });
   const a = await okJson(startResponse);
   attempts.push(a.id);
