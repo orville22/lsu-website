@@ -1,6 +1,10 @@
 # Deployment guide
 
-Nothing has been deployed. The application needs a Node.js host and PostgreSQL. Choose providers and costs before provisioning. Any host supporting Next.js 16 App Router and Node.js 22.12+ is suitable; this project does not require a paid SDK or managed database.
+Production is hosted at **https://lsu-website.vercel.app** on Vercel, connected to the `orville22/lsu-website` GitHub repository. The `lsu-postgres` database uses the Neon Free plan in the same region as the Vercel functions (`iad1`). It is connected to Production only; Preview deployments need a separate database configuration.
+
+Vercel stores `DATABASE_URL`, the provider connection variables, `SITE_URL`, and `SESSION_SECRET` as production environment variables. Administrator credentials remain unconfigured, so admin sign-in is disabled. The initial migration and draft-only seed were applied during the first database-backed release on 14 November 2026. No scientific content was published.
+
+`vercel.json` pins the Next.js framework and the normal `npm run build` command. Pushes to `main` deploy automatically. Subsequent schema migrations must be applied once per release using the unpooled database connection; normal builds do not migrate or seed the database.
 
 ## Prepare
 

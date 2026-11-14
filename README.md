@@ -1,6 +1,8 @@
 # Lab Science Unfiltered
 
-A local, database-backed clinical laboratory science learning platform built with Next.js App Router, TypeScript, Tailwind CSS, PostgreSQL and Prisma. No cloud service is provisioned and nothing is deployed by these instructions.
+A database-backed clinical laboratory science learning platform built with Next.js App Router, TypeScript, Tailwind CSS, PostgreSQL and Prisma.
+
+Production: **https://lsu-website.vercel.app**, hosted on Vercel with a Neon Free PostgreSQL database. Pushes to `main` deploy automatically. Production secrets are stored in Vercel; local `.env` and `.local` data remain excluded from Git.
 
 ## Quick start
 
