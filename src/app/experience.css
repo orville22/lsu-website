@@ -1145,3 +1145,113 @@ h3 {
     scroll-behavior: auto !important;
   }
 }
+
+/* ---- Launch: short lessons, upcoming list, citations, references ---- */
+.learning-layout.no-sidebar {
+  grid-template-columns: minmax(0, 1fr);
+}
+.short-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-heading);
+  padding: 1px var(--space-2);
+  background: var(--soft-mustard);
+  color: var(--warning);
+  border-radius: var(--radius-small);
+  white-space: nowrap;
+}
+.short-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  border: 1px solid var(--line);
+  background: var(--soft-mustard);
+  padding: var(--space-4);
+  border-radius: var(--radius-control);
+  font-size: var(--text-small);
+  color: var(--ink);
+  margin: var(--space-6) 0;
+}
+.short-notice .short-pill {
+  background: var(--surface);
+}
+.upcoming {
+  margin-top: var(--space-10);
+  padding: var(--space-6);
+  border: 1px dashed var(--control-line);
+  border-radius: var(--radius-control);
+}
+.upcoming h2 {
+  font-size: var(--text-subheading);
+  margin-bottom: var(--space-4);
+}
+.upcoming ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.upcoming li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-4);
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--line);
+}
+.upcoming .upcoming-title {
+  font-weight: var(--weight-heading);
+}
+.content-block ul,
+.content-block ol {
+  font-size: var(--text-reading);
+  line-height: var(--leading-reading);
+  padding-left: var(--space-6);
+  margin: var(--space-3) 0;
+}
+.content-block li + li {
+  margin-top: var(--space-2);
+}
+.content-block p + p {
+  margin-top: var(--space-4);
+}
+.citation {
+  font-size: 0.8em;
+  vertical-align: 0.15em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.citation a {
+  color: var(--action);
+  text-decoration: none;
+}
+.citation a:hover,
+.citation a:focus-visible {
+  text-decoration: underline;
+}
+.reference-list {
+  padding-left: var(--space-6);
+  margin: 0;
+}
+.reference-list li {
+  margin-top: var(--space-3);
+  line-height: 1.55;
+  scroll-margin-top: 96px;
+}
+.reference-list li:target {
+  background: var(--soft-mustard);
+  border-radius: var(--radius-small);
+}
+.reference-url {
+  overflow-wrap: anywhere;
+}
+.content-block ul {
+  list-style: disc;
+}
+.content-block ol,
+.reference-list {
+  list-style: decimal;
+}
+.reference-list li::marker {
+  color: var(--muted);
+}

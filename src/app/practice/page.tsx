@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { db } from '@/lib/db';
 import { Breadcrumbs, PageIntro } from '@/components/ui';
 import { PracticeStart } from '@/components/practice-start';
+import { notFound } from 'next/navigation';
+import { siteState } from '@/lib/visibility';
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'Practice quiz hub',
@@ -15,6 +17,10 @@ export default async function Practice({
   searchParams: Promise<{ category?: string; demo?: string }>;
 }) {
   const params = await searchParams;
+  const state = await siteState();
+  if (!state.show.practicePage) notFound();
+  // Draft demonstration questions are an administrator testing tool only.
+  const allowDemo = state.isAdmin;
   const categories = await db.category.findMany({
     orderBy: { name: 'asc' },
     include: {
@@ -22,7 +28,7 @@ export default async function Practice({
         where: {
           OR: [
             { status: 'PUBLISHED', reviewedAt: { not: null } },
-            { status: 'DRAFT', isDemo: true },
+            ...(allowDemo ? [{ status: 'DRAFT' as const, isDemo: true }] : []),
           ],
         },
         select: { status: true, subtopic: true },
@@ -39,7 +45,8 @@ export default async function Practice({
       />
       <PracticeStart
         initialCategory={params.category}
-        initialDemo={params.demo === 'true'}
+        initialDemo={allowDemo && params.demo === 'true'}
+        allowDemo={allowDemo}
         categories={categories.map((c) => ({
           id: c.id,
           name: c.name,

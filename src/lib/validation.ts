@@ -5,7 +5,55 @@ export const safeUrl = z
   .string()
   .url()
   .refine((v) => /^https?:\/\//.test(v), 'Use an http(s) URL');
-export const referenceSchema = z.object({ title: z.string().min(1).max(500), url: safeUrl });
+const emptyToUndefined = (v: unknown) =>
+  typeof v === 'string' && v.trim() === '' ? undefined : typeof v === 'string' ? v.trim() : v;
+/** Accepts "10.x/…", "doi:10.x/…" or "https://doi.org/10.x/…" and stores the bare DOI. */
+const doiSchema = z.preprocess(
+  (v) =>
+    typeof v === 'string'
+      ? emptyToUndefined(v.trim().replace(/^(?:https?:\/\/(?:dx\.)?doi\.org\/|doi:\s*)/i, ''))
+      : v,
+  z
+    .string()
+    .regex(/^10\.\d{4,9}\/\S+$/, 'Use a DOI such as 10.1373/clinchem.2015.123456')
+    .max(300)
+    .optional(),
+);
+/**
+ * A reference is a pre-formatted Vancouver citation plus optional identifiers.
+ * Legacy records stored as { title, url } are accepted and converted.
+ */
+export const referenceSchema = z.preprocess(
+  (v) =>
+    v && typeof v === 'object' && !('citation' in v) && 'title' in v
+      ? { citation: (v as { title: unknown }).title, url: (v as { url?: unknown }).url }
+      : v,
+  z.object({
+    citation: z.string().trim().min(1, 'Each reference needs a citation.').max(1500),
+    doi: doiSchema,
+    pmid: z.preprocess(
+      emptyToUndefined,
+      z
+        .string()
+        .regex(/^\d{1,9}$/, 'PMID must be digits only.')
+        .optional(),
+    ),
+    url: z.preprocess(emptyToUndefined, safeUrl.optional()),
+  }),
+);
+/** Citation numbers used in text, e.g. "[1]", "[2,4]", "[3–5]" → [1], [2, 4], [3, 4, 5]. */
+export const citationPattern = /\[(\d{1,3}(?:\s*[,–-]\s*\d{1,3})*)\](?!\()/g;
+export function citedNumbers(text: string): number[] {
+  const found: number[] = [];
+  for (const m of text.matchAll(citationPattern)) {
+    for (const part of m[1].split(',')) {
+      const [a, b] = part.split(/[–-]/).map((n) => Number(n.trim()));
+      if (b === undefined) found.push(a);
+      else for (let n = a; n <= b && n - a < 50; n++) found.push(n);
+    }
+  }
+  return found;
+}
 const blockBase = {
   id: z
     .string()
@@ -103,6 +151,8 @@ export const lessonSchema = z
       .max(150),
     description: z.string().min(10).max(1000),
     readingMinutes: z.number().int().min(1).max(180),
+    depth: z.enum(['SHORT', 'FULL']).default('FULL'),
+    listAsUpcoming: z.boolean().default(false),
     objectives: z.array(z.string().min(1).max(500)).min(1).max(20),
     blocks: z.array(blockSchema).min(1).max(100),
     takeaways: z.array(z.string().min(1).max(1000)).min(1).max(20),
@@ -115,7 +165,32 @@ export const lessonSchema = z
         code: 'custom',
         message: 'Publishing requires review confirmation and at least one reference.',
       });
+    if (v.status === 'PUBLISHED') {
+      const missing = [...new Set(lessonCitations(v))].filter(
+        (n) => n < 1 || n > v.references.length,
+      );
+      if (missing.length)
+        c.addIssue({
+          code: 'custom',
+          path: ['references'],
+          message: `Citation ${missing.map((n) => `[${n}]`).join(', ')} has no matching reference. Add it or fix the number.`,
+        });
+    }
   });
+/** Every citation number used anywhere in a lesson's text. */
+export function lessonCitations(l: {
+  objectives: string[];
+  takeaways: string[];
+  blocks: Block[];
+}): number[] {
+  const texts = [...l.objectives, ...l.takeaways];
+  for (const b of l.blocks) {
+    if (b.type === 'text' || b.type === 'callout') texts.push(b.text);
+    if (b.type === 'table') texts.push(b.caption, ...b.rows.flat());
+    if (b.type === 'image') texts.push(b.caption);
+  }
+  return texts.flatMap(citedNumbers);
+}
 export type Block = z.infer<typeof blockSchema>;
 export type Reference = z.infer<typeof referenceSchema>;
 export type QuestionInput = z.infer<typeof questionSchema>;

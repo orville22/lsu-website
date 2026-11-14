@@ -1,3 +1,5 @@
+import { notFound } from 'next/navigation';
+import { siteState } from '@/lib/visibility';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { Breadcrumbs, PageIntro, DraftNotice } from '@/components/ui';
@@ -7,7 +9,8 @@ export const metadata = {
     'Explore stepwise fictional educational cases connecting clinical chemistry principles and laboratory interpretation.',
   alternates: { canonical: '/cases' },
 };
-export default function Cases() {
+export default async function Cases() {
+  if (!(await siteState()).show.casesPage) notFound();
   return (
     <div className="container" style={{ paddingBottom: 70 }}>
       <Breadcrumbs items={[{ label: 'Clinical cases' }]} />

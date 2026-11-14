@@ -1,3 +1,5 @@
+import { notFound } from 'next/navigation';
+import { siteState } from '@/lib/visibility';
 import Link from 'next/link';
 import { Play, ArrowUpRight } from 'lucide-react';
 import { PageIntro, Breadcrumbs } from '@/components/ui';
@@ -8,7 +10,8 @@ export const metadata = {
     'The future home of Lab Science Unfiltered educational videos, connected to clinical chemistry lessons and practice.',
   alternates: { canonical: '/watch' },
 };
-export default function Watch() {
+export default async function Watch() {
+  if (!(await siteState()).show.watchPage) notFound();
   return (
     <div className="container">
       <Breadcrumbs items={[{ label: 'Watch' }]} />

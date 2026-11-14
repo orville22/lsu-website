@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowUpRight, FlaskConical } from 'lucide-react';
-import { Navigation } from '@/components/navigation';
+import { Navigation, type NavLink } from '@/components/navigation';
+import { siteState } from '@/lib/visibility';
 import './globals.css';
 import './experience.css';
 export const metadata: Metadata = {
@@ -20,14 +21,40 @@ export const metadata: Metadata = {
     images: ['/opengraph-image.png'],
   },
 };
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  // If the database is unreachable, keep a minimal working navigation.
+  const { show, lessonCount } = await siteState().catch(() => ({
+    lessonCount: 0,
+    show: { practice: false, cases: false, watch: false, youtubeUrl: null as string | null },
+  }));
+  // Sections appear here only once they have published content.
+  const sections: NavLink[] = [
+    { href: '/learn', label: 'Learn' },
+    ...(show.practice ? [{ href: '/practice', label: 'Practice' }] : []),
+    ...(show.cases ? [{ href: '/cases', label: 'Clinical cases' }] : []),
+    ...(show.watch ? [{ href: '/watch', label: 'Watch' }] : []),
+  ];
+  const navLinks: NavLink[] = [
+    ...sections,
+    { href: '/#about', label: 'About LSU' },
+    ...(show.youtubeUrl ? [{ href: show.youtubeUrl, label: 'YouTube', external: true }] : []),
+  ];
+  const cta: NavLink = show.practice
+    ? { href: '/practice', label: 'Let’s practise' }
+    : { href: '/learn', label: 'Start learning' };
+  const footerLabels: Record<string, string> = {
+    '/learn': 'Learning hub',
+    '/practice': 'Practice quizzes',
+    '/cases': 'Clinical cases',
+    '/watch': 'Video library',
+  };
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
         <a className="skip-link" href="#main">
           Skip to content
         </a>
-        <Navigation />
+        <Navigation links={navLinks} cta={cta} search={lessonCount > 0} />
         <main id="main">{children}</main>
         <footer className="site-footer">
           <div className="container footer-grid">
@@ -43,10 +70,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
             <div>
               <h3>Keep exploring</h3>
-              <Link href="/learn">Learning hub</Link>
-              <Link href="/practice">Practice quizzes</Link>
-              <Link href="/cases">Clinical cases</Link>
-              <Link href="/watch">Video library</Link>
+              {sections.map((l) => (
+                <Link key={l.href} href={l.href}>
+                  {footerLabels[l.href]}
+                </Link>
+              ))}
+              {show.youtubeUrl && (
+                <a href={show.youtubeUrl} target="_blank" rel="noreferrer">
+                  YouTube <ArrowUpRight size={13} />
+                </a>
+              )}
             </div>
             <div>
               <h3>Behind the science</h3>
@@ -55,7 +88,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 Founder’s portfolio <ArrowUpRight size={13} />
               </a>
               <Link href="/privacy">Privacy</Link>
-              <Link href="/admin">Administration</Link>
             </div>
             <div className="footer-note">
               <span className="eyebrow">Built for understanding</span>

@@ -2,8 +2,11 @@ import Link from 'next/link';
 import katex from 'katex';
 import { db } from '@/lib/db';
 import { lessonUrl } from '@/lib/content';
-import { blockSchema, referenceSchema } from '@/lib/validation';
-import { DraftNotice, Breadcrumbs } from './ui';
+import { blockSchema } from '@/lib/validation';
+import { DraftNotice, Breadcrumbs, ShortLessonNotice } from './ui';
+import { RichText, InlineText } from './rich-text';
+import { ReferenceList, toReferences } from './reference-list';
+import { siteState } from '@/lib/visibility';
 import { Video } from './video';
 import { lessonPresentation } from '@/lib/topic-presentation';
 import { TopicArt } from './brand/topic-art';
@@ -12,20 +15,31 @@ import { ArrowUpRight } from 'lucide-react';
 import { z } from 'zod';
 export async function Lesson({
   lesson,
-  demo,
+  preview,
 }: {
   lesson: NonNullable<Awaited<ReturnType<typeof fetchLesson>>>;
-  demo: boolean;
+  /** Administrator preview of an unpublished lesson. */
+  preview: boolean;
 }) {
   const topic = lessonPresentation(lesson);
   const blocks = z.array(blockSchema).parse(lesson.blocks);
-  const refs = z.array(referenceSchema).parse(lesson.references);
+  const refs = toReferences(lesson.references);
+  const state = await siteState();
+  // Topic practice is offered only when the topic has enough reviewed questions;
+  // previews of AI demo drafts can still use the demo question set.
+  const practiceHref = preview
+    ? lesson.isDemo
+      ? `/practice?category=${lesson.categoryId}&demo=true`
+      : null
+    : state.practiceCategoryIds.has(lesson.categoryId)
+      ? `/practice?category=${lesson.categoryId}`
+      : null;
   const related = await db.lesson.findMany({
     where: {
       id: { not: lesson.id },
       categoryId: lesson.categoryId,
-      ...(demo
-        ? { isDemo: true, status: 'DRAFT' }
+      ...(preview
+        ? { status: { in: ['DRAFT', 'IN_REVIEW'] } }
         : { status: 'PUBLISHED', reviewedAt: { not: null } }),
     },
     include: { category: { include: { discipline: true } } },
@@ -58,11 +72,11 @@ export async function Lesson({
             </a>
           ))}
           <a href="#takeaways">Key takeaways</a>
-          <a href="#practice">Test your understanding</a>
-          <a href="#references">References</a>
+          {practiceHref && <a href="#practice">Test your understanding</a>}
+          {refs.length > 0 && <a href="#references">References</a>}
         </aside>
         <article className="article">
-          {demo && <DraftNotice />}
+          {preview && <DraftNotice variant={lesson.isDemo ? 'demo' : 'preview'} />}
           <div className="lesson-visual">
             <TopicArt kind={topic.artwork} />
           </div>
@@ -71,6 +85,7 @@ export async function Lesson({
           </p>
           <h1>{lesson.title}</h1>
           <div className="article-meta">
+            {lesson.depth === 'SHORT' && <span className="short-pill">Short lesson</span>}
             <span>{lesson.difficulty.toLowerCase()}</span>
             <span>{lesson.readingMinutes} minute read</span>
             <span>{lesson.subtopic}</span>
@@ -81,11 +96,14 @@ export async function Lesson({
             </span>
           </div>
           <p className="lead">{lesson.description}</p>
+          {lesson.depth === 'SHORT' && <ShortLessonNotice />}
           <section className="objectives" id="objectives">
             <h2>What you’ll take away</h2>
             <ul>
               {lesson.objectives.map((o) => (
-                <li key={o}>{o}</li>
+                <li key={o}>
+                  <InlineText text={o} />
+                </li>
               ))}
             </ul>
           </section>
@@ -98,7 +116,7 @@ export async function Lesson({
               {b.type === 'text' || b.type === 'callout' ? (
                 <>
                   <h2>{b.heading}</h2>
-                  <p>{b.text}</p>
+                  <RichText text={b.text} />
                 </>
               ) : b.type === 'equation' ? (
                 <div
@@ -117,7 +135,9 @@ export async function Lesson({
               ) : b.type === 'table' ? (
                 <div className="table-scroll">
                   <table>
-                    <caption>{b.caption}</caption>
+                    <caption>
+                      <InlineText text={b.caption} />
+                    </caption>
                     <thead>
                       <tr>
                         {b.headers.map((h, i) => (
@@ -131,7 +151,9 @@ export async function Lesson({
                       {b.rows.map((r, i) => (
                         <tr key={i}>
                           {r.map((c, j) => (
-                            <td key={j}>{c}</td>
+                            <td key={j}>
+                              <InlineText text={c} />
+                            </td>
                           ))}
                         </tr>
                       ))}
@@ -141,7 +163,9 @@ export async function Lesson({
               ) : b.type === 'image' ? (
                 <figure>
                   <img src={b.url} alt={b.alt} loading="lazy" />
-                  <figcaption>{b.caption}</figcaption>
+                  <figcaption>
+                    <InlineText text={b.caption} />
+                  </figcaption>
                 </figure>
               ) : b.type === 'video' ? (
                 <Video id={b.youtubeId} title={b.title} />
@@ -153,46 +177,39 @@ export async function Lesson({
             <h2>Key takeaways</h2>
             <ul>
               {lesson.takeaways.map((t) => (
-                <li key={t}>{t}</li>
+                <li key={t}>
+                  <InlineText text={t} />
+                </li>
               ))}
             </ul>
           </section>
-          <section className="test-understanding" id="practice">
-            <h2>Test your understanding.</h2>
-            <p>
-              Connect this concept with questions from the same topic.{' '}
-              {demo
-                ? 'This practice uses unreviewed demonstration questions.'
-                : 'Feedback and explanations appear after submission.'}
-            </p>
-            <Link
-              className="button button-light"
-              href={`/practice?category=${lesson.categoryId}${demo ? '&demo=true' : ''}`}
-            >
-              Practise this topic <ArrowUpRight size={16} />
-            </Link>
-          </section>
+          {practiceHref && (
+            <section className="test-understanding" id="practice">
+              <h2>Test your understanding.</h2>
+              <p>
+                Connect this concept with questions from the same topic.{' '}
+                {lesson.isDemo && preview
+                  ? 'This practice uses unreviewed demonstration questions.'
+                  : 'Feedback and explanations appear after submission.'}
+              </p>
+              <Link className="button button-light" href={practiceHref}>
+                Practise this topic <ArrowUpRight size={16} />
+              </Link>
+            </section>
+          )}
           <section id="references" className="references">
-            <h2>References & further reading</h2>
+            <h2>References</h2>
             {refs.length ? (
-              <ol>
-                {refs.map((r) => (
-                  <li key={r.url}>
-                    <a href={r.url} target="_blank" rel="noreferrer">
-                      {r.title}
-                    </a>
-                  </li>
-                ))}
-              </ol>
+              <ReferenceList references={refs} />
             ) : (
               <p className="muted">
-                References must be added and verified before this draft can be published.
+                References must be added and verified before this lesson can be published.
               </p>
             )}
           </section>
           {related.length > 0 && (
             <section className="references">
-              <h2>{demo ? 'Related draft previews' : 'Related lessons'}</h2>
+              <h2>{preview ? 'Related unpublished lessons' : 'Related lessons'}</h2>
               {related.map((l) => (
                 <p key={l.id}>
                   <Link className="text-link" href={lessonUrl(l)}>
@@ -207,12 +224,12 @@ export async function Lesson({
     </div>
   );
 }
-export function fetchLesson(slug: string, demo: boolean) {
+export function fetchLesson(slug: string, preview: boolean) {
   return db.lesson.findFirst({
     where: {
       slug,
-      ...(demo
-        ? { isDemo: true, status: 'DRAFT' as const }
+      ...(preview
+        ? { status: { in: ['DRAFT' as const, 'IN_REVIEW' as const] } }
         : { status: 'PUBLISHED' as const, reviewedAt: { not: null } }),
     },
     include: { category: { include: { discipline: true } } },

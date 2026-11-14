@@ -11,6 +11,10 @@ enum Status {
   PUBLISHED
   ARCHIVED
 }
+enum LessonDepth {
+  SHORT
+  FULL
+}
 enum Difficulty {
   BEGINNER
   INTERMEDIATE
@@ -43,6 +47,8 @@ model Lesson {
   subtopic String @default("")
   difficulty Difficulty @default(BEGINNER)
   readingMinutes Int @default(5)
+  depth LessonDepth @default(FULL)
+  listAsUpcoming Boolean @default(false)
   objectives String[]
   blocks Json
   takeaways String[]

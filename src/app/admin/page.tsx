@@ -4,6 +4,7 @@ import { admin } from '@/lib/security';
 import { db } from '@/lib/db';
 import { AdminLogin, AdminLogout } from '@/components/admin-auth';
 import { ContentEditor } from '@/components/content-editor';
+import { lessonUrl } from '@/lib/content';
 import { ImportPanel } from '@/components/import-panel';
 import { TaxonomyForm } from '@/components/taxonomy-form';
 export const dynamic = 'force-dynamic';
@@ -224,16 +225,21 @@ async function ContentList({
             orderBy: { updatedAt: 'desc' },
             take: 100,
           })
-        ).map((q) => ({ ...q, title: q.text }))
-      : await db.lesson.findMany({
-          where: {
-            ...where,
-            ...(p.q ? { title: { contains: p.q, mode: 'insensitive' as const } } : {}),
-          },
-          include: { category: true },
-          orderBy: { updatedAt: 'desc' },
-          take: 100,
-        });
+        ).map((q) => ({ ...q, title: q.text, viewUrl: null as string | null }))
+      : (
+          await db.lesson.findMany({
+            where: {
+              ...where,
+              ...(p.q ? { title: { contains: p.q, mode: 'insensitive' as const } } : {}),
+            },
+            include: { category: { include: { discipline: true } } },
+            orderBy: { updatedAt: 'desc' },
+            take: 100,
+          })
+        ).map((l) => ({
+          ...l,
+          viewUrl: l.status === 'ARCHIVED' ? null : (lessonUrl(l) as string | null),
+        }));
   return (
     <>
       <div className="section-heading">
@@ -315,6 +321,14 @@ async function ContentList({
                   <Link className="text-link" href={`/admin?tab=${kind}&edit=${r.id}`}>
                     Edit →
                   </Link>
+                  {r.viewUrl && (
+                    <>
+                      {' · '}
+                      <Link className="text-link" href={r.viewUrl}>
+                        {r.status === 'PUBLISHED' ? 'View' : 'Preview'}
+                      </Link>
+                    </>
+                  )}
                 </td>
               </tr>
             ))}

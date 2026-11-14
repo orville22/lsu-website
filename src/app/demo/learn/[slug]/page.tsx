@@ -1,15 +1,18 @@
 import { notFound } from 'next/navigation';
 import { Lesson, fetchLesson } from '@/components/lesson';
+import { admin } from '@/lib/security';
 export const dynamic = 'force-dynamic';
+// Unpublished lesson previews are for signed-in administrators only.
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const l = await fetchLesson((await params).slug, true);
+  const l = (await admin()) ? await fetchLesson((await params).slug, true) : null;
   return {
-    title: l ? `Draft preview: ${l.title}` : 'Lesson not found',
+    title: l ? `Preview: ${l.title}` : 'Lesson not found',
     robots: { index: false, follow: false },
   };
 }
-export default async function DemoLesson({ params }: { params: Promise<{ slug: string }> }) {
+export default async function LessonPreview({ params }: { params: Promise<{ slug: string }> }) {
+  if (!(await admin())) notFound();
   const lesson = await fetchLesson((await params).slug, true);
   if (!lesson) notFound();
-  return <Lesson lesson={lesson} demo />;
+  return <Lesson lesson={lesson} preview />;
 }

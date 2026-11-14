@@ -4,13 +4,17 @@ import { readDraft, writeDraft } from '@/lib/browser-storage';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { ArrowUpRight, Menu, X, Sun, Moon, FlaskConical, Search } from 'lucide-react';
-const links = [
-  ['/learn', 'Learn'],
-  ['/practice', 'Practice'],
-  ['/cases', 'Clinical cases'],
-  ['/watch', 'Watch'],
-];
-export function Navigation() {
+export type NavLink = { href: string; label: string; external?: boolean };
+export function Navigation({
+  links,
+  cta,
+  search,
+}: {
+  links: NavLink[];
+  cta: NavLink;
+  /** Show the lesson search shortcut (only once lessons exist). */
+  search: boolean;
+}) {
   const path = usePathname();
   const [open, setOpen] = useState(false);
   const [dark, setDark] = useState(false);
@@ -40,24 +44,29 @@ export function Navigation() {
           </span>
         </Link>
         <nav aria-label="Main navigation" className={open ? 'main-nav open' : 'main-nav'}>
-          {links.map(([href, label]) => (
-            <Link
-              key={href}
-              href={href}
-              className={path.startsWith(href) ? 'active' : ''}
-              onClick={() => setOpen(false)}
-            >
-              {label}
-            </Link>
-          ))}
-          <Link href="/#about" onClick={() => setOpen(false)}>
-            About LSU
-          </Link>
+          {links.map(({ href, label, external }) =>
+            external ? (
+              <a key={href} href={href} target="_blank" rel="noreferrer">
+                {label} <ArrowUpRight size={14} />
+              </a>
+            ) : (
+              <Link
+                key={href}
+                href={href}
+                className={path.startsWith(href) ? 'active' : ''}
+                onClick={() => setOpen(false)}
+              >
+                {label}
+              </Link>
+            ),
+          )}
         </nav>
         <div className="nav-actions">
-          <Link href="/learn#search" className="icon-button" aria-label="Search lessons">
-            <Search size={19} />
-          </Link>
+          {search && (
+            <Link href="/learn#search" className="icon-button" aria-label="Search lessons">
+              <Search size={19} />
+            </Link>
+          )}
           <button
             className="icon-button theme-toggle"
             onClick={toggle}
@@ -65,8 +74,8 @@ export function Navigation() {
           >
             {dark ? <Sun size={19} /> : <Moon size={19} />}
           </button>
-          <Link href="/practice" className="button button-small nav-cta">
-            Let’s practise <ArrowUpRight size={16} />
+          <Link href={cta.href} className="button button-small nav-cta">
+            {cta.label} <ArrowUpRight size={16} />
           </Link>
           <button
             className="icon-button mobile-menu"

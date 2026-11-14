@@ -13,11 +13,11 @@ type SeedLesson = {
   references: Reference[];
 };
 const sodiumRef = {
-  title: 'NCBI Bookshelf · Hyponatremia (background reading; verify before publication)',
+  citation: 'NCBI Bookshelf. Hyponatremia (background reading; verify before publication).',
   url: 'https://www.ncbi.nlm.nih.gov/books/NBK470386/',
 };
 const qcRef = {
-  title: 'Westgard QC · Westgard Rules',
+  citation: 'Westgard QC. Westgard rules (background reading; verify before publication).',
   url: 'https://www.westgard.com/westgard-rules',
 };
 const topics = [

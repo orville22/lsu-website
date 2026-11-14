@@ -22,5 +22,5 @@ export default async function PublishedLesson({ params }: Props) {
     lesson.category.discipline.slug !== p.discipline
   )
     notFound();
-  return <Lesson lesson={lesson} demo={false} />;
+  return <Lesson lesson={lesson} preview={false} />;
 }

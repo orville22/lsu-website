@@ -99,6 +99,28 @@ try {
     403,
   );
   pass('admin authorisation and cross-origin rejection');
+  {
+    // Launch gating: empty sections stay hidden from visitors, visible to administrators.
+    const publishedQuestions = await db.question.count({
+      where: { status: 'PUBLISHED', reviewedAt: { not: null } },
+    });
+    const home = await (await fetch(origin + '/')).text();
+    assert.ok(!home.includes('href="/admin"'), 'footer must not link to administration');
+    assert.ok(!home.includes('href="/watch"'), 'watch hidden until enabled');
+    assert.ok(!home.includes('href="/cases"'), 'cases hidden until enabled');
+    if (publishedQuestions < 5) {
+      assert.ok(!home.includes('href="/practice"'), 'practice hidden without questions');
+      assert.equal((await fetch(origin + '/practice')).status, 404);
+      assert.equal((await api('/practice', 'GET', undefined, cookie)).status, 200);
+    }
+    for (const page of ['/watch', '/cases', '/cases/a-low-sodium-result']) {
+      assert.equal((await fetch(origin + page)).status, 404, page);
+      assert.equal((await api(page, 'GET', undefined, cookie)).status, 200, page);
+    }
+    const sitemap = await (await fetch(origin + '/sitemap.xml')).text();
+    assert.ok(!sitemap.includes('/watch') && !sitemap.includes('/cases'));
+    pass('empty sections hidden from visitors and previewable by administrators');
+  }
   const discipline = await db.discipline.findUniqueOrThrow({
     where: { slug: 'clinical-chemistry' },
   });
@@ -183,7 +205,62 @@ try {
   const lesson = await okJson(await api('/api/admin/lessons', 'POST', lessonBody, cookie));
   createdLessons.push(lesson.id);
   assert.equal((await api(`/learn/clinical-chemistry/${marker}/${marker}`)).status, 404);
-  pass('lesson management and unpublished route exclusion');
+  assert.equal((await api(`/demo/learn/${marker}`)).status, 404);
+  assert.equal((await api(`/demo/learn/${marker}`, 'GET', undefined, cookie)).status, 200);
+  pass('lesson management, unpublished route exclusion and admin-only preview');
+  {
+    const cited = {
+      ...lessonBody,
+      id: lesson.id,
+      version: 1,
+      depth: 'SHORT',
+      status: 'PUBLISHED',
+      reviewed: true,
+      blocks: [
+        {
+          id: 'section-one',
+          type: 'text',
+          heading: 'Fixture',
+          text: 'Synthetic claim [1].\nSecond claim [2] with **emphasis**.\n- Na^+^ item',
+        },
+      ],
+      references: [
+        {
+          citation: 'Fixture A. Synthetic reference one. Test J. 2020;1:1-2.',
+          doi: 'doi:10.1000/xyz123',
+        },
+      ],
+    };
+    const missing = await api('/api/admin/lessons', 'POST', cited, cookie);
+    assert.equal(missing.status, 400);
+    assert.match(JSON.stringify(await missing.json()), /Citation \[2\]/);
+    await okJson(
+      await api(
+        '/api/admin/lessons',
+        'POST',
+        {
+          ...cited,
+          references: [...cited.references, { citation: 'Fixture B. Two.', pmid: '123' }],
+        },
+        cookie,
+      ),
+    );
+    const page = await api(`/learn/clinical-chemistry/${marker}/${marker}`);
+    assert.equal(page.status, 200);
+    const body = await page.text();
+    for (const expected of [
+      'id="ref-1"',
+      'href="#ref-2"',
+      'https://doi.org/10.1000/xyz123',
+      'pubmed.ncbi.nlm.nih.gov/123/',
+      'Short lesson',
+      '<strong>emphasis</strong>',
+      'Na<sup>+</sup>',
+    ])
+      assert.ok(body.includes(expected), expected);
+    assert.ok(!body.includes('Unpublished preview'));
+    pass('citation gate, short-lesson badge and Vancouver references render');
+  }
   const startResponse = await api('/api/attempts', 'POST', { categoryId });
   const a = await okJson(startResponse);
   attempts.push(a.id);
@@ -228,13 +305,17 @@ try {
   );
   assert.equal(again.result.percentage, 100);
   pass('server scoring, concurrent and repeated submission idempotency');
-  const demoResponse = await api('/api/attempts', 'POST', { demo: true }, visitor);
+  assert.equal((await api('/api/attempts', 'POST', { demo: true }, visitor)).status, 403);
+  const adminVisitor = `${visitor}; ${cookie}`;
+  const demoResponse = await api('/api/attempts', 'POST', { demo: true }, adminVisitor);
   const demo = await okJson(demoResponse);
   attempts.push(demo.id);
   assert.equal(demo.count, 20);
-  const demoView = await okJson(await api(`/api/attempts/${demo.id}`, 'GET', undefined, visitor));
+  const demoView = await okJson(
+    await api(`/api/attempts/${demo.id}`, 'GET', undefined, adminVisitor),
+  );
   assert.equal(new Set(demoView.questions.map((q: { id: string }) => q.id)).size, 20);
-  pass('20-question draft demo without duplicates');
+  pass('draft demo restricted to administrators; 20 questions without duplicates');
   const csv = readFileSync('public/question-import-template.csv', 'utf8').replace(
     'REPLACE THIS:',
     marker,
@@ -333,13 +414,14 @@ try {
   assert.equal(fullResult.result.correct, 20);
   assert.equal(fullResult.result.percentage, 100);
   pass('20-question reviewed pool, 8/8/4 quotas, safe server rendering and full scoring');
+  {
+    const home = await (await fetch(origin + '/')).text();
+    assert.ok(home.includes('href="/practice"'), 'practice appears once 20 questions are reviewed');
+  }
   for (const page of [
     '/',
     '/learn',
     '/practice',
-    '/cases',
-    '/cases/a-low-sodium-result',
-    '/watch',
     '/privacy',
     '/sitemap.xml',
     '/robots.txt',
