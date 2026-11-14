@@ -1,0 +1,23 @@
+{
+  "name": "lsu-motion",
+  "private": true,
+  "description": "Lab Science Unfiltered video graphics: title sting, lower thirds, source tags, end card.",
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio",
+    "render:all": "node render-all.mjs"
+  },
+  "dependencies": {
+    "@remotion/bundler": "^4.0.539",
+    "@remotion/cli": "4.0.539",
+    "@remotion/fonts": "^4.0.539",
+    "@remotion/renderer": "^4.0.539",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.539"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.2",
+    "typescript": "5.9.3"
+  }
+}
