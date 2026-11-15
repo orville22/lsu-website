@@ -8,10 +8,13 @@ export function PracticeStart({
   categories,
   initialCategory = '',
   initialDemo = false,
+  allowDemo = false,
 }: {
   categories: Category[];
   initialCategory?: string;
   initialDemo?: boolean;
+  /** Administrators only: test with unreviewed demonstration questions. */
+  allowDemo?: boolean;
 }) {
   const router = useRouter();
   const [category, setCategory] = useState(initialCategory);
@@ -50,18 +53,20 @@ export function PracticeStart({
   }
   return (
     <>
-      <div className="admin-note">
-        <label style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }}>
-          <input type="checkbox" checked={demo} onChange={(e) => setDemo(e.target.checked)} /> Use
-          draft demonstration questions
-        </label>
-        <p style={{ marginTop: 10 }}>
-          {demo
-            ? 'Demo mode uses AI-generated, unreviewed questions and is for testing the platform.'
-            : 'Standard practice selects only reviewed, published questions.'}{' '}
-          {total} question{total === 1 ? '' : 's'} available.
-        </p>
-      </div>
+      {allowDemo && (
+        <div className="admin-note">
+          <label style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }}>
+            <input type="checkbox" checked={demo} onChange={(e) => setDemo(e.target.checked)} /> Use
+            draft demonstration questions
+          </label>
+          <p style={{ marginTop: 10 }}>
+            {demo
+              ? 'Demo mode uses AI-generated, unreviewed questions and is for testing the platform.'
+              : 'Standard practice selects only reviewed, published questions.'}{' '}
+            {total} question{total === 1 ? '' : 's'} available.
+          </p>
+        </div>
+      )}
       {error && (
         <div className="error-message" role="alert">
           {error}
@@ -96,7 +101,7 @@ export function PracticeStart({
           {total < 20 && (
             <p className="content-note">
               {total === 0
-                ? 'The published question bank is awaiting editorial review. Enable the draft demo to test the experience.'
+                ? 'No reviewed questions are available yet.'
                 : `This pool contains ${total} questions. Your quiz will be shorter than 20 questions.`}
             </p>
           )}
@@ -123,11 +128,13 @@ export function PracticeStart({
               }}
             >
               <option value="">All topics</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name} ({demo ? c.demo : c.published})
-                </option>
-              ))}
+              {categories
+                .filter((c) => (demo ? c.demo : c.published) > 0)
+                .map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name} ({demo ? c.demo : c.published})
+                  </option>
+                ))}
             </select>
           </label>
           <label className="field">

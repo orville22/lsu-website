@@ -13,6 +13,7 @@
     "db:seed": "node --import tsx prisma/seed.ts",
     "admin:password": "node scripts/password.mjs",
     "db:cleanup": "node --import tsx scripts/cleanup.ts",
+    "db:remove-demo": "node --import tsx scripts/remove-demo-content.ts",
     "test:integration": "node --import tsx scripts/integration.ts",
     "format": "prettier --write src prisma scripts tests docs README.md",
     "format:check": "prettier --check src prisma scripts tests docs README.md"

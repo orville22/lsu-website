@@ -15,14 +15,18 @@ export async function catalog() {
     orderBy: { name: 'asc' },
   });
 }
-export async function lessons() {
+/** Published, reviewed lessons only: everything the public can see. */
+export async function publishedLessons() {
   return db.lesson.findMany({
-    where: {
-      OR: [
-        { status: 'PUBLISHED', reviewedAt: { not: null } },
-        { status: 'DRAFT', isDemo: true },
-      ],
-    },
+    where: { status: 'PUBLISHED', reviewedAt: { not: null } },
+    include: { category: { include: categoryInclude } },
+    orderBy: { updatedAt: 'desc' },
+  });
+}
+/** Unpublished lessons, for administrator previews only. */
+export async function draftLessons() {
+  return db.lesson.findMany({
+    where: { status: { in: ['DRAFT', 'IN_REVIEW'] } },
     include: { category: { include: categoryInclude } },
     orderBy: { updatedAt: 'desc' },
   });
@@ -32,7 +36,7 @@ export function lessonUrl(l: {
   status: string;
   category: { slug: string; discipline: { slug: string } };
 }) {
-  return l.status === 'DRAFT'
-    ? `/demo/learn/${l.slug}`
-    : `/learn/${l.category.discipline.slug}/${l.category.slug}/${l.slug}`;
+  return l.status === 'PUBLISHED'
+    ? `/learn/${l.category.discipline.slug}/${l.category.slug}/${l.slug}`
+    : `/demo/learn/${l.slug}`;
 }

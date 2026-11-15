@@ -1,4 +1,61 @@
-# Question import and export
+# Imports and exports
+
+- [Lesson import (Markdown)](#lesson-import-markdown)
+- [Question import and export (CSV/JSON)](#question-import-and-export)
+
+## Lesson import (Markdown)
+
+Use `/admin` → **Import & export** → **Import a lesson from Markdown**, or **Import from Markdown** on the Lessons tab. Paste the lesson or choose a `.md` file, then **Check & preview**. Nothing is saved until you press **Import as Draft** or **Import and publish**.
+
+Download [`public/lesson-import-template.md`](../public/lesson-import-template.md) for a complete example.
+
+### Front matter
+
+```yaml
+---
+title: Sodium: the story outside the cell   # or use a "# Title" line
+slug: sodium-homeostasis                     # optional; made from the title
+category: electrolytes                       # required: an existing category slug
+subtopic: Sodium physiology                  # optional
+difficulty: intermediate                     # beginner | intermediate | advanced
+length: short                                # short | full (default short)
+description: One or two sentences.           # or the first paragraph under the title
+readingMinutes: 6                            # optional; estimated from word count
+upcoming: no                                 # yes = list title under "Coming next" while a draft
+author: Orville Malijan                      # optional; defaults to the signed-in admin
+---
+```
+
+### Body
+
+| Markdown                                                         | Becomes                            |
+| ---------------------------------------------------------------- | ---------------------------------- |
+| `## Learning objectives` + bullet list                           | Objectives (required)              |
+| `## Key takeaways` + bullet list                                 | Takeaways (required)               |
+| `## References` + numbered list                                  | References, numbered in that order |
+| `## Any other heading` + paragraphs and lists                    | A lesson section                   |
+| `### Sub-heading`                                                | A new block within the section     |
+| `> **Heading**` or `> [!NOTE] Heading` then `> text`             | Callout                            |
+| Pipe table, with `Table: caption` on the line before or after    | Table                              |
+| `$$ … $$` (one or more lines)                                    | Equation (LaTeX)                   |
+| `![description](https://… "caption")` on its own line            | Image (description is required)    |
+| A YouTube link on its own line, or `[Title](https://youtu.be/…)` | Click-to-load video                |
+
+Inline formatting follows the [lesson text format](LAUNCH.md#writing-lesson-text). The importer also converts common export habits: `_italic_`, `__bold__`, `<sup>`/`<sub>`, footnote citations `[^1]`, and wrapped lines within a paragraph.
+
+### References
+
+Write each reference as a Vancouver citation. The importer moves `doi:10.…` or `https://doi.org/10.…`, `PMID: …` and `Available from: https://…` out of the text into linked fields, so they aren't shown twice.
+
+### Checks
+
+Errors block the import: missing title, category, description, objectives, takeaways or content; unknown category; images without a description; and, when publishing, missing review confirmation, missing references or a citation number with no matching reference. Warnings don't block: references never cited, references without a DOI, PMID or link, and tables without captions.
+
+### Updating a lesson
+
+Re-import with the same `slug` and tick **Replace the existing lesson**. The lesson keeps its address and question links, its version number increases and the audit log records the change. To swap a short lesson for the full version, set `length: full` and import with **Publish now** so the page never goes offline; importing over a published lesson as a Draft unpublishes it until you publish again.
+
+## Question import and export
 
 Use `/admin` → **Import & export**. Download `public/question-import-template.csv` from the dashboard, replace the example row, choose a file or paste its contents, then **Validate & preview**. Correct all errors before **Import drafts**. Maximum 500 questions and a 1 MB request; file chooser enforces a 900 KB text limit to leave room for JSON encoding.
 

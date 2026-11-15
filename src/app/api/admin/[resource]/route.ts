@@ -12,6 +12,8 @@ import {
 } from '@/lib/security';
 import { questionSchema, lessonSchema } from '@/lib/validation';
 import { parseImport, normalize } from '@/lib/import';
+import { saveLesson } from '@/lib/lesson-save';
+import { importLesson } from '@/lib/lesson-import-server';
 const json = (v: unknown) => JSON.parse(JSON.stringify(v)) as Prisma.InputJsonValue;
 const idSchema = z.object({ id: z.string().min(1), version: z.number().int().min(1) });
 type Params = { params: Promise<{ resource: string }> };
@@ -101,6 +103,9 @@ export async function POST(req: Request, { params }: Params) {
     await rateLimit('admin', 100, 600, actor);
     const { resource } = await params;
     const body = await readJson(req);
+    if (resource === 'lesson-import') {
+      return Response.json(await importLesson(actor, body));
+    }
     if (resource === 'import') {
       const data = z
         .object({
@@ -261,43 +266,7 @@ export async function POST(req: Request, { params }: Params) {
         });
         return id;
       } else {
-        const data = lessonSchema.parse(body);
-        const { reviewed: _, ...rest } = data;
-        const existing = identifier.id
-          ? await tx.lesson.findUnique({ where: { id: identifier.id } })
-          : null;
-        if (identifier.id && !existing) throw new HttpError(404, 'Lesson not found.');
-        if (existing && existing.version !== identifier.version)
-          throw new HttpError(409, 'This lesson changed. Reload before editing.');
-        const base = {
-          ...rest,
-          blocks: json(rest.blocks),
-          references: json(rest.references),
-          ...review,
-          ...(rest.status === 'PUBLISHED' ? { isDemo: false } : {}),
-        };
-        let id = existing?.id;
-        if (existing) {
-          const changed = await tx.lesson.updateMany({
-            where: { id: existing.id, version: identifier.version },
-            data: { ...base, version: { increment: 1 } },
-          });
-          if (!changed.count)
-            throw new HttpError(409, 'This lesson changed. Reload before editing.');
-        } else {
-          id = (await tx.lesson.create({ data: base })).id;
-        }
-        await tx.auditLog.create({
-          data: {
-            actor,
-            action: existing ? 'UPDATE' : 'CREATE',
-            entity: 'lesson',
-            entityId: id!,
-            before: existing ? json(existing) : undefined,
-            after: json(data),
-          },
-        });
-        return id;
+        return saveLesson(tx, actor, lessonSchema.parse(body), identifier);
       }
     });
     return Response.json({ id: result });

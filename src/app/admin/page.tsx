@@ -4,6 +4,8 @@ import { admin } from '@/lib/security';
 import { db } from '@/lib/db';
 import { AdminLogin, AdminLogout } from '@/components/admin-auth';
 import { ContentEditor } from '@/components/content-editor';
+import { LessonImportPanel } from '@/components/lesson-import-panel';
+import { lessonUrl } from '@/lib/content';
 import { ImportPanel } from '@/components/import-panel';
 import { TaxonomyForm } from '@/components/taxonomy-form';
 export const dynamic = 'force-dynamic';
@@ -97,7 +99,11 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           {tab === 'overview' ? (
             <Overview />
           ) : tab === 'import' ? (
-            <ImportPanel />
+            <>
+              <LessonImportPanel />
+              <h2 style={{ marginTop: 48 }}>Import questions</h2>
+              <ImportPanel />
+            </>
           ) : tab === 'categories' ? (
             <>
               <TaxonomyForm disciplines={disciplines} />
@@ -224,16 +230,21 @@ async function ContentList({
             orderBy: { updatedAt: 'desc' },
             take: 100,
           })
-        ).map((q) => ({ ...q, title: q.text }))
-      : await db.lesson.findMany({
-          where: {
-            ...where,
-            ...(p.q ? { title: { contains: p.q, mode: 'insensitive' as const } } : {}),
-          },
-          include: { category: true },
-          orderBy: { updatedAt: 'desc' },
-          take: 100,
-        });
+        ).map((q) => ({ ...q, title: q.text, viewUrl: null as string | null }))
+      : (
+          await db.lesson.findMany({
+            where: {
+              ...where,
+              ...(p.q ? { title: { contains: p.q, mode: 'insensitive' as const } } : {}),
+            },
+            include: { category: { include: { discipline: true } } },
+            orderBy: { updatedAt: 'desc' },
+            take: 100,
+          })
+        ).map((l) => ({
+          ...l,
+          viewUrl: l.status === 'ARCHIVED' ? null : (lessonUrl(l) as string | null),
+        }));
   return (
     <>
       <div className="section-heading">
@@ -243,9 +254,19 @@ async function ContentList({
           </h2>
           <p className="muted">Search before creating content to detect potential duplicates.</p>
         </div>
-        <Link className="button button-small" href={`/admin?tab=${kind}&edit=new`}>
-          Create {kind === 'questions' ? 'question' : 'lesson'}
-        </Link>
+        <div className="form-actions" style={{ margin: 0 }}>
+          {kind === 'lessons' && (
+            <Link
+              className="button button-outline button-small"
+              href="/admin?tab=import#lesson-import"
+            >
+              Import from Markdown
+            </Link>
+          )}
+          <Link className="button button-small" href={`/admin?tab=${kind}&edit=new`}>
+            Create {kind === 'questions' ? 'question' : 'lesson'}
+          </Link>
+        </div>
       </div>
       <form className="filters">
         <input type="hidden" name="tab" value={kind} />
@@ -315,6 +336,14 @@ async function ContentList({
                   <Link className="text-link" href={`/admin?tab=${kind}&edit=${r.id}`}>
                     Edit →
                   </Link>
+                  {r.viewUrl && (
+                    <>
+                      {' · '}
+                      <Link className="text-link" href={r.viewUrl}>
+                        {r.status === 'PUBLISHED' ? 'View' : 'Preview'}
+                      </Link>
+                    </>
+                  )}
                 </td>
               </tr>
             ))}

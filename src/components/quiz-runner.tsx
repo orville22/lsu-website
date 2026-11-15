@@ -1,4 +1,5 @@
 'use client';
+import { ReferenceList, toReferences } from './reference-list';
 import Link from 'next/link';
 import { readDraft, writeDraft, clearDraft } from '@/lib/browser-storage';
 import { useEffect, useRef, useState } from 'react';
@@ -388,13 +389,7 @@ function QuizResults({ attempt }: { attempt: AttemptView }) {
             ))}
             {q.references.length > 0 && (
               <div className="references">
-                {q.references.map((r) => (
-                  <p key={r.url}>
-                    <a href={r.url} target="_blank" rel="noreferrer">
-                      {r.title}
-                    </a>
-                  </p>
-                ))}
+                <ReferenceList references={toReferences(q.references)} anchors={false} />
               </div>
             )}
           </article>

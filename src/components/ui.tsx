@@ -30,15 +30,56 @@ export function SectionHeading({
     </div>
   );
 }
-export function DraftNotice() {
+export function DraftNotice({ variant = 'demo' }: { variant?: 'demo' | 'preview' }) {
   return (
     <div className="draft-notice" role="note">
       <span className="status-dot" />
+      {variant === 'demo' ? (
+        <span>
+          <strong>Demonstration content.</strong> AI-generated draft awaiting scientific review. For
+          testing the platform; not approved teaching material.
+        </span>
+      ) : (
+        <span>
+          <strong>Unpublished preview.</strong> Only signed-in administrators can see this page.
+        </span>
+      )}
+    </div>
+  );
+}
+export function ShortLessonNotice() {
+  return (
+    <div className="short-notice" role="note">
+      <span className="short-pill">Short lesson</span>
       <span>
-        <strong>Demonstration content.</strong> AI-generated draft awaiting scientific review. For
-        testing the platform; not approved teaching material.
+        This is a concise version covering the essentials. The full lesson is in development and
+        will replace this page when it’s ready.
       </span>
     </div>
+  );
+}
+/** Announced lessons: titles only, never linked, so there are no dead ends. */
+export function UpcomingList({
+  items,
+  showCategory = true,
+}: {
+  items: { id: string; title: string; category: { name: string } }[];
+  showCategory?: boolean;
+}) {
+  if (!items.length) return null;
+  return (
+    <section className="upcoming" aria-labelledby="upcoming-heading">
+      <p className="eyebrow">In development</p>
+      <h2 id="upcoming-heading">Coming next</h2>
+      <ul>
+        {items.map((l) => (
+          <li key={l.id}>
+            <span className="upcoming-title">{l.title}</span>
+            {showCategory && <span className="small-label">{l.category.name}</span>}
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 export function Breadcrumbs({ items }: { items: { label: string; href?: string }[] }) {
@@ -67,6 +108,7 @@ export function LessonCard({
     readingMinutes: number;
     difficulty: string;
     status: string;
+    depth?: string;
     category: { name: string; slug?: string };
     url: string;
   };
@@ -93,7 +135,8 @@ export function LessonCard({
             <Clock3 size={14} />
             {lesson.readingMinutes} min
           </span>
-          {lesson.status === 'DRAFT' && <span className="draft-pill">Draft demo</span>}
+          {lesson.depth === 'SHORT' && <span className="short-pill">Short lesson</span>}
+          {lesson.status !== 'PUBLISHED' && <span className="draft-pill">Unpublished</span>}
         </div>
       </div>
     </Link>

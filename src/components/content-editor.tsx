@@ -23,10 +23,25 @@ type EditorInitial = {
   options?: { text: string; isCorrect: boolean; explanation?: string }[];
   lessonIds?: string[];
   readingMinutes?: number;
+  depth?: string;
+  listAsUpcoming?: boolean;
   objectives?: string[];
   takeaways?: string[];
   blocks?: unknown;
 };
+type RefDraft = { citation: string; doi: string; pmid: string; url: string };
+const blankRef: RefDraft = { citation: '', doi: '', pmid: '', url: '' };
+function toRefDrafts(raw: unknown): RefDraft[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((r: Record<string, unknown>) => ({
+    citation: String(r.citation ?? r.title ?? ''),
+    doi: String(r.doi ?? ''),
+    pmid: String(r.pmid ?? ''),
+    url: String(r.url ?? ''),
+  }));
+}
+const formattingHelp =
+  'Formatting: one paragraph per line · "- " bullets · "1. " numbered list · **bold** · *italic* · H~2~O · Na^+^ · cite references as [1], [1,3] or [2–4] · links as [text](https://…)';
 const emptyBlocks: Block[] = [
   { id: 'principle', type: 'text', heading: 'The principle', text: '' },
 ];
@@ -52,7 +67,10 @@ export function ContentEditor({
       Array.from({ length: 4 }, (_, i) => ({ text: '', isCorrect: i === 0, explanation: '' })),
   );
   const [deleteConfirm, setDeleteConfirm] = useState(false);
-  const [refs, setRefs] = useState(JSON.stringify(initial.references || [], null, 2));
+  const [refs, setRefs] = useState<RefDraft[]>(toRefDrafts(initial.references));
+  function changeRef(index: number, patch: Partial<RefDraft>) {
+    setRefs(refs.map((r, i) => (i === index ? { ...r, ...patch } : r)));
+  }
   const [status, setStatus] = useState(initial.status || 'DRAFT');
   function changeBlock(index: number, patch: Record<string, unknown>) {
     setBlocks(blocks.map((b, i) => (i === index ? ({ ...b, ...patch } as Block) : b)));
@@ -71,7 +89,8 @@ export function ContentEditor({
         difficulty: f.get('difficulty'),
         status,
         author: f.get('author'),
-        references: JSON.parse(refs),
+        // Empty optional fields are dropped by server validation.
+        references: refs.filter((r) => r.citation.trim() || r.doi.trim() || r.url.trim()),
         reviewed: f.get('reviewed') === 'on',
       };
       const body = isQuestion
@@ -92,6 +111,8 @@ export function ContentEditor({
             slug: f.get('slug'),
             description: f.get('description'),
             readingMinutes: Number(f.get('readingMinutes')),
+            depth: f.get('depth'),
+            listAsUpcoming: f.get('listAsUpcoming') === 'on',
             objectives: String(f.get('objectives') || '')
               .split('\n')
               .filter(Boolean),
@@ -181,6 +202,24 @@ export function ContentEditor({
                 defaultValue={initial.readingMinutes || 5}
                 required
               />
+            </label>
+            <label className="field">
+              <span>Lesson length</span>
+              <select name="depth" defaultValue={initial.depth || 'SHORT'}>
+                <option value="SHORT">Short lesson (full version in development)</option>
+                <option value="FULL">Full lesson</option>
+              </select>
+            </label>
+            <label className="field review-check" style={{ alignSelf: 'end' }}>
+              <input
+                type="checkbox"
+                name="listAsUpcoming"
+                defaultChecked={initial.listAsUpcoming}
+              />
+              <span>
+                While unpublished, list this title publicly under “Coming next” (title only, not
+                linked).
+              </span>
             </label>
             <label className="field full-width">
               <span>Description</span>
@@ -346,6 +385,7 @@ export function ContentEditor({
           <p className="count-label">
             Content is rendered safely from structured blocks. Section IDs create anchor links.
           </p>
+          <p className="count-label">{formattingHelp}</p>
           {blocks.map((block, i) => (
             <div className="panel" key={i} style={{ marginBottom: 20 }}>
               <div className="form-grid">
@@ -372,7 +412,7 @@ export function ContentEditor({
                       />
                     </label>
                     <label className="field full-width">
-                      <span>Text (Unicode scientific notation supported)</span>
+                      <span>Text (see formatting guide above)</span>
                       <textarea
                         value={block.text}
                         onChange={(e) => changeBlock(i, { text: e.target.value })}
@@ -528,16 +568,83 @@ export function ContentEditor({
           </label>
         </>
       )}
-      <h2>Scientific references</h2>
-      <label className="field">
-        <span>References as JSON: an array of objects with title and url</span>
-        <textarea
-          className="code"
-          value={refs}
-          onChange={(e) => setRefs(e.target.value)}
-          placeholder={'[{"title":"Verified source title","url":"https://…"}]'}
-        />
-      </label>
+      <h2>References</h2>
+      <p className="count-label">
+        Numbered in this order. Enter each citation in Vancouver style; DOI, PMID and URL become
+        links.{' '}
+        {isQuestion
+          ? ''
+          : 'Cite them in the text as [1], [2] … — publishing checks every citation has a matching reference.'}
+      </p>
+      {refs.map((r, i) => (
+        <div className="panel reference-editor" key={i} style={{ marginBottom: 16 }}>
+          <label className="field full-width">
+            <span>[{i + 1}] Citation (Vancouver)</span>
+            <textarea
+              value={r.citation}
+              rows={2}
+              placeholder="Author AA, Author BB. Title of article. Journal Abbrev. 2020;66(1):12-20."
+              onChange={(e) => changeRef(i, { citation: e.target.value })}
+            />
+          </label>
+          <div className="form-grid">
+            <label className="field">
+              <span>DOI</span>
+              <input
+                value={r.doi}
+                placeholder="10.1093/clinchem/…"
+                onChange={(e) => changeRef(i, { doi: e.target.value })}
+              />
+            </label>
+            <label className="field">
+              <span>PMID</span>
+              <input
+                value={r.pmid}
+                inputMode="numeric"
+                onChange={(e) => changeRef(i, { pmid: e.target.value })}
+              />
+            </label>
+            <label className="field full-width">
+              <span>URL (stable link, if no DOI)</span>
+              <input
+                type="url"
+                value={r.url}
+                onChange={(e) => changeRef(i, { url: e.target.value })}
+              />
+            </label>
+          </div>
+          <div className="form-actions">
+            <button
+              type="button"
+              className="text-link"
+              disabled={i === 0}
+              onClick={() => {
+                const copy = [...refs];
+                [copy[i - 1], copy[i]] = [copy[i], copy[i - 1]];
+                setRefs(copy);
+              }}
+            >
+              Move up
+            </button>
+            <button
+              type="button"
+              className="text-link"
+              onClick={() => setRefs(refs.filter((_, j) => j !== i))}
+            >
+              Remove reference
+            </button>
+          </div>
+        </div>
+      ))}
+      <div className="form-actions">
+        <button
+          type="button"
+          className="button button-outline button-small"
+          onClick={() => setRefs([...refs, { ...blankRef }])}
+        >
+          Add reference
+        </button>
+      </div>
       <label className="review-check">
         <input type="checkbox" name="reviewed" required={status === 'PUBLISHED'} />
         <span>

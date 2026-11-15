@@ -11,6 +11,7 @@ const db = new PrismaClient({
 const origin = 'http://localhost:3100';
 const password = randomBytes(24).toString('hex');
 const salt = randomBytes(16).toString('hex');
+const cronSecret = randomBytes(32).toString('hex');
 const actor = `integration-${randomBytes(5).toString('hex')}`;
 const marker = actor;
 let output = '';
@@ -37,6 +38,7 @@ const server = spawn(
       SITE_URL: origin,
       ADMIN_USERNAME: actor,
       ADMIN_PASSWORD_HASH: `${salt}:${scryptSync(password, salt, 64).toString('hex')}`,
+      CRON_SECRET: cronSecret,
     },
     stdio: ['ignore', 'pipe', 'pipe'],
   },
@@ -99,6 +101,28 @@ try {
     403,
   );
   pass('admin authorisation and cross-origin rejection');
+  {
+    // Launch gating: empty sections stay hidden from visitors, visible to administrators.
+    const publishedQuestions = await db.question.count({
+      where: { status: 'PUBLISHED', reviewedAt: { not: null } },
+    });
+    const home = await (await fetch(origin + '/')).text();
+    assert.ok(!home.includes('href="/admin"'), 'footer must not link to administration');
+    assert.ok(!home.includes('href="/watch"'), 'watch hidden until enabled');
+    assert.ok(!home.includes('href="/cases"'), 'cases hidden until enabled');
+    if (publishedQuestions < 5) {
+      assert.ok(!home.includes('href="/practice"'), 'practice hidden without questions');
+      assert.equal((await fetch(origin + '/practice')).status, 404);
+      assert.equal((await api('/practice', 'GET', undefined, cookie)).status, 200);
+    }
+    for (const page of ['/watch', '/cases', '/cases/a-low-sodium-result']) {
+      assert.equal((await fetch(origin + page)).status, 404, page);
+      assert.equal((await api(page, 'GET', undefined, cookie)).status, 200, page);
+    }
+    const sitemap = await (await fetch(origin + '/sitemap.xml')).text();
+    assert.ok(!sitemap.includes('/watch') && !sitemap.includes('/cases'));
+    pass('empty sections hidden from visitors and previewable by administrators');
+  }
   const discipline = await db.discipline.findUniqueOrThrow({
     where: { slug: 'clinical-chemistry' },
   });
@@ -183,7 +207,171 @@ try {
   const lesson = await okJson(await api('/api/admin/lessons', 'POST', lessonBody, cookie));
   createdLessons.push(lesson.id);
   assert.equal((await api(`/learn/clinical-chemistry/${marker}/${marker}`)).status, 404);
-  pass('lesson management and unpublished route exclusion');
+  assert.equal((await api(`/demo/learn/${marker}`)).status, 404);
+  assert.equal((await api(`/demo/learn/${marker}`, 'GET', undefined, cookie)).status, 200);
+  pass('lesson management, unpublished route exclusion and admin-only preview');
+  {
+    const cited = {
+      ...lessonBody,
+      id: lesson.id,
+      version: 1,
+      depth: 'SHORT',
+      status: 'PUBLISHED',
+      reviewed: true,
+      blocks: [
+        {
+          id: 'section-one',
+          type: 'text',
+          heading: 'Fixture',
+          text: 'Synthetic claim [1].\nSecond claim [2] with **emphasis**.\n- Na^+^ item',
+        },
+      ],
+      references: [
+        {
+          citation: 'Fixture A. Synthetic reference one. Test J. 2020;1:1-2.',
+          doi: 'doi:10.1000/xyz123',
+        },
+      ],
+    };
+    const missing = await api('/api/admin/lessons', 'POST', cited, cookie);
+    assert.equal(missing.status, 400);
+    assert.match(JSON.stringify(await missing.json()), /Citation \[2\]/);
+    await okJson(
+      await api(
+        '/api/admin/lessons',
+        'POST',
+        {
+          ...cited,
+          references: [...cited.references, { citation: 'Fixture B. Two.', pmid: '123' }],
+        },
+        cookie,
+      ),
+    );
+    const page = await api(`/learn/clinical-chemistry/${marker}/${marker}`);
+    assert.equal(page.status, 200);
+    const body = await page.text();
+    for (const expected of [
+      'id="ref-1"',
+      'href="#ref-2"',
+      'https://doi.org/10.1000/xyz123',
+      'pubmed.ncbi.nlm.nih.gov/123/',
+      'Short lesson',
+      '<strong>emphasis</strong>',
+      'Na<sup>+</sup>',
+    ])
+      assert.ok(body.includes(expected), expected);
+    assert.ok(!body.includes('Unpublished preview'));
+    pass('citation gate, short-lesson badge and Vancouver references render');
+  }
+  {
+    // Markdown lesson import: preview, draft, replace-and-publish at the same address.
+    const md = (length: string, extra = '') => `---
+title: ${marker} Imported lesson
+slug: ${marker}-imported
+category: ${marker}
+length: ${length}
+description: A synthetic imported lesson for integration testing.
+---
+
+## Learning objectives
+- Test the importer [1].
+
+## Fixture section
+Synthetic text with **bold** [1].${extra}
+
+## Key takeaways
+- Fixture only.
+
+## References
+1. Fixture A. Synthetic reference. Test J. 2020;1:1-2. doi:10.1000/xyz123
+`;
+    const preview = await okJson(
+      await api('/api/admin/lesson-import', 'POST', { markdown: md('short') }, cookie),
+    );
+    assert.deepEqual(preview.errors, []);
+    assert.equal(preview.summary.existing, null);
+    assert.equal(await db.lesson.count({ where: { slug: `${marker}-imported` } }), 0);
+    const unknown = await okJson(
+      await api(
+        '/api/admin/lesson-import',
+        'POST',
+        { markdown: md('short').replace(`category: ${marker}`, 'category: nope') },
+        cookie,
+      ),
+    );
+    assert.ok(unknown.errors.some((e: string) => /Unknown category/.test(e)));
+    assert.equal(
+      (await api('/api/admin/lesson-import', 'POST', { markdown: md('short') })).status,
+      401,
+    );
+    const draft = await okJson(
+      await api(
+        '/api/admin/lesson-import',
+        'POST',
+        { markdown: md('short'), commit: true },
+        cookie,
+      ),
+    );
+    createdLessons.push(draft.id);
+    assert.equal(draft.status, 'DRAFT');
+    assert.equal(draft.url, `/demo/learn/${marker}-imported`);
+    // Same slug without "replace" is refused; with replace + publish it updates in place.
+    assert.equal(
+      (
+        await api(
+          '/api/admin/lesson-import',
+          'POST',
+          { markdown: md('full'), commit: true },
+          cookie,
+        )
+      ).status,
+      409,
+    );
+    const unreviewed = await api(
+      '/api/admin/lesson-import',
+      'POST',
+      { markdown: md('full'), commit: true, replace: true, publish: true },
+      cookie,
+    );
+    assert.equal(unreviewed.status, 400);
+    const badCite = await api(
+      '/api/admin/lesson-import',
+      'POST',
+      {
+        markdown: md('full', ' Another claim [2].'),
+        commit: true,
+        replace: true,
+        publish: true,
+        reviewed: true,
+      },
+      cookie,
+    );
+    assert.equal(badCite.status, 400);
+    const published = await okJson(
+      await api(
+        '/api/admin/lesson-import',
+        'POST',
+        { markdown: md('full'), commit: true, replace: true, publish: true, reviewed: true },
+        cookie,
+      ),
+    );
+    assert.equal(published.id, draft.id);
+    assert.equal(published.status, 'PUBLISHED');
+    const row = await db.lesson.findUniqueOrThrow({ where: { id: draft.id } });
+    assert.equal(row.depth, 'FULL');
+    assert.equal(row.version, 2);
+    assert.equal(row.isDemo, false);
+    assert.ok(row.reviewedAt);
+    const page = await (await fetch(origin + published.url)).text();
+    assert.ok(page.includes('<strong>bold</strong>') && page.includes('href="#ref-1"'));
+    assert.ok(page.includes('https://doi.org/10.1000/xyz123'));
+    assert.ok(
+      (await db.auditLog.count({
+        where: { entityId: draft.id, action: { startsWith: 'IMPORT' } },
+      })) === 2,
+    );
+    pass('Markdown lesson import: preview, draft, replace-and-publish in place, gates and audit');
+  }
   const startResponse = await api('/api/attempts', 'POST', { categoryId });
   const a = await okJson(startResponse);
   attempts.push(a.id);
@@ -228,13 +416,17 @@ try {
   );
   assert.equal(again.result.percentage, 100);
   pass('server scoring, concurrent and repeated submission idempotency');
-  const demoResponse = await api('/api/attempts', 'POST', { demo: true }, visitor);
+  assert.equal((await api('/api/attempts', 'POST', { demo: true }, visitor)).status, 403);
+  const adminVisitor = `${visitor}; ${cookie}`;
+  const demoResponse = await api('/api/attempts', 'POST', { demo: true }, adminVisitor);
   const demo = await okJson(demoResponse);
   attempts.push(demo.id);
   assert.equal(demo.count, 20);
-  const demoView = await okJson(await api(`/api/attempts/${demo.id}`, 'GET', undefined, visitor));
+  const demoView = await okJson(
+    await api(`/api/attempts/${demo.id}`, 'GET', undefined, adminVisitor),
+  );
   assert.equal(new Set(demoView.questions.map((q: { id: string }) => q.id)).size, 20);
-  pass('20-question draft demo without duplicates');
+  pass('draft demo restricted to administrators; 20 questions without duplicates');
   const csv = readFileSync('public/question-import-template.csv', 'utf8').replace(
     'REPLACE THIS:',
     marker,
@@ -333,13 +525,14 @@ try {
   assert.equal(fullResult.result.correct, 20);
   assert.equal(fullResult.result.percentage, 100);
   pass('20-question reviewed pool, 8/8/4 quotas, safe server rendering and full scoring');
+  {
+    const home = await (await fetch(origin + '/')).text();
+    assert.ok(home.includes('href="/practice"'), 'practice appears once 20 questions are reviewed');
+  }
   for (const page of [
     '/',
     '/learn',
     '/practice',
-    '/cases',
-    '/cases/a-low-sodium-result',
-    '/watch',
     '/privacy',
     '/sitemap.xml',
     '/robots.txt',
@@ -347,6 +540,28 @@ try {
   ])
     assert.equal((await fetch(origin + page)).status, 200, page);
   pass('public routes, sitemap, robots and social image');
+  {
+    const cron = (auth?: string) =>
+      fetch(origin + '/api/cron/cleanup', auth ? { headers: { Authorization: auth } } : {});
+    assert.equal((await cron()).status, 401);
+    assert.equal((await cron('Bearer wrong')).status, 401);
+    const stale = await db.attempt.create({
+      data: {
+        ownerHash: `${marker}-stale`,
+        questionIds: [],
+        snapshot: [],
+        updatedAt: new Date(Date.now() - 400 * 86400000),
+      },
+    });
+    attempts.push(stale.id);
+    const ran = await cron(`Bearer ${cronSecret}`);
+    assert.equal(ran.status, 200);
+    assert.ok((await ran.json()).oldAnonymousAttempts >= 1);
+    assert.equal(await db.attempt.count({ where: { id: stale.id } }), 0);
+    const privacy = await (await fetch(origin + '/privacy')).text();
+    assert.ok(!privacy.includes('TEMPLATE') && privacy.includes('United States'));
+    pass('scheduled retention cleanup is secret-protected and removes stale attempts');
+  }
   console.log(`${checks} database-backed integration checks passed.`);
 } catch (e) {
   console.error(e);

@@ -231,16 +231,6 @@ summary:focus-visible {
 .brand-dot {
   color: var(--brand-tomato);
 }
-.brand-mark {
-  background: var(--brand-cobalt);
-  color: var(--brand-card);
-  border-radius: var(--radius-card);
-  width: 40px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 .main-nav {
   display: flex;
   align-items: center;
@@ -2176,13 +2166,6 @@ th {
   .brand-second {
     font-size: var(--text-body);
   }
-  .brand-mark {
-    width: 33px;
-    height: 37px;
-  }
-  .brand-mark svg {
-    width: 21px;
-  }
   .theme-toggle {
     display: none;
   }
@@ -2722,9 +2705,6 @@ th {
 .hero-copy {
   max-width: 560px;
 }
-.brand-mark svg {
-  stroke-width: 1.7;
-}
 .main-nav a.active {
   text-decoration: underline;
   text-decoration-color: var(--brand-tomato);
@@ -2949,10 +2929,6 @@ th {
   }
   .brand-second {
     font-size: var(--text-brand-mobile);
-  }
-  .brand-mark {
-    width: 36px;
-    height: 40px;
   }
   .main-nav {
     top: 76px;

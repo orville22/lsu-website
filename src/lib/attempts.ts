@@ -39,7 +39,7 @@ export async function createAttempt(
   if (!pool.length)
     throw new HttpError(
       409,
-      'No eligible questions are available for these filters. Try another topic or the labelled draft demo.',
+      'No eligible questions are available for these filters. Try another topic or difficulty.',
     );
   const configured = (name: string, fallback: number) => {
     const n = Number(process.env[name]);

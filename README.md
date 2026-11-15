@@ -68,7 +68,7 @@ For another computer, install Node 22 normally; `.local` is not part of the appl
 
 ## Scientific content and publication
 
-The idempotent seed creates **10 AI-generated draft lessons and 20 draft questions**. It never publishes material and does not overwrite existing records. Draft lessons are visibly labelled previews under `/demo/learn/...`, with `noindex`. The standard question pool is initially empty. Enable **Use draft demonstration questions** in `/practice` to test a 20-question quiz.
+The idempotent seed creates **10 AI-generated draft lessons and 20 draft questions** for local testing. It never publishes material and does not overwrite existing records. Unpublished lessons are previewable at `/demo/learn/...` by signed-in administrators only. The standard question pool is initially empty; signed-in administrators can enable **Use draft demonstration questions** in `/practice` to test a 20-question quiz. Sections without published content are hidden from visitors; see [docs/LAUNCH.md](docs/LAUNCH.md).
 
 In `/admin`, verify content and references, set status to Published, and explicitly confirm scientific review for that save. Publishing records the reviewer/date and removes the demonstration flag. A reviewed published question can then enter standard practice. Published lessons use `/learn/{discipline}/{category}/{lesson}`. Links to lessons that are not eligible at attempt creation are omitted. Missing references block publication. References supplied with a draft are reading suggestions, not a claim that the draft has been verified.
 
@@ -90,8 +90,9 @@ Unit tests do not need a database. Integration tests require the migrated/seeded
 - [Brand guidelines](BRAND_GUIDELINES.md) and [brand verification/screenshots](docs/BRAND_VERIFICATION.md)
 - [Architecture and decisions](docs/ARCHITECTURE.md)
 - [Database migration guide](docs/DATABASE.md)
-- [Import format](docs/IMPORTS.md) and [CSV template](public/question-import-template.csv)
+- [Import formats](docs/IMPORTS.md): [Markdown lesson template](public/lesson-import-template.md) and [question CSV template](public/question-import-template.csv)
 - [Deployment guide](docs/DEPLOYMENT.md)
+- [Public launch: visibility, short lessons, lesson text format and references](docs/LAUNCH.md)
 - [Verification and remaining work](docs/VERIFICATION.md)
 
 ## Deliberate scope limits

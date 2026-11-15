@@ -6,7 +6,8 @@ export type SnapshotQuestion = Candidate & {
   subtopic: string;
   version: number;
   explanation: string;
-  references: { title: string; url: string }[];
+  /** Stored as written at attempt time; may be the legacy { title, url } shape. */
+  references: unknown[];
   options: { id: string; text: string; isCorrect: boolean; explanation: string }[];
   lessons: { title: string; url: string }[];
 };

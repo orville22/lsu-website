@@ -1,5 +1,13 @@
 import { z } from 'zod';
-import { assertOrigin, owner, rateLimit, errorResponse, readJson } from '@/lib/security';
+import {
+  assertOrigin,
+  owner,
+  rateLimit,
+  errorResponse,
+  readJson,
+  admin,
+  HttpError,
+} from '@/lib/security';
 import { createAttempt } from '@/lib/attempts';
 export async function POST(req: Request) {
   try {
@@ -15,6 +23,8 @@ export async function POST(req: Request) {
         demo: z.boolean().optional(),
       })
       .parse(await readJson(req));
+    if (input.demo && !(await admin()))
+      throw new HttpError(403, 'Demonstration questions are available to administrators only.');
     const a = await createAttempt(key, input);
     return Response.json({ id: a.id, count: a.questionIds.length }, { status: 201 });
   } catch (e) {
