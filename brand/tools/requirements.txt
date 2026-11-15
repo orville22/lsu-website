@@ -1,0 +1,5 @@
+fonttools
+brotli
+uharfbuzz
+playwright
+pillow
