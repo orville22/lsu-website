@@ -50,11 +50,6 @@ h3 {
 .brand {
   font-weight: 700;
 }
-.brand-mark {
-  border-radius: 14px 14px 14px 4px;
-  background: var(--scene-blue);
-  box-shadow: 3px 3px 0 var(--brand-mustard);
-}
 .main-nav a {
   transition:
     color var(--motion-fast),
@@ -1254,4 +1249,40 @@ h3 {
 }
 .reference-list li::marker {
   color: var(--muted);
+}
+
+/* ---- Brand kit: Beam logo and lowercase wordmark ---- */
+.brand {
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  gap: var(--space-3);
+}
+.brand-logo-mark {
+  flex-shrink: 0;
+  display: block;
+}
+/* Full stop: tomato on light grounds, mustard on dark (brand rule). */
+.brand-dot {
+  color: var(--brand-tomato);
+}
+.footer-brand .brand-dot {
+  color: var(--brand-tomato);
+}
+:root[data-theme='dark'] .brand-dot {
+  color: var(--brand-mustard);
+}
+.footer-brand {
+  gap: var(--space-3);
+}
+.footer-brand .footer-wordmark {
+  font-weight: 800;
+  font-size: var(--text-body);
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+@media (max-width: 680px) {
+  .brand .brand-logo-mark {
+    width: 41px;
+    height: 37px;
+  }
 }

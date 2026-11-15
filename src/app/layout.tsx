@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowUpRight, FlaskConical } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
+import { BrandMark } from '@/components/brand-mark';
 import { Navigation, type NavLink } from '@/components/navigation';
 import { siteState } from '@/lib/visibility';
 import { siteConfig } from '@/lib/site-config';
@@ -61,7 +62,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <div className="container footer-grid">
             <div>
               <Link href="/" className="footer-brand">
-                <FlaskConical size={23} /> Lab Science Unfiltered<span>.</span>
+                <BrandMark size={34} />
+                <span className="footer-wordmark">
+                  lab science unfiltered<span className="brand-dot">.</span>
+                </span>
               </Link>
               <p>
                 Understand the Science.

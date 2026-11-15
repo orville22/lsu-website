@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { readDraft, writeDraft } from '@/lib/browser-storage';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { ArrowUpRight, Menu, X, Sun, Moon, FlaskConical, Search } from 'lucide-react';
+import { ArrowUpRight, Menu, X, Sun, Moon, Search } from 'lucide-react';
+import { BrandMark } from './brand-mark';
 export type NavLink = { href: string; label: string; external?: boolean };
 export function Navigation({
   links,
@@ -33,9 +34,7 @@ export function Navigation({
     <header className="site-header">
       <div className="container nav-bar">
         <Link href="/" className="brand" aria-label="Lab Science Unfiltered home">
-          <span className="brand-mark">
-            <FlaskConical size={24} />
-          </span>
+          <BrandMark />
           <span>
             lab science
             <span className="brand-second">
