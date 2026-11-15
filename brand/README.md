@@ -24,6 +24,7 @@ The **Beam** mark: a cuvette with a light beam passing straight through it and o
 | `…-one-colour-ink`, `…-one-colour-white` | Single-ink use; glass and beam knocked out |
 | `lsu-wordmark`, `lsu-wordmark-one-line(-reversed)` | Text-only |
 | `youtube-avatar`, `youtube-banner` | Channel art (banner content inside the 1546 × 423 safe area) |
+| `og-image` | Link preview image for the website (1200 × 630) |
 
 Never put the full-colour mark on cobalt: the tile disappears. Use the one-colour white version there.
 
@@ -34,6 +35,7 @@ cd brand
 pip install -r tools/requirements.txt && playwright install chromium
 python3 tools/make_fonts.py          # static instances of the site's Bricolage Grotesque
 python3 tools/build_logos.py logo    # SVGs
+python3 tools/og.py logo             # Open Graph image SVG
 python3 tools/export_png.py          # PNGs and favicon.ico (edit the browser path in the script if needed)
 ```
 

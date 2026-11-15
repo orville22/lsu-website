@@ -97,7 +97,6 @@ made = []
 # Marks
 made.append(save('lsu-mark', 134, 120, beam_mark('a')))
 made.append(save('lsu-mark-flat', 112, 112, beam_mark('b', shadow=None, breakout=False)))
-made.append(save('lsu-mark-on-dark', 134, 120, beam_mark('c', shadow='mustard')))
 made.append(save('lsu-mark-one-colour-ink', 134, 112, beam_mark_onecolour('d', 'ink')))
 made.append(save('lsu-mark-one-colour-white', 134, 112, beam_mark_onecolour('e', '#ffffff')))
 # Horizontal lockups
