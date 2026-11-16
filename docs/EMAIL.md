@@ -32,13 +32,13 @@ Administrators see counts, progress toward the 500-subscriber Phase 1 target, re
 
 5. **Add the environment variables** in Vercel → Settings → Environment Variables (Production):
 
-   | Variable             | Value                                                                                                                              |
-   | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-   | `RESEND_API_KEY`     | The key from step 3                                                                                                                |
-   | `EMAIL_FROM`         | e.g. `Lab Science Unfiltered <updates@labscienceunfiltered.com>` (must use the verified domain)                                    |
-   | `EMAIL_TOKEN_SECRET` | `openssl rand -hex 32`. Set it once: changing it breaks unsubscribe links in emails already sent.                                  |
-   | `SITE_URL`           | Must be `https://labscienceunfiltered.com`. Email links are built from it, and sign-up requests from any other origin are refused. |
-   | `TRUST_PROXY`        | `true` on Vercel, so the per-IP limit counts each visitor separately instead of sharing one bucket.                                |
+   | Variable             | Value                                                                                                                                                                                                              |
+   | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+   | `RESEND_API_KEY`     | The key from step 3                                                                                                                                                                                                |
+   | `EMAIL_FROM`         | e.g. `Lab Science Unfiltered <updates@labscienceunfiltered.com>` (must use the verified domain)                                                                                                                    |
+   | `EMAIL_TOKEN_SECRET` | `openssl rand -hex 32`. Set it once: changing it breaks unsubscribe links in emails already sent.                                                                                                                  |
+   | `SITE_URL`           | Must be the address visitors actually land on: `https://www.labscienceunfiltered.com` (the bare domain redirects to `www`). Email links are built from it, and sign-up requests from any other origin are refused. |
+   | `TRUST_PROXY`        | `true` on Vercel, so the per-IP limit counts each visitor separately instead of sharing one bucket.                                                                                                                |
 
 6. **Redeploy**, then sign up with your own address and check: the confirmation email arrives (not in spam), the button confirms, Admin → Subscribers shows you, and the unsubscribe link works.
 
