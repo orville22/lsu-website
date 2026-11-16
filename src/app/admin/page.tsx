@@ -28,7 +28,9 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       </div>
     );
   const p = await searchParams;
-  const tab = ['questions', 'lessons', 'import', 'categories', 'audit'].includes(p.tab || '')
+  const tab = ['questions', 'lessons', 'import', 'categories', 'subscribers', 'audit'].includes(
+    p.tab || '',
+  )
     ? p.tab!
     : 'overview';
   const [categories, lessonOptions, disciplines] = await Promise.all([
@@ -82,6 +84,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           ['lessons', 'Lessons'],
           ['import', 'Import & export'],
           ['categories', 'Categories'],
+          ['subscribers', 'Subscribers'],
           ['audit', 'Audit history'],
         ].map(([id, label]) => (
           <Link href={`/admin?tab=${id}`} className={tab === id ? 'active' : ''} key={id}>
@@ -128,6 +131,8 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                 </table>
               </div>
             </>
+          ) : tab === 'subscribers' ? (
+            <Subscribers />
           ) : tab === 'audit' ? (
             <Audit />
           ) : (
@@ -136,6 +141,63 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         </>
       )}
     </div>
+  );
+}
+async function Subscribers() {
+  const [counts, recent] = await Promise.all([
+    db.subscriber.groupBy({ by: ['status'], _count: { _all: true } }),
+    db.subscriber.findMany({
+      where: { status: 'CONFIRMED' },
+      orderBy: { confirmedAt: 'desc' },
+      take: 25,
+      select: { id: true, email: true, source: true, confirmedAt: true },
+    }),
+  ]);
+  const count = (status: string) => counts.find((c) => c.status === status)?._count._all ?? 0;
+  return (
+    <>
+      <div className="stats-grid">
+        {[
+          ['Confirmed', count('CONFIRMED')],
+          ['Awaiting confirmation', count('PENDING')],
+          ['Unsubscribed (kept 30 days)', count('UNSUBSCRIBED')],
+          [
+            'Phase 1 target',
+            `${Math.min(100, Math.round((count('CONFIRMED') / 500) * 100))}% of 500`,
+          ],
+        ].map(([label, value]) => (
+          <div className="stat" key={label}>
+            <span>{label}</span>
+            <strong>{value}</strong>
+          </div>
+        ))}
+      </div>
+      <div className="form-actions">
+        <a className="button" href="/api/admin/subscribers?format=csv">
+          Export confirmed subscribers (CSV)
+        </a>
+      </div>
+      <div className="admin-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Signed up from</th>
+              <th>Confirmed</th>
+            </tr>
+          </thead>
+          <tbody>
+            {recent.map((r) => (
+              <tr key={r.id}>
+                <td>{r.email}</td>
+                <td>{r.source || '—'}</td>
+                <td>{r.confirmedAt?.toISOString().slice(0, 10)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 }
 async function Overview() {

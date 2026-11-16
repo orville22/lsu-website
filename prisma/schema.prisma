@@ -147,3 +147,29 @@ model RateLimit {
   count Int @default(1)
   expiresAt DateTime
 }
+enum SubscriberStatus {
+  PENDING
+  CONFIRMED
+  UNSUBSCRIBED
+}
+/// Email-update subscribers. Double opt-in: a row counts only once CONFIRMED.
+/// No IP address or browser data is stored (see the privacy page).
+model Subscriber {
+  id String @id @default(cuid())
+  /// Trimmed and lower-cased.
+  email String @unique
+  status SubscriberStatus @default(PENDING)
+  /// Where the form was submitted, e.g. "home" or "lesson:<slug>".
+  source String @default("")
+  /// Exact consent statement shown next to the form when the person signed up.
+  consentText String @default("")
+  /// SHA-256 of the single-use confirmation token. Cleared once confirmed.
+  confirmTokenHash String? @unique
+  confirmExpiresAt DateTime?
+  confirmSentAt DateTime?
+  confirmedAt DateTime?
+  unsubscribedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([status, updatedAt])
+}

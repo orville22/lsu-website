@@ -50,6 +50,15 @@ export default function Privacy() {
         you save or submit.
       </p>
       <p>
+        <strong>Email updates (optional).</strong> If you sign up for email updates, we store your
+        email address, the page you signed up from, the consent statement shown with the form, and
+        when you signed up, confirmed or unsubscribed. We send a confirmation email first, and your
+        address is added to the list only after you click its link. We use it only to email you
+        about new lessons and occasional site updates. We don’t sell or share it, and we don’t track
+        whether you open our emails. Every email has an unsubscribe link, which takes effect
+        straight away.
+      </p>
+      <p>
         <strong>Preventing abuse.</strong> To limit automated misuse, the site keeps short-lived
         request counters. These are stored as keyed hashes, reset within an hour and are then
         deleted. The site does not store your IP address in its database.
@@ -67,14 +76,20 @@ export default function Privacy() {
 
       <h2>Where it is stored</h2>
       <p>
-        The site is hosted by Vercel and its database by Neon. Both currently run in the United
-        States, so the information described above is stored and processed outside Australia.
+        The site is hosted by Vercel and its database by Neon. Emails are sent through Resend, which
+        receives your address and the message content in order to deliver each email. All three
+        currently run in the United States, so the information described above is stored and
+        processed outside Australia.
       </p>
 
       <h2>How long we keep it</h2>
       <ul>
         <li>Quiz attempts are deleted automatically 30 days after they were last used.</li>
         <li>Request counters and expired administrator sessions are deleted automatically.</li>
+        <li>
+          Your email address is kept while you are subscribed. Sign-ups that are never confirmed,
+          and addresses that unsubscribe, are deleted automatically after 30 days.
+        </li>
         <li>Information in your browser stays until you clear your cookies and site data.</li>
       </ul>
 
@@ -94,15 +109,16 @@ export default function Privacy() {
 
       <h2>Your choices</h2>
       <p>
-        Clearing cookies and site data for this website removes the quiz identifier and anything
-        saved in your browser. Because quiz records are stored only against a hashed identifier, we
-        can’t link them to you, and they are deleted automatically after 30 days. If you have a
-        question, a concern or a request, use the {contact}.
+        You can unsubscribe from email updates using the link in any email we send. Clearing cookies
+        and site data for this website removes the quiz identifier and anything saved in your
+        browser. Because quiz records are stored only against a hashed identifier, we can’t link
+        them to you, and they are deleted automatically after 30 days. If you have a question, a
+        concern or a request, use the {contact}.
       </p>
       <p>
-        We aim to handle personal information in line with the Australian Privacy Principles. If the
-        site starts collecting anything new, such as accounts or email sign-up, this page will be
-        updated first and the date above will change.
+        We aim to handle personal information in line with the Australian Privacy Principles, and to
+        send email only in line with the Spam Act 2003. If the site starts collecting anything new,
+        such as accounts, this page will be updated first and the date above will change.
       </p>
     </div>
   );

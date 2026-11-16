@@ -45,4 +45,4 @@ Run database-backed integration tests against a disposable staging database befo
 
 Administrator sessions last eight hours. To revoke all active sessions, remove AdminSession records via a controlled database operation; changing the password hash alone does not revoke existing sessions. A multi-admin identity provider with MFA can replace the single-admin mechanism later.
 
-No third-party analytics, marketing cookies, learner emails or patient data collection are implemented. If those are added, revise the privacy policy and data model accordingly. The project has no dependency on the founder’s personal website beyond external portfolio links.
+No third-party analytics, marketing cookies or patient data collection are implemented. Optional email sign-up (double opt-in, through Resend) is described in [EMAIL.md](EMAIL.md). If anything else is added, revise the privacy policy and data model accordingly. The project has no dependency on the founder’s personal website beyond external portfolio links.

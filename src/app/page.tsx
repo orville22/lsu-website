@@ -16,6 +16,7 @@ import { publishedLessons, lessonUrl } from '@/lib/content';
 import { siteState, upcomingLessons } from '@/lib/visibility';
 import { categoryDefinitions } from '@/lib/catalog';
 import { UpcomingList } from '@/components/ui';
+import { SubscribeCallout } from '@/components/subscribe-callout';
 export const dynamic = 'force-dynamic';
 export default async function Home() {
   const [state, items, upcoming] = await Promise.all([
@@ -235,6 +236,9 @@ export default async function Home() {
           )}
         </section>
       )}
+      <div className="container">
+        <SubscribeCallout source="home" />
+      </div>
       <section id="about" className="about-section">
         <div className="container about-grid">
           <MascotArtwork moment="welcome" />
