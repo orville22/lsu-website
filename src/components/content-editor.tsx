@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { Block } from '@/lib/validation';
+import { interactiveKeys, type InteractiveKey } from '@/lib/interactive-keys';
 type Category = { id: string; name: string };
 type LinkedLesson = { id: string; title: string };
 type EditorInitial = {
@@ -473,6 +474,30 @@ export function ContentEditor({
                     </label>
                   </>
                 )}
+                {block.type === 'interactive' && (
+                  <>
+                    <label className="field">
+                      <span>Illustration or interactive</span>
+                      <select
+                        value={block.name}
+                        onChange={(e) => changeBlock(i, { name: e.target.value as InteractiveKey })}
+                      >
+                        {interactiveKeys.map((k) => (
+                          <option key={k} value={k}>
+                            {k}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <label className="field">
+                      <span>Caption</span>
+                      <input
+                        value={block.caption}
+                        onChange={(e) => changeBlock(i, { caption: e.target.value })}
+                      />
+                    </label>
+                  </>
+                )}
                 {block.type === 'table' && (
                   <>
                     <label className="field full-width">
@@ -540,6 +565,11 @@ export function ContentEditor({
                   setBlocks([...blocks, { id, type: 'image', url: '', alt: '', caption: '' }]);
                 if (t === 'video')
                   setBlocks([...blocks, { id, type: 'video', youtubeId: '', title: '' }]);
+                if (t === 'interactive')
+                  setBlocks([
+                    ...blocks,
+                    { id, type: 'interactive', name: interactiveKeys[0], caption: '' },
+                  ]);
                 if (t === 'table')
                   setBlocks([
                     ...blocks,
@@ -560,6 +590,7 @@ export function ContentEditor({
               <option value="table">Data table</option>
               <option value="image">Image or diagram</option>
               <option value="video">YouTube video</option>
+              <option value="interactive">Illustration or interactive</option>
             </select>
           </label>
           <label className="field">

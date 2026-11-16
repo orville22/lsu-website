@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { interactiveKeys } from './interactive-keys';
 export const statusSchema = z.enum(['DRAFT', 'IN_REVIEW', 'PUBLISHED', 'ARCHIVED']);
 export const difficultySchema = z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']);
 export const safeUrl = z
@@ -94,6 +95,12 @@ export const blockSchema = z.discriminatedUnion('type', [
     youtubeId: z.string().regex(/^[a-zA-Z0-9_-]{11}$/),
     title: z.string().min(1).max(300),
   }),
+  z.object({
+    ...blockBase,
+    type: z.literal('interactive'),
+    name: z.enum(interactiveKeys),
+    caption: z.string().max(500).default(''),
+  }),
 ]);
 const common = {
   categoryId: z.string().min(1),
@@ -187,7 +194,7 @@ export function lessonCitations(l: {
   for (const b of l.blocks) {
     if (b.type === 'text' || b.type === 'callout') texts.push(b.text);
     if (b.type === 'table') texts.push(b.caption, ...b.rows.flat());
-    if (b.type === 'image') texts.push(b.caption);
+    if (b.type === 'image' || b.type === 'interactive') texts.push(b.caption);
   }
   return texts.flatMap(citedNumbers);
 }

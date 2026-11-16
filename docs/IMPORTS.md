@@ -28,18 +28,38 @@ author: Orville Malijan                      # optional; defaults to the signed-
 
 ### Body
 
-| Markdown                                                         | Becomes                            |
-| ---------------------------------------------------------------- | ---------------------------------- |
-| `## Learning objectives` + bullet list                           | Objectives (required)              |
-| `## Key takeaways` + bullet list                                 | Takeaways (required)               |
-| `## References` + numbered list                                  | References, numbered in that order |
-| `## Any other heading` + paragraphs and lists                    | A lesson section                   |
-| `### Sub-heading`                                                | A new block within the section     |
-| `> **Heading**` or `> [!NOTE] Heading` then `> text`             | Callout                            |
-| Pipe table, with `Table: caption` on the line before or after    | Table                              |
-| `$$ … $$` (one or more lines)                                    | Equation (LaTeX)                   |
-| `![description](https://… "caption")` on its own line            | Image (description is required)    |
-| A YouTube link on its own line, or `[Title](https://youtu.be/…)` | Click-to-load video                |
+| Markdown                                                         | Becomes                              |
+| ---------------------------------------------------------------- | ------------------------------------ |
+| `## Learning objectives` + bullet list                           | Objectives (required)                |
+| `## Key takeaways` + bullet list                                 | Takeaways (required)                 |
+| `## References` + numbered list                                  | References, numbered in that order   |
+| `## Any other heading` + paragraphs and lists                    | A lesson section                     |
+| `### Sub-heading`                                                | A new block within the section       |
+| `> **Heading**` or `> [!NOTE] Heading` then `> text`             | Callout                              |
+| Pipe table, with `Table: caption` on the line before or after    | Table                                |
+| `$$ … $$` (one or more lines)                                    | Equation (LaTeX)                     |
+| `![description](https://… "caption")` on its own line            | Image (description is required)      |
+| A YouTube link on its own line, or `[Title](https://youtu.be/…)` | Click-to-load video                  |
+| `@interactive(key "Caption")` on its own line                    | Built-in illustration or interactive |
+
+### Illustrations and interactives
+
+Lesson diagrams and interactives are built into the site as components (`src/components/interactives`), so they follow the site's colours, fonts, dark mode and phone layout. Embed one with a line such as `@interactive(c1-1-normal-physiology "C1.1 interactive I2 · the two systems in normal physiology")`. The caption is optional and may carry citations. An unknown key blocks the import and the error lists the known keys. Current keys are in `src/lib/interactive-keys.ts`:
+
+| Key                       | Lesson | What it is                                            |
+| ------------------------- | ------ | ----------------------------------------------------- |
+| `c1-1-concentration`      | C1.1   | I1: amount versus concentration (sliders and presets) |
+| `c1-1-compartments`       | C1.1   | Visual 2: where water, sodium and potassium live      |
+| `c1-1-two-systems`        | C1.1   | Visual 3: the two control systems                     |
+| `c1-1-adh-switch`         | C1.1   | Visual 4: the ADH switch (draggable osmolality)       |
+| `c1-1-jg-triggers`        | C1.1   | What switches on renin release                        |
+| `c1-1-raas-cascade`       | C1.1   | Visual 5: the RAAS cascade                            |
+| `c1-1-normal-physiology`  | C1.1   | I2: both systems in a healthy person                  |
+| `c1-1-adh-switch-patient` | C1.1   | Visual 6: the ADH switch applied to the case patient  |
+| `c1-1-heart-failure`      | C1.1   | Visual 7: why heart failure lowers sodium             |
+| `c1-1-spot-urine`         | C1.1   | Visual 8: reading the spot urine                      |
+
+To add one: write the component under `src/components/interactives/<lesson>/`, register it in `src/components/interactives/index.tsx` and add its key to `src/lib/interactive-keys.ts`. The test in `tests/interactives.test.tsx` renders every registered key.
 
 Inline formatting follows the [lesson text format](LAUNCH.md#writing-lesson-text). The importer also converts common export habits: `_italic_`, `__bold__`, `<sup>`/`<sub>`, footnote citations `[^1]`, and wrapped lines within a paragraph.
 

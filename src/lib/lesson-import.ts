@@ -7,6 +7,7 @@
  */
 import type { Block, Reference } from './validation';
 import { citedNumbers } from './validation';
+import { interactiveKeys, isInteractiveKey } from './interactive-keys';
 
 export type ParsedLesson = {
   title: string;
@@ -358,6 +359,24 @@ export function parseLessonMarkdown(src: string, defaults: { author?: string } =
         });
         continue;
       }
+      // Illustration or interactive on its own line: @interactive(key "Caption")
+      const ix = /^@interactive\(\s*([a-z0-9-]+)\s*(?:"([^"]*)")?\s*\)$/.exec(t);
+      if (ix) {
+        flushProse();
+        if (!isInteractiveKey(ix[1])) {
+          errors.push(
+            `Unknown interactive “${ix[1]}” in “${s.heading}”. Known: ${interactiveKeys.join(', ')}.`,
+          );
+          continue;
+        }
+        blocks.push({
+          id: uniqueId(`${s.heading} ${ix[1]}`),
+          type: 'interactive',
+          name: ix[1],
+          caption: normaliseInline(ix[2] || ''),
+        });
+        continue;
+      }
       if (/^#{3,}\s/.test(t)) {
         // Sub-headings start a new text block within the section
         flushProse();
@@ -429,7 +448,7 @@ export function parseLessonMarkdown(src: string, defaults: { author?: string } =
         ? [b.text]
         : b.type === 'table'
           ? [b.caption, ...b.rows.flat()]
-          : b.type === 'image'
+          : b.type === 'image' || b.type === 'interactive'
             ? [b.caption]
             : [],
     ),
