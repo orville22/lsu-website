@@ -40,27 +40,36 @@ export function TopicArt({ kind, className = '' }: { kind: TopicArtwork; classNa
       )}
       {kind === 'ions' && (
         <>
-          <path
-            d="M79 58 155 36 229 93 162 145 79 58Z"
-            stroke="var(--art-paper)"
-            strokeWidth="9"
-            strokeLinejoin="round"
-            opacity=".7"
-          />
-          <circle cx="79" cy="58" r="34" fill="var(--art-orange)" />
-          <circle cx="155" cy="36" r="24" fill="var(--art-pink)" />
-          <circle cx="229" cy="93" r="31" fill="var(--art-yellow)" />
-          <circle cx="162" cy="145" r="29" fill="var(--art-paper)" />
-          <g fill="var(--art-ink)" fontSize="22" fontWeight="600" textAnchor="middle">
-            <text x="79" y="66">
+          {/* Free ions in water: no bonds between them. Sizes follow ionic radius
+              (Na⁺ < K⁺ < Cl⁻); dashed rings are hydration shells. */}
+          <g stroke="var(--art-paper)" strokeWidth="2" strokeDasharray="4 6" opacity=".55">
+            <circle cx="92" cy="104" r="45" />
+            <circle cx="172" cy="56" r="34" />
+            <circle cx="232" cy="118" r="40" />
+          </g>
+          <circle cx="92" cy="104" r="34" fill="var(--art-pink)" />
+          <circle cx="172" cy="56" r="23" fill="var(--art-orange)" />
+          <circle cx="232" cy="118" r="29" fill="var(--art-yellow)" />
+          {/* A water molecule: bent, about 104.5° between the two O–H bonds. */}
+          <g fill="var(--art-paper)" stroke="var(--art-paper)" strokeWidth="3">
+            <path d="M166 138 153.5 148M166 138 178.5 148" />
+            <circle cx="166" cy="138" r="10" stroke="none" />
+            <circle cx="153.5" cy="148" r="5" stroke="none" />
+            <circle cx="178.5" cy="148" r="5" stroke="none" />
+          </g>
+          <g fill="var(--art-ink)" fontWeight="600" textAnchor="middle">
+            <text x="92" y="112" fontSize="22">
+              Cl⁻
+            </text>
+            <text x="172" y="63" fontSize="18">
               Na⁺
             </text>
-            <text x="230" y="101">
+            <text x="233" y="126" fontSize="21">
               K⁺
             </text>
           </g>
           <path
-            d="M40 133h20m-10-10v20"
+            d="M34 46h20m-10-10v20"
             stroke="var(--art-paper)"
             strokeWidth="3"
             strokeLinecap="round"
