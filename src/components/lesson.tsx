@@ -12,6 +12,7 @@ import { Interactive } from './interactives';
 import { lessonPresentation } from '@/lib/topic-presentation';
 import { TopicArt } from './brand/topic-art';
 import { MascotArtwork } from './brand/mascot-artwork';
+import { SubscribeCallout } from './subscribe-callout';
 import { ArrowUpRight } from 'lucide-react';
 import { z } from 'zod';
 export async function Lesson({
@@ -194,6 +195,14 @@ export async function Lesson({
                 Practise this topic <ArrowUpRight size={16} />
               </Link>
             </section>
+          )}
+          {!preview && (
+            <SubscribeCallout
+              source={`lesson:${lesson.slug}`}
+              variant="lesson"
+              title="Want the next lesson?"
+              description="Get one short email when a new lesson is published. No spam, and you can leave whenever you like."
+            />
           )}
           <section id="references" className="references">
             <h2>References</h2>

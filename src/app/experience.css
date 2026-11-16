@@ -1286,3 +1286,106 @@ h3 {
     height: 37px;
   }
 }
+
+/* Email sign-up (src/components/subscribe*.tsx) */
+.subscribe-callout {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: var(--space-8);
+  align-items: center;
+  background: var(--soft-mustard);
+  border: 1px solid var(--line);
+  border-radius: var(--section-radius, 24px);
+  padding: var(--space-10, 40px);
+  box-shadow: 0 2px 0 var(--brand-shadow, #ddcfb4);
+}
+.subscribe-callout-section {
+  margin-block: var(--space-12);
+}
+.subscribe-callout h2 {
+  font-size: clamp(1.7rem, 2.6vw, 2.3rem);
+  font-weight: 650;
+  line-height: 1.1;
+  margin: var(--space-2) 0 var(--space-3);
+}
+.subscribe-description {
+  color: var(--muted);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  margin: 0;
+}
+.subscribe-callout-lesson {
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+  margin-top: var(--space-8);
+  padding: var(--space-6);
+  border-radius: 20px;
+}
+.subscribe-callout-lesson h2 {
+  font-size: var(--text-subheading);
+}
+.subscribe-row {
+  display: flex;
+  gap: var(--space-3);
+  align-items: stretch;
+}
+.subscribe-row .field {
+  flex: 1;
+}
+.subscribe-row .button {
+  flex-shrink: 0;
+}
+.subscribe-consent {
+  font-size: var(--text-small);
+  color: var(--muted);
+  line-height: 1.5;
+  margin: var(--space-3) 0 0;
+}
+.subscribe-trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.subscribe-done {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  padding: var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--success);
+  border-radius: var(--radius-control);
+  color: var(--ink);
+}
+.subscribe-done svg {
+  color: var(--success);
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.subscribe-done p {
+  margin: var(--space-1) 0 0;
+  color: var(--muted);
+  font-size: var(--text-caption);
+}
+.subscribe-page {
+  max-width: 560px;
+  padding-block: var(--space-12);
+}
+.subscribe-page .button {
+  margin-top: var(--space-4);
+}
+@media (max-width: 900px) {
+  .subscribe-callout {
+    grid-template-columns: 1fr;
+    padding: var(--space-6);
+  }
+}
+@media (max-width: 520px) {
+  .subscribe-row {
+    flex-direction: column;
+  }
+}
+.subscribe-page h1 {
+  margin: var(--space-2) 0 var(--space-4);
+}

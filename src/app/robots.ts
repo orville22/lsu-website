@@ -4,7 +4,14 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/admin', '/api/', '/demo/', '/practice/', '/cases/a-low-sodium-result'],
+      disallow: [
+        '/admin',
+        '/api/',
+        '/subscribe/',
+        '/demo/',
+        '/practice/',
+        '/cases/a-low-sodium-result',
+      ],
     },
     sitemap: `${process.env.SITE_URL || 'http://localhost:3000'}/sitemap.xml`,
   };

@@ -57,6 +57,8 @@ References are numbered in the order listed. Each has a Vancouver-formatted **ci
 DATABASE_URL="<Neon unpooled URL>" npm run db:migrate
 ```
 
+`20261117000000_email_subscribers` adds the `Subscriber` table for email sign-up. It only creates a new table, so apply it **before** deploying the code that uses it (the daily cleanup reads this table). Setup steps are in [EMAIL.md](EMAIL.md).
+
 ## Go-live checklist
 
 1. Apply pending migrations to Neon (unpooled connection): `npm run db:migrate`.
