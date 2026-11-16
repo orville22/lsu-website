@@ -1,6 +1,6 @@
 # Deployment guide
 
-Production is hosted at **https://lsu-website.vercel.app** on Vercel, connected to the `orville22/lsu-website` GitHub repository. The `lsu-postgres` database uses the Neon Free plan in the same region as the Vercel functions (`iad1`). It is connected to Production only; Preview deployments need a separate database configuration.
+Production is hosted at **https://www.labscienceunfiltered.com** (registered at Namecheap; the apex domain redirects to www; https://lsu-website.vercel.app remains the Vercel address) on Vercel, connected to the `orville22/lsu-website` GitHub repository. The `lsu-postgres` database uses the Neon Free plan in the same region as the Vercel functions (`iad1`). It is connected to Production only; Preview deployments need a separate database configuration.
 
 Vercel stores `DATABASE_URL`, the provider connection variables, `SITE_URL`, and `SESSION_SECRET` as production environment variables. Administrator credentials remain unconfigured, so admin sign-in is disabled. The initial migration and draft-only seed were applied during the first database-backed release on 14 November 2026. No scientific content was published.
 
