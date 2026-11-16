@@ -2,6 +2,7 @@
 @import 'katex/dist/katex.min.css';
 @import './brand-fonts.css';
 @import './design-tokens.css';
+@import './interactives.css';
 * {
   box-sizing: border-box;
 }

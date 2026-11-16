@@ -40,6 +40,8 @@ $$ \text{Anion gap} = \text{Na}^+ - (\text{Cl}^- + \text{HCO}_3^-) $$
 
 [Video title](https://www.youtube.com/watch?v=xxxxxxxxxxx)
 
+@interactive(c1-1-concentration "Optional caption for a built-in illustration or interactive")
+
 ## Key takeaways
 
 - The single most important point.

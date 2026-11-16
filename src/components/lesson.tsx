@@ -8,6 +8,7 @@ import { RichText, InlineText } from './rich-text';
 import { ReferenceList, toReferences } from './reference-list';
 import { siteState } from '@/lib/visibility';
 import { Video } from './video';
+import { Interactive } from './interactives';
 import { lessonPresentation } from '@/lib/topic-presentation';
 import { TopicArt } from './brand/topic-art';
 import { MascotArtwork } from './brand/mascot-artwork';
@@ -164,6 +165,8 @@ export async function Lesson({
                 </figure>
               ) : b.type === 'video' ? (
                 <Video id={b.youtubeId} title={b.title} />
+              ) : b.type === 'interactive' ? (
+                <Interactive name={b.name} caption={b.caption} />
               ) : null}
             </section>
           ))}
