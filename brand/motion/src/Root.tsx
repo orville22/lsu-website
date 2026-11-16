@@ -48,7 +48,7 @@ export const Root: React.FC = () => (
       component={EndCard}
       durationInFrames={20 * FPS}
       {...HD}
-      defaultProps={{ heading: 'Keep asking “but why?”', url: 'lsu-website.vercel.app', guides: false }}
+      defaultProps={{ heading: 'Keep asking “but why?”', url: 'labscienceunfiltered.com', guides: false }}
     />
     <Folder name="Previews">
       <Composition
