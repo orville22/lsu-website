@@ -13,7 +13,7 @@ export const siteConfig = {
   /** Turn on once the first video is published. */
   watchEnabled: false,
   /** Public YouTube channel URL, shown in the navigation and footer when set. */
-  youtubeUrl: null as string | null,
+  youtubeUrl: 'https://www.youtube.com/@labscienceunfiltered' as string | null,
   /** Where visitors contact LSU (privacy requests, corrections). Shown in the footer and privacy page. */
   contactUrl: 'https://orvillemalijan.com',
   /** Date the privacy page last changed in substance. */
