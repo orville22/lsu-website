@@ -36,6 +36,7 @@ pip install -r tools/requirements.txt && playwright install chromium
 python3 tools/make_fonts.py          # static instances of the site's Bricolage Grotesque
 python3 tools/build_logos.py logo    # SVGs
 python3 tools/og.py logo             # Open Graph image SVG
+python3 tools/banner.py logo         # YouTube banner SVG
 python3 tools/export_png.py          # PNGs and favicon.ico (edit the browser path in the script if needed)
 ```
 
