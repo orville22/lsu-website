@@ -30,10 +30,17 @@ const SOLUTES = [
   },
   {
     key: 'glu',
-    label: 'Glucose',
+    label: 'Glucose, no insulin',
     effective: true,
     colour: 'var(--ix-solid-green)',
-    text: 'Glucose mostly stays outside cells too, so it pulls water out just as sodium does.',
+    text: 'Without insulin, glucose can’t get into cells such as muscle and fat, so it stays outside and pulls water out just as sodium does. This is what happens in uncontrolled diabetes.',
+  },
+  {
+    key: 'gluIns',
+    label: 'Glucose, with insulin',
+    effective: false,
+    colour: 'var(--ix-solid-green)',
+    text: 'With insulin working, glucose moves into cells and is used, so it doesn’t stay outside to pull water out. Simplified: some cells, such as brain cells, take up glucose without insulin.',
   },
   {
     key: 'urea',

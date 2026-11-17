@@ -19,9 +19,10 @@ test('every registered key has a component that renders', () => {
     // Marker ids must be unique within the page fragment.
     const ids = [...html.matchAll(/<marker id="([^"]+)"/g)].map((m) => m[1]);
     assert.equal(new Set(ids).size, ids.length, `${k} marker ids`);
-    // Every url(#…) reference resolves to a marker in the same fragment.
+    // Every url(#…) reference resolves to a marker or gradient in the same fragment.
+    const all = [...html.matchAll(/ id="([^"]+)"/g)].map((m) => m[1]);
     for (const m of html.matchAll(/url\(#([^)]+)\)/g))
-      assert.ok(ids.includes(m[1]), `${k} ${m[1]}`);
+      assert.ok(all.includes(m[1]), `${k} ${m[1]}`);
   }
 });
 

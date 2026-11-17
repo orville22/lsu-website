@@ -61,6 +61,12 @@ Lesson diagrams and interactives are built into the site as components (`src/com
 | `c1-2-cell-tonicity`      | C1.2   | I2: effective and ineffective osmoles (a cell)        |
 | `c1-2-gap-builder`        | C1.2   | I1: the gap builder (presets, sliders, factor)        |
 | `c1-2-gap-time-course`    | C1.2   | Visual 2: osmolal gap and anion gap over time         |
+| `c1-1-adh-water`          | C1.1   | How ADH gets water back (3-step, animated)            |
+| `c1-1-water-follows-sodium` | C1.1 | Water follows sodium (4-step, animated)               |
+| `c1-1-cell-volume`        | C1.1   | Cells swell and shrink (three panels)                 |
+| `c1-1-underfilled-arteries` | C1.1 | Heart failure: full tissues, underfilled arteries     |
+| `c1-2-plasma-litre`       | C1.2   | A litre of plasma: indirect vs direct ISE (toggle)    |
+| `c1-2-freezing-curve`     | C1.2   | The osmometer freezing curve (3-step, animated)       |
 
 To add one: write the component under `src/components/interactives/<lesson>/`, register it in `src/components/interactives/index.tsx` and add its key to `src/lib/interactive-keys.ts`. The test in `tests/interactives.test.tsx` renders every registered key.
 
