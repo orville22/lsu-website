@@ -1,0 +1,1148 @@
+[
+ {
+  "text": "What does a serum sodium result describe?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "BEGINNER",
+  "tags": [
+   "c1-1",
+   "core",
+   "sodium"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Sterns RH. Disorders of plasma sodium — causes, consequences, and correction. N Engl J Med. 2015;372(1):55–65.",
+    "url": "https://doi.org/10.1056/NEJMra1404489"
+   },
+   {
+    "title": "Edelman IS, et al. Interrelations between serum sodium concentration, serum osmolarity and total exchangeable sodium, total exchangeable potassium and total body water. J Clin Invest. 1958;37(9):1236–56.",
+    "url": "https://doi.org/10.1172/JCI103712"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "The total amount of sodium in the body",
+    "isCorrect": false,
+    "explanation": "No. The lab cannot measure total body sodium from a blood sample."
+   },
+   {
+    "text": "The ratio of sodium to water in plasma",
+    "isCorrect": true,
+    "explanation": "Correct. It is a concentration: sodium per litre, so it moves when either sodium or water changes."
+   },
+   {
+    "text": "The amount of sodium inside cells",
+    "isCorrect": false,
+    "explanation": "No. Sodium is mostly outside cells; the result reflects plasma."
+   },
+   {
+    "text": "The sodium excreted in the urine each day",
+    "isCorrect": false,
+    "explanation": "No. That needs a urine collection, not a serum sample."
+   }
+  ],
+  "explanation": "Serum sodium is a concentration. It follows the ratio of exchangeable sodium (plus potassium) to total body water, so a low result usually means too much water rather than too little sodium."
+ },
+ {
+  "text": "Where is most of the body's potassium found?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "BEGINNER",
+  "tags": [
+   "c1-1",
+   "core",
+   "compartments"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Sterns RH. Disorders of plasma sodium — causes, consequences, and correction. N Engl J Med. 2015;372(1):55–65.",
+    "url": "https://doi.org/10.1056/NEJMra1404489"
+   },
+   {
+    "title": "Cordeiro BM, Fontes CFL, Meyer-Fernandes JR. Molecular basis of Na, K–ATPase regulation of diseases. Int J Mol Sci. 2024;25(24):13398.",
+    "url": "https://doi.org/10.3390/ijms252413398"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "In plasma",
+    "isCorrect": false,
+    "explanation": "No. Plasma potassium is only about 3.5–5 mmol/L, a small share of the total."
+   },
+   {
+    "text": "In the interstitial fluid",
+    "isCorrect": false,
+    "explanation": "No. The interstitial fluid, like plasma, is part of the potassium-poor ECF."
+   },
+   {
+    "text": "Inside cells",
+    "isCorrect": true,
+    "explanation": "Correct. The sodium pump keeps potassium inside cells and sodium outside."
+   },
+   {
+    "text": "In bone",
+    "isCorrect": false,
+    "explanation": "No. Bone holds a store of sodium, not most of the potassium."
+   }
+  ],
+  "explanation": "Sodium is mostly outside cells and potassium mostly inside. The Na⁺/K⁺-ATPase in every cell membrane maintains that split."
+ },
+ {
+  "text": "What does the sodium pump (Na⁺/K⁺-ATPase) do?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "BEGINNER",
+  "tags": [
+   "c1-1",
+   "core",
+   "compartments",
+   "sodium pump"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Cordeiro BM, Fontes CFL, Meyer-Fernandes JR. Molecular basis of Na, K–ATPase regulation of diseases. Int J Mol Sci. 2024;25(24):13398.",
+    "url": "https://doi.org/10.3390/ijms252413398"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "Uses energy to move three sodium ions out of the cell for every two potassium ions in",
+    "isCorrect": true,
+    "explanation": "Correct. This 3:2 exchange keeps sodium outside cells and potassium inside."
+   },
+   {
+    "text": "Uses energy to move two sodium ions out for every three potassium ions in",
+    "isCorrect": false,
+    "explanation": "No. The ratio is the other way round: three sodium out, two potassium in."
+   },
+   {
+    "text": "Lets water cross the membrane",
+    "isCorrect": false,
+    "explanation": "No. Water crosses through aquaporins and the lipid membrane, not the sodium pump."
+   },
+   {
+    "text": "Lets sodium flow into cells without using energy",
+    "isCorrect": false,
+    "explanation": "No. The pump works against the gradient and uses ATP."
+   }
+  ],
+  "explanation": "The Na⁺/K⁺-ATPase hydrolyses ATP to export three sodium ions and import two potassium ions per cycle."
+ },
+ {
+  "text": "Where is ADH (vasopressin) made?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "BEGINNER",
+  "tags": [
+   "c1-1",
+   "core",
+   "ADH"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Tasker JG, et al. Advances in the neurophysiology of magnocellular neuroendocrine cells. J Neuroendocrinol. 2020;32(4):e12826.",
+    "url": "https://doi.org/10.1111/jne.12826"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "In the posterior pituitary",
+    "isCorrect": false,
+    "explanation": "No. The posterior pituitary stores and releases ADH but doesn't make it."
+   },
+   {
+    "text": "In nerve cells of the hypothalamus, which carry it to the posterior pituitary",
+    "isCorrect": true,
+    "explanation": "Correct. It is made in the hypothalamus, carried down nerve fibres and released from the posterior pituitary."
+   },
+   {
+    "text": "In the adrenal cortex",
+    "isCorrect": false,
+    "explanation": "No. The adrenal cortex makes aldosterone."
+   },
+   {
+    "text": "In the juxtaglomerular cells of the kidney",
+    "isCorrect": false,
+    "explanation": "No. Those cells release renin."
+   }
+  ],
+  "explanation": "ADH is synthesised by magnocellular neurons in the supraoptic and paraventricular nuclei of the hypothalamus, transported down their axons and released from the posterior pituitary."
+ },
+ {
+  "text": "A patient's plasma becomes more dilute over a few hours. What happens to their brain cells?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-1",
+   "core",
+   "tonicity"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Sterns RH. Disorders of plasma sodium — causes, consequences, and correction. N Engl J Med. 2015;372(1):55–65.",
+    "url": "https://doi.org/10.1056/NEJMra1404489"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "They shrink",
+    "isCorrect": false,
+    "explanation": "No. Cells shrink when plasma becomes more concentrated."
+   },
+   {
+    "text": "They swell",
+    "isCorrect": true,
+    "explanation": "Correct. Water moves into the cells, towards the side with more dissolved particles."
+   },
+   {
+    "text": "Nothing, because sodium can't enter cells",
+    "isCorrect": false,
+    "explanation": "No. It's water that moves, and water crosses cell membranes freely."
+   },
+   {
+    "text": "Nothing, because the sodium pump compensates",
+    "isCorrect": false,
+    "explanation": "No. The pump keeps the ions apart; it doesn't stop water moving."
+   }
+  ],
+  "explanation": "Water crosses cell membranes freely and moves until the concentration of dissolved particles is equal on both sides. Dilute plasma means water moves into cells, so they swell, which is why sodium disorders cause neurological symptoms."
+ },
+ {
+  "text": "Which hormone mainly controls how much water the kidney keeps?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-1",
+   "core",
+   "ADH",
+   "kidney"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Nielsen S, et al. Aquaporins in the kidney: from molecules to medicine. Physiol Rev. 2002;82(1):205–44.",
+    "url": "https://doi.org/10.1152/physrev.00024.2001"
+   },
+   {
+    "title": "Tsilosani A, Gao C, Zhang W. Aldosterone-regulated sodium transport and blood pressure. Front Physiol. 2022;13:770375.",
+    "url": "https://doi.org/10.3389/fphys.2022.770375"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "Aldosterone",
+    "isCorrect": false,
+    "explanation": "No. Aldosterone acts mainly on sodium reabsorption."
+   },
+   {
+    "text": "Atrial natriuretic peptide",
+    "isCorrect": false,
+    "explanation": "No. ANP mainly increases sodium excretion."
+   },
+   {
+    "text": "Antidiuretic hormone (ADH)",
+    "isCorrect": true,
+    "explanation": "Correct. ADH inserts aquaporin-2 channels in the collecting duct."
+   },
+   {
+    "text": "Angiotensin II",
+    "isCorrect": false,
+    "explanation": "No. Angiotensin II drives aldosterone release and stimulates thirst and ADH, but doesn't itself open water channels."
+   }
+  ],
+  "explanation": "ADH binds V2 receptors on collecting duct principal cells and moves aquaporin-2 into the urine-facing membrane, so water can be drawn back towards the salty medulla."
+ },
+ {
+  "text": "A 60 kg woman has a sodium of 138 mmol/L and about 30 L of total body water. She retains 1.5 L of water and loses no sodium. Estimate her new sodium.",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-1",
+   "core",
+   "calculation"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Sterns RH. Disorders of plasma sodium — causes, consequences, and correction. N Engl J Med. 2015;372(1):55–65.",
+    "url": "https://doi.org/10.1056/NEJMra1404489"
+   },
+   {
+    "title": "Edelman IS, et al. Interrelations between serum sodium concentration, serum osmolarity and total exchangeable sodium, total exchangeable potassium and total body water. J Clin Invest. 1958;37(9):1236–56.",
+    "url": "https://doi.org/10.1172/JCI103712"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "125 mmol/L",
+    "isCorrect": false,
+    "explanation": "No. That would need about 3 L of retained water."
+   },
+   {
+    "text": "131 mmol/L",
+    "isCorrect": true,
+    "explanation": "Correct. 138 × 30 / 31.5 ≈ 131 mmol/L."
+   },
+   {
+    "text": "134 mmol/L",
+    "isCorrect": false,
+    "explanation": "No. Check the arithmetic: the water rises by 5%, so the sodium falls by about 5%."
+   },
+   {
+    "text": "138 mmol/L",
+    "isCorrect": false,
+    "explanation": "No. The amount of sodium is unchanged, but it is now dissolved in more water."
+   }
+  ],
+  "explanation": "Sodium concentration follows the ratio of sodium to water. With no change in body sodium: 138 × 30 / (30 + 1.5) ≈ 131 mmol/L. This simple form is an estimate."
+ },
+ {
+  "text": "A renin sample arrives in the lab sitting in ice water. What is the main risk?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-1",
+   "core",
+   "pre-analytical",
+   "renin"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Rutledge AC, et al. Survey of renin and aldosterone testing practices by Ontario laboratories. Pract Lab Med. 2021;25:e00229.",
+    "url": "https://doi.org/10.1016/j.plabm.2021.e00229"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "A falsely low renin from degradation",
+    "isCorrect": false,
+    "explanation": "No. The main problem with cold is the opposite."
+   },
+   {
+    "text": "A falsely high renin from cryoactivation of prorenin",
+    "isCorrect": true,
+    "explanation": "Correct. Cold converts inactive prorenin to active renin in the tube."
+   },
+   {
+    "text": "Haemolysis releasing renin from red cells",
+    "isCorrect": false,
+    "explanation": "No. Red cells don't contain renin."
+   },
+   {
+    "text": "No effect, because chilling is recommended",
+    "isCorrect": false,
+    "explanation": "No. Renin samples should stay at room temperature until separated and frozen."
+   }
+  ],
+  "explanation": "Chilling a renin sample causes cryoactivation: prorenin becomes active renin and the result is falsely high. Keep renin samples at room temperature until the plasma is separated and frozen."
+ },
+ {
+  "text": "Plasma osmolality 270 mmol/kg, urine osmolality 410 mmol/kg, urine sodium 12 mmol/L, no diuretic given. What do the results suggest?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "ADVANCED",
+  "tags": [
+   "c1-1",
+   "core",
+   "reading results"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Schrier RW. Body fluid volume regulation in health and disease: a unifying hypothesis. Ann Intern Med. 1990;113(2):155–9.",
+    "url": "https://doi.org/10.7326/0003-4819-113-2-155"
+   },
+   {
+    "title": "Spasovski G, et al. Clinical practice guideline on diagnosis and treatment of hyponatraemia. Eur J Endocrinol. 2014;170(3):G1–47.",
+    "url": "https://doi.org/10.1530/EJE-13-1020"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "Primary polydipsia: ADH is switched off",
+    "isCorrect": false,
+    "explanation": "No. With ADH off, urine would be maximally dilute, not 410 mmol/kg."
+   },
+   {
+    "text": "Low effective arterial blood volume: non-osmotic ADH is on and the kidney is keeping sodium",
+    "isCorrect": true,
+    "explanation": "Correct. ADH is on despite dilute plasma, and the low urine sodium shows the RAAS holding sodium."
+   },
+   {
+    "text": "Diuretic effect",
+    "isCorrect": false,
+    "explanation": "No. Diuretics usually raise urine sodium, and none was given."
+   },
+   {
+    "text": "A lab artefact: the plasma isn't really dilute",
+    "isCorrect": false,
+    "explanation": "No. A measured osmolality of 270 mmol/kg confirms true hypotonicity."
+   }
+  ],
+  "explanation": "Concentrated urine in dilute plasma means ADH is being driven by something other than osmolality. A urine sodium of 30 mmol/L or less with no diuretic points to low effective arterial blood volume, as in heart failure, cirrhosis or volume depletion."
+ },
+ {
+  "text": "A man with heart failure has oedema to both knees and a sodium of 125 mmol/L. Which explanation fits best?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "ADVANCED",
+  "tags": [
+   "c1-1",
+   "core",
+   "heart failure"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Schrier RW. Body fluid volume regulation in health and disease: a unifying hypothesis. Ann Intern Med. 1990;113(2):155–9.",
+    "url": "https://doi.org/10.7326/0003-4819-113-2-155"
+   },
+   {
+    "title": "Filippatos TD, Elisaf MS. Hyponatremia in patients with heart failure. World J Cardiol. 2013;5(9):317–28.",
+    "url": "https://doi.org/10.4330/wjc.v5.i9.317"
+   },
+   {
+    "title": "Schrier RW, Abraham WT. Hormones and hemodynamics in heart failure. N Engl J Med. 1999;341(8):577–85.",
+    "url": "https://doi.org/10.1056/NEJM199908193410806"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "He has lost sodium in his urine and needs sodium replacement",
+    "isCorrect": false,
+    "explanation": "No. His body holds extra sodium; giving more adds to the oedema."
+   },
+   {
+    "text": "His arteries are underfilled, so the RAAS and non-osmotic ADH make the kidney keep sodium and even more water",
+    "isCorrect": true,
+    "explanation": "Correct. He has extra sodium and even more extra water."
+   },
+   {
+    "text": "The low result is an artefact of oedema fluid in the sample",
+    "isCorrect": false,
+    "explanation": "No. Oedema fluid isn't in a blood sample."
+   },
+   {
+    "text": "Aldosterone has made him lose water",
+    "isCorrect": false,
+    "explanation": "No. Aldosterone makes the kidney keep sodium, not lose water."
+   }
+  ],
+  "explanation": "In heart failure the weak pump leaves the arteries underfilled. Both systems respond as if the patient were dehydrated: the kidney keeps sodium (oedema) and non-osmotic ADH keeps even more water, so the sodium-to-water ratio falls."
+ },
+ {
+  "text": "What mainly sets the volume of the extracellular fluid?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "BEGINNER",
+  "tags": [
+   "c1-1",
+   "reserve",
+   "compartments"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Sterns RH. Disorders of plasma sodium — causes, consequences, and correction. N Engl J Med. 2015;372(1):55–65.",
+    "url": "https://doi.org/10.1056/NEJMra1404489"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "The amount of sodium in the body",
+    "isCorrect": true,
+    "explanation": "Correct. Sodium is held outside cells, and water follows it to keep osmolality equal."
+   },
+   {
+    "text": "The amount of potassium in the body",
+    "isCorrect": false,
+    "explanation": "No. Potassium is mainly inside cells."
+   },
+   {
+    "text": "The ADH level alone",
+    "isCorrect": false,
+    "explanation": "No. ADH sets the concentration; volume follows the amount of sodium."
+   },
+   {
+    "text": "The plasma protein level alone",
+    "isCorrect": false,
+    "explanation": "No. Proteins matter for fluid distribution across capillaries, but sodium sets ECF volume."
+   }
+  ],
+  "explanation": "Sodium content sets the volume of the ECF; water balance sets the concentration. That's why the sodium system (RAAS, natriuretic peptides) regulates volume."
+ },
+ {
+  "text": "When ADH acts on the collecting duct, where are aquaporin-2 channels inserted?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "BEGINNER",
+  "tags": [
+   "c1-1",
+   "reserve",
+   "ADH",
+   "aquaporins"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Nielsen S, et al. Aquaporins in the kidney: from molecules to medicine. Physiol Rev. 2002;82(1):205–44.",
+    "url": "https://doi.org/10.1152/physrev.00024.2001"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "Into the urine-facing (apical) membrane of the principal cells",
+    "isCorrect": true,
+    "explanation": "Correct. That lets water enter the cell from the urine."
+   },
+   {
+    "text": "Into the blood-facing membrane of the principal cells",
+    "isCorrect": false,
+    "explanation": "No. That side already has aquaporin-3 and -4."
+   },
+   {
+    "text": "Into the loop of Henle",
+    "isCorrect": false,
+    "explanation": "No. ADH-regulated aquaporin-2 is in the collecting duct."
+   },
+   {
+    "text": "Into red cell membranes",
+    "isCorrect": false,
+    "explanation": "No. Aquaporin-2 is a kidney collecting duct channel."
+   }
+  ],
+  "explanation": "ADH binds V2 receptors on principal cells and moves aquaporin-2 from vesicles into the apical membrane. Water then leaves through aquaporin-3 and -4 on the blood side."
+ },
+ {
+  "text": "Why do labs measure copeptin instead of ADH?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "BEGINNER",
+  "tags": [
+   "c1-1",
+   "reserve",
+   "copeptin"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Morgenthaler NG, et al. Assay for the measurement of copeptin, a stable peptide derived from the precursor of vasopressin. Clin Chem. 2006;52(1):112–9.",
+    "url": "https://doi.org/10.1373/clinchem.2005.060038"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "Copeptin is a stable fragment from the same precursor as ADH, so it stands in for ADH",
+    "isCorrect": true,
+    "explanation": "Correct. ADH itself is unstable and hard to measure."
+   },
+   {
+    "text": "Copeptin is the active form of ADH",
+    "isCorrect": false,
+    "explanation": "No. Copeptin has no known antidiuretic action."
+   },
+   {
+    "text": "Copeptin is made by the kidney in response to ADH",
+    "isCorrect": false,
+    "explanation": "No. It comes from the same precursor molecule in the hypothalamus."
+   },
+   {
+    "text": "Copeptin measures aldosterone activity",
+    "isCorrect": false,
+    "explanation": "No. It reflects ADH release."
+   }
+  ],
+  "explanation": "Copeptin is cut from the same precursor as ADH and released in equal amounts. It is stable after collection, so it is used as a surrogate for ADH."
+ },
+ {
+  "text": "Which receptor does ADH bind to make the kidney keep water?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "BEGINNER",
+  "tags": [
+   "c1-1",
+   "reserve",
+   "ADH"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Nielsen S, et al. Aquaporins in the kidney: from molecules to medicine. Physiol Rev. 2002;82(1):205–44.",
+    "url": "https://doi.org/10.1152/physrev.00024.2001"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "V1a receptor",
+    "isCorrect": false,
+    "explanation": "No. V1a receptors mediate vasoconstriction."
+   },
+   {
+    "text": "V2 receptor",
+    "isCorrect": true,
+    "explanation": "Correct. V2 receptors on collecting duct principal cells trigger aquaporin-2 insertion."
+   },
+   {
+    "text": "Angiotensin II type 1 receptor",
+    "isCorrect": false,
+    "explanation": "No. That is angiotensin II's receptor."
+   },
+   {
+    "text": "Mineralocorticoid receptor",
+    "isCorrect": false,
+    "explanation": "No. That is aldosterone's receptor."
+   }
+  ],
+  "explanation": "ADH acts on V2 receptors on the blood side of collecting duct principal cells; the signal (cyclic AMP) moves aquaporin-2 into the urine-facing membrane."
+ },
+ {
+  "text": "Why can the most concentrated urine reach only about 1,200 mmol/kg?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-1",
+   "reserve",
+   "urine concentration"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Sands JM, Layton HE. The physiology of urinary concentration: an update. Semin Nephrol. 2009;29(3):178–95.",
+    "url": "https://doi.org/10.1016/j.semnephrol.2009.03.008"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "Because aquaporin-2 can only open to a set size",
+    "isCorrect": false,
+    "explanation": "No. The channels let water move; something else sets the limit."
+   },
+   {
+    "text": "Because urine can't become more concentrated than the inner medulla around the collecting duct",
+    "isCorrect": true,
+    "explanation": "Correct. Water leaves the urine only while the surrounding tissue is saltier."
+   },
+   {
+    "text": "Because ADH levels have a fixed maximum",
+    "isCorrect": false,
+    "explanation": "No. ADH opens the channels but doesn't set the ceiling."
+   },
+   {
+    "text": "Because the bladder reabsorbs water",
+    "isCorrect": false,
+    "explanation": "No. The bladder doesn't concentrate urine."
+   }
+  ],
+  "explanation": "The loops of Henle build an increasingly concentrated medulla, up to about 1,200 mmol/kg at the tip. With ADH acting, water leaves the collecting duct until the urine matches that tissue."
+ },
+ {
+  "text": "In human studies, at roughly what plasma osmolality does ADH switch on?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-1",
+   "reserve",
+   "ADH threshold"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Hughes F, Mythen M, Montgomery H. The sensitivity of the human thirst response to changes in plasma osmolality: a systematic review. Perioper Med (Lond). 2018;7:1.",
+    "url": "https://doi.org/10.1186/s13741-017-0081-4"
+   },
+   {
+    "title": "Sterns RH. Disorders of plasma sodium — causes, consequences, and correction. N Engl J Med. 2015;372(1):55–65.",
+    "url": "https://doi.org/10.1056/NEJMra1404489"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "About 270 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. At 270 mmol/kg plasma is dilute and ADH should be off."
+   },
+   {
+    "text": "About 284 mmol/kg",
+    "isCorrect": true,
+    "explanation": "Correct. Thirst starts at a similar point."
+   },
+   {
+    "text": "About 295 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. That is near the top of the reference interval."
+   },
+   {
+    "text": "About 310 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. That is well above the switch-on point."
+   }
+  ],
+  "explanation": "ADH switches on at about 284 mmol/kg and the system responds to changes of only 1–2%. In sodium terms, ADH becomes detectable once sodium rises above about 135 mmol/L."
+ },
+ {
+  "text": "After a very salty meal, which system responds first?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-1",
+   "reserve",
+   "salty meal"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Bichet DG. Regulation of thirst and vasopressin release. Annu Rev Physiol. 2019;81:359–73.",
+    "url": "https://doi.org/10.1146/annurev-physiol-020518-114556"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "The water system: ADH and thirst",
+    "isCorrect": true,
+    "explanation": "Correct. Osmolality rises first, so ADH and thirst respond."
+   },
+   {
+    "text": "The RAAS, which switches on",
+    "isCorrect": false,
+    "explanation": "No. The RAAS is switched down as the ECF expands."
+   },
+   {
+    "text": "The natriuretic peptides, before anything else",
+    "isCorrect": false,
+    "explanation": "No. They respond to volume stretching the heart, later in the sequence."
+   },
+   {
+    "text": "Neither: sodium is excreted unchanged",
+    "isCorrect": false,
+    "explanation": "No. The extra sodium first raises osmolality."
+   }
+  ],
+  "explanation": "Extra sodium raises osmolality, so osmoreceptors switch on ADH and thirst. As the ECF expands, the RAAS is switched down and the extra sodium is excreted."
+ },
+ {
+  "text": "How does aldosterone make the kidney keep sodium?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-1",
+   "reserve",
+   "aldosterone"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Tsilosani A, Gao C, Zhang W. Aldosterone-regulated sodium transport and blood pressure. Front Physiol. 2022;13:770375.",
+    "url": "https://doi.org/10.3389/fphys.2022.770375"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "It increases the activity of epithelial sodium channels (ENaC) in principal cells",
+    "isCorrect": true,
+    "explanation": "Correct. More sodium is reabsorbed, and potassium and hydrogen ions are secreted."
+   },
+   {
+    "text": "It inserts aquaporin-2 in the collecting duct",
+    "isCorrect": false,
+    "explanation": "No. That is ADH's action."
+   },
+   {
+    "text": "It blocks the sodium pump",
+    "isCorrect": false,
+    "explanation": "No. Blocking the pump would reduce sodium reabsorption."
+   },
+   {
+    "text": "It reduces the filtration rate to zero",
+    "isCorrect": false,
+    "explanation": "No. Its action is on the tubule."
+   }
+  ],
+  "explanation": "Aldosterone acts on principal cells in the last part of the nephron, increasing ENaC activity. Sodium is reabsorbed; potassium and hydrogen ions are secreted in exchange."
+ },
+ {
+  "text": "The kidney keeps extra sodium. Why does the ECF grow instead of the sodium result rising?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-1",
+   "reserve",
+   "water follows sodium"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Sterns RH. Disorders of plasma sodium — causes, consequences, and correction. N Engl J Med. 2015;372(1):55–65.",
+    "url": "https://doi.org/10.1056/NEJMra1404489"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "The kept sodium nudges osmolality up, ADH and thirst respond, and the extra water restores the concentration",
+    "isCorrect": true,
+    "explanation": "Correct. Water follows sodium through the water system."
+   },
+   {
+    "text": "Sodium pulls water directly through the kidney without ADH",
+    "isCorrect": false,
+    "explanation": "No. The water has to come from ADH and thirst."
+   },
+   {
+    "text": "Aldosterone also inserts water channels",
+    "isCorrect": false,
+    "explanation": "No. Aldosterone acts on sodium channels."
+   },
+   {
+    "text": "The extra sodium moves into cells",
+    "isCorrect": false,
+    "explanation": "No. Sodium is kept outside cells by the pump."
+   }
+  ],
+  "explanation": "Keeping sodium raises osmolality slightly; the osmoreceptors switch on ADH and thirst; water is kept and drunk until the concentration returns. That's why the sodium system sets volume, not concentration."
+ },
+ {
+  "text": "Which of these does NOT directly trigger renin release from the juxtaglomerular cells?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-1",
+   "reserve",
+   "renin"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Tsilosani A, Gao C, Zhang W. Aldosterone-regulated sodium transport and blood pressure. Front Physiol. 2022;13:770375.",
+    "url": "https://doi.org/10.3389/fphys.2022.770375"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "A fall in blood pressure reaching the kidney",
+    "isCorrect": false,
+    "explanation": "No, this does trigger renin release."
+   },
+   {
+    "text": "Less sodium chloride reaching the macula densa",
+    "isCorrect": false,
+    "explanation": "No, this does trigger renin release."
+   },
+   {
+    "text": "Sympathetic nerve activity",
+    "isCorrect": false,
+    "explanation": "No, this does trigger renin release."
+   },
+   {
+    "text": "A rise in plasma osmolality",
+    "isCorrect": true,
+    "explanation": "Correct. Osmolality drives ADH and thirst, not renin."
+   }
+  ],
+  "explanation": "Renin release responds to renal perfusion pressure, sodium chloride delivery to the macula densa and sympathetic signals. Osmolality is the water system's signal."
+ },
+ {
+  "text": "A patient loses blood with no change in plasma osmolality. What happens to ADH?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-1",
+   "reserve",
+   "blood loss"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Dunn FL, et al. The role of blood osmolality and volume in regulating vasopressin secretion in the rat. J Clin Invest. 1973;52(12):3212–9.",
+    "url": "https://doi.org/10.1172/JCI107521"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "It stays off, because osmolality hasn't changed",
+    "isCorrect": false,
+    "explanation": "No. Volume can switch ADH on by itself."
+   },
+   {
+    "text": "It rises, because a large fall in volume drives ADH regardless of osmolality",
+    "isCorrect": true,
+    "explanation": "Correct. Volume takes priority over concentration."
+   },
+   {
+    "text": "It falls, to protect the sodium concentration",
+    "isCorrect": false,
+    "explanation": "No. ADH rises."
+   },
+   {
+    "text": "It is replaced by aldosterone",
+    "isCorrect": false,
+    "explanation": "No. Both systems respond."
+   }
+  ],
+  "explanation": "A large fall in blood volume releases ADH non-osmotically and also lowers the osmotic switch-on point. When the systems conflict, the circulation is protected first."
+ },
+ {
+  "text": "A hyponatraemic patient had a diuretic dose an hour before the spot urine. Urine sodium is 45 mmol/L. How should you read it?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "ADVANCED",
+  "tags": [
+   "c1-1",
+   "reserve",
+   "reading results",
+   "diuretics"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Spasovski G, et al. Clinical practice guideline on diagnosis and treatment of hyponatraemia. Eur J Endocrinol. 2014;170(3):G1–47.",
+    "url": "https://doi.org/10.1530/EJE-13-1020"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "It rules out low effective arterial blood volume",
+    "isCorrect": false,
+    "explanation": "No. The diuretic may have raised the urine sodium."
+   },
+   {
+    "text": "It can't be used to exclude low effective arterial blood volume, because diuretics raise urine sodium",
+    "isCorrect": true,
+    "explanation": "Correct. The cut-off only works without a recent diuretic."
+   },
+   {
+    "text": "It proves SIAD",
+    "isCorrect": false,
+    "explanation": "No. A diuretic confounds that interpretation too."
+   },
+   {
+    "text": "It means the plasma isn't truly hypotonic",
+    "isCorrect": false,
+    "explanation": "No. Urine sodium doesn't tell you that; measured plasma osmolality does."
+   }
+  ],
+  "explanation": "The guideline's urine sodium cut-off of 30 mmol/L assumes no recent diuretic. A diuretic raises urine sodium and can send you down the wrong branch."
+ },
+ {
+  "text": "In patients with hypotonic polyuria, how did a copeptin-based approach after hypertonic saline compare with the classic water deprivation test?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "ADVANCED",
+  "tags": [
+   "c1-1",
+   "reserve",
+   "copeptin"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Fenske W, et al. A copeptin-based approach in the diagnosis of diabetes insipidus. N Engl J Med. 2018;379(5):428–39.",
+    "url": "https://doi.org/10.1056/NEJMoa1803760"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "It gave the right diagnosis more often (about 97% against 77%)",
+    "isCorrect": true,
+    "explanation": "Correct. A copeptin above 4.9 pmol/L after hypertonic saline was more accurate."
+   },
+   {
+    "text": "It was less accurate but faster",
+    "isCorrect": false,
+    "explanation": "No. It was more accurate."
+   },
+   {
+    "text": "The two were equally accurate",
+    "isCorrect": false,
+    "explanation": "No. The copeptin approach performed better."
+   },
+   {
+    "text": "Copeptin can't be measured after hypertonic saline",
+    "isCorrect": false,
+    "explanation": "No. That is how the test works."
+   }
+  ],
+  "explanation": "In 144 patients, copeptin above 4.9 pmol/L after hypertonic saline gave the correct diagnosis in 96.5% of cases, against 76.6% for the water deprivation test."
+ },
+ {
+  "text": "Plasma osmolality 268 mmol/kg, urine osmolality 80 mmol/kg. What does this pattern suggest?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "ADVANCED",
+  "tags": [
+   "c1-1",
+   "reserve",
+   "reading results"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Spasovski G, et al. Clinical practice guideline on diagnosis and treatment of hyponatraemia. Eur J Endocrinol. 2014;170(3):G1–47.",
+    "url": "https://doi.org/10.1530/EJE-13-1020"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "ADH is appropriately off, and water intake is outrunning the kidney",
+    "isCorrect": true,
+    "explanation": "Correct. Maximally dilute urine in dilute plasma means ADH is suppressed."
+   },
+   {
+    "text": "Non-osmotic ADH release from low arterial filling",
+    "isCorrect": false,
+    "explanation": "No. ADH on would make the urine concentrated."
+   },
+   {
+    "text": "SIAD",
+    "isCorrect": false,
+    "explanation": "No. In SIAD the urine is inappropriately concentrated."
+   },
+   {
+    "text": "Pseudohyponatraemia",
+    "isCorrect": false,
+    "explanation": "No. The measured osmolality is low, so the plasma is truly dilute."
+   }
+  ],
+  "explanation": "A urine osmolality of 100 mmol/kg or less with truly hypotonic plasma means ADH is off. The kidney is excreting free water but intake is outrunning it, as in primary polydipsia or very low solute intake."
+ },
+ {
+  "text": "Why don't the baroreceptors count the oedema fluid of a patient with heart failure?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Water and sodium homeostasis",
+  "difficulty": "ADVANCED",
+  "tags": [
+   "c1-1",
+   "reserve",
+   "heart failure",
+   "baroreceptors"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Schrier RW. Body fluid volume regulation in health and disease: a unifying hypothesis. Ann Intern Med. 1990;113(2):155–9.",
+    "url": "https://doi.org/10.7326/0003-4819-113-2-155"
+   },
+   {
+    "title": "Schrier RW, Abraham WT. Hormones and hemodynamics in heart failure. N Engl J Med. 1999;341(8):577–85.",
+    "url": "https://doi.org/10.1056/NEJM199908193410806"
+   },
+   {
+    "title": "Levick JR, Michel CC. Microvascular fluid exchange and the revised Starling principle. Cardiovasc Res. 2010;87(2):198–210.",
+    "url": "https://doi.org/10.1093/cvr/cvq062"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-1-water-sodium-homeostasis"
+  ],
+  "options": [
+   {
+    "text": "Oedema fluid has leaked out of the capillaries into the tissues, outside the circulation, so the arterial stretch sensors stay underfilled",
+    "isCorrect": true,
+    "explanation": "Correct. The sensors respond to arterial filling, not total body fluid."
+   },
+   {
+    "text": "Baroreceptors only respond to osmolality",
+    "isCorrect": false,
+    "explanation": "No. They are stretch sensors."
+   },
+   {
+    "text": "Oedema fluid has no sodium in it",
+    "isCorrect": false,
+    "explanation": "No. It is extracellular fluid with sodium in it."
+   },
+   {
+    "text": "The kidney destroys the signal",
+    "isCorrect": false,
+    "explanation": "No. The signal comes from the arteries."
+   }
+  ],
+  "explanation": "The sodium system measures effective arterial blood volume through baroreceptors in the carotid sinus, aortic arch and left ventricle. Fluid pushed out of the capillaries into the tissues sits outside the circulation, so the arteries stay underfilled and the signals stay on."
+ }
+]

@@ -1,0 +1,1162 @@
+[
+ {
+  "text": "In what unit does the lab report measured osmolality?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "BEGINNER",
+  "tags": [
+   "c1-2",
+   "core",
+   "osmolality"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Gennari FJ. Current concepts. Serum osmolality. Uses and limitations. N Engl J Med. 1984;310(2):102–5.",
+    "url": "https://doi.org/10.1056/NEJM198401123100207"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "mmol/L, particles per litre of solution",
+    "isCorrect": false,
+    "explanation": "No. That is osmolarity, used for the calculated value."
+   },
+   {
+    "text": "mmol/kg, particles per kilogram of water",
+    "isCorrect": true,
+    "explanation": "Correct. A kilogram of water stays a kilogram whatever the temperature or the fat and protein content."
+   },
+   {
+    "text": "g/L, grams per litre",
+    "isCorrect": false,
+    "explanation": "No. Osmolality counts particles, not mass."
+   },
+   {
+    "text": "mmol/24 h",
+    "isCorrect": false,
+    "explanation": "No. That is an excretion rate."
+   }
+  ],
+  "explanation": "Osmolality is the count of dissolved particles per kilogram of water. The lab measures it rather than osmolarity because it isn't affected by temperature or by fat and protein in the sample."
+ },
+ {
+  "text": "A patient may have drunk methanol. Which measurement is right for the osmolal gap?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "BEGINNER",
+  "tags": [
+   "c1-2",
+   "core",
+   "osmometry",
+   "toxic alcohols"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Walker JA, et al. The missing gap. A pitfall in the diagnosis of alcohol intoxication by osmometry. Arch Intern Med. 1986;146(9):1843–4.",
+    "url": "https://doi.org/10.1001/archinte.146.9.1843"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "Vapour pressure osmometry",
+    "isCorrect": false,
+    "explanation": "No. Methanol is volatile and can be missed entirely."
+   },
+   {
+    "text": "Freezing point osmometry",
+    "isCorrect": true,
+    "explanation": "Correct. It counts volatile alcohols."
+   },
+   {
+    "text": "Calculated osmolality alone",
+    "isCorrect": false,
+    "explanation": "No. A gap needs a measured value."
+   },
+   {
+    "text": "Either osmometer, as long as the sample is fresh",
+    "isCorrect": false,
+    "explanation": "No. Freshness doesn't fix the vapour pressure method's blind spot."
+   }
+  ],
+  "explanation": "Volatile alcohols escape into the vapour above the sample, so a vapour pressure osmometer doesn't count them. A published case showed no osmolal gap in methanol poisoning for this reason."
+ },
+ {
+  "text": "Which formula does the lesson use for calculated osmolality?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "BEGINNER",
+  "tags": [
+   "c1-2",
+   "core",
+   "calculation"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Choy KW, Wijeratne N, Lu ZX, Doery JC. Harmonisation of osmolal gap — can we use a common formula? Clin Biochem Rev. 2016;37(3):113–9.",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5111243"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "2 × Na + glucose + urea",
+    "isCorrect": true,
+    "explanation": "Correct. All three in mmol/L; sodium is doubled to cover its partner anions."
+   },
+   {
+    "text": "Na + K + glucose + urea",
+    "isCorrect": false,
+    "explanation": "No. Sodium has to be doubled to account for its anions."
+   },
+   {
+    "text": "2 × (Na + K)",
+    "isCorrect": false,
+    "explanation": "No. This leaves out glucose and urea."
+   },
+   {
+    "text": "2 × Na + 2 × glucose + urea",
+    "isCorrect": false,
+    "explanation": "No. Glucose and urea are each counted once."
+   }
+  ],
+  "explanation": "Calculated osmolality = 2 × Na + glucose + urea, all in mmol/L. An AACB working group has proposed this simple formula as a common formula for Australasian laboratories."
+ },
+ {
+  "text": "Which of these raises measured osmolality without changing tonicity?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "BEGINNER",
+  "tags": [
+   "c1-2",
+   "core",
+   "tonicity"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Sterns RH. Disorders of plasma sodium — causes, consequences, and correction. N Engl J Med. 2015;372(1):55–65.",
+    "url": "https://doi.org/10.1056/NEJMra1404489"
+   },
+   {
+    "title": "Oster JR, Singer I. Hyponatremia, hyposmolality, and hypotonicity: tables and fables. Arch Intern Med. 1999;159(4):333–6.",
+    "url": "https://doi.org/10.1001/archinte.159.4.333"
+   },
+   {
+    "title": "Tzamaloukas AH, et al. Serum sodium concentration and tonicity in hyperglycemic crises. J Am Heart Assoc. 2019;8(19):e011786.",
+    "url": "https://doi.org/10.1161/JAHA.118.011786"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "Sodium",
+    "isCorrect": false,
+    "explanation": "No. Sodium stays outside cells and is the main effective osmole."
+   },
+   {
+    "text": "Glucose, in a patient without insulin",
+    "isCorrect": false,
+    "explanation": "No. Without insulin, glucose stays outside cells and does change tonicity."
+   },
+   {
+    "text": "Urea",
+    "isCorrect": true,
+    "explanation": "Correct. Urea crosses cell membranes freely, so it is an ineffective osmole."
+   },
+   {
+    "text": "Mannitol",
+    "isCorrect": false,
+    "explanation": "No. Mannitol stays outside cells."
+   }
+  ],
+  "explanation": "Urea and ethanol cross cell membranes and spread to both sides, so they raise osmolality without creating a pull on water. Tonicity is roughly 2 × Na + glucose."
+ },
+ {
+  "text": "Sodium 132 mmol/L, glucose 30 mmol/L, urea 6 mmol/L, measured osmolality 305 mmol/kg. What is the osmolal gap?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-2",
+   "core",
+   "calculation"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Choy KW, Wijeratne N, Lu ZX, Doery JC. Harmonisation of osmolal gap — can we use a common formula? Clin Biochem Rev. 2016;37(3):113–9.",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5111243"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "−5 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. Measured minus calculated: 305 − 300."
+   },
+   {
+    "text": "5 mmol/kg",
+    "isCorrect": true,
+    "explanation": "Correct. Calculated = 2 × 132 + 30 + 6 = 300; gap = 305 − 300 = 5, which is normal."
+   },
+   {
+    "text": "11 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. Recheck: sodium is doubled, glucose and urea are added once."
+   },
+   {
+    "text": "41 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. That forgets to double sodium."
+   }
+  ],
+  "explanation": "Calculated osmolality is 2 × 132 + 30 + 6 = 300 mmol/kg. The gap is measured minus calculated: 305 − 300 = 5 mmol/kg, within the usual range."
+ },
+ {
+  "text": "Sodium 140, glucose 5 and urea 5 mmol/L, ethanol 30 mmol/L, measured osmolality 330 mmol/kg. Using an ethanol factor of 1.25, what is the residual gap?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-2",
+   "core",
+   "ethanol",
+   "calculation"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Purssell RA, et al. Derivation and validation of a formula to calculate the contribution of ethanol to the osmolal gap. Ann Emerg Med. 2001;38(6):653–9.",
+    "url": "https://doi.org/10.1067/mem.2001.119455"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "About 2.5 mmol/kg",
+    "isCorrect": true,
+    "explanation": "Correct. 290 + 1.25 × 30 = 327.5; 330 − 327.5 = 2.5."
+   },
+   {
+    "text": "About 10 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. That uses a factor of 1.0 and drops the 0.5."
+   },
+   {
+    "text": "About 12.5 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. Check the multiplication: 1.25 × 30 = 37.5."
+   },
+   {
+    "text": "About 40 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. That is the gap before ethanol is added in."
+   }
+  ],
+  "explanation": "Without ethanol the calculated value is 290. Ethanol adds about 1.25 × 30 = 37.5, giving 327.5, so the residual gap is about 2.5 mmol/kg: fully explained by the ethanol."
+ },
+ {
+  "text": "Plasma at 290 mmol/kg freezes at about what temperature?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-2",
+   "core",
+   "osmometry"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Sweeney TE, Beuchat CA. Limitations of methods of osmometry: measuring the osmolality of biological fluids. Am J Physiol. 1993;264(3 Pt 2):R469–80.",
+    "url": "https://doi.org/10.1152/ajpregu.1993.264.3.R469"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "−0.29 °C",
+    "isCorrect": false,
+    "explanation": "No. Each osmole per kilogram lowers it by 1.86 °C, not 1 °C."
+   },
+   {
+    "text": "−0.54 °C",
+    "isCorrect": true,
+    "explanation": "Correct. 0.290 × 1.86 ≈ 0.54."
+   },
+   {
+    "text": "−1.86 °C",
+    "isCorrect": false,
+    "explanation": "No. That is for one full osmole per kilogram of water."
+   },
+   {
+    "text": "−5.4 °C",
+    "isCorrect": false,
+    "explanation": "No. That is ten times too low."
+   }
+  ],
+  "explanation": "One osmole in a kilogram of water lowers the freezing point by 1.86 °C, so 290 mmol/kg lowers it by about 0.54 °C. A freezing point osmometer converts that temperature directly to osmolality."
+ },
+ {
+  "text": "Sodium 132 mmol/L, glucose 30 mmol/L, urea 6 mmol/L, in a patient without insulin. What is the tonicity?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-2",
+   "core",
+   "tonicity",
+   "calculation"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Sterns RH. Disorders of plasma sodium — causes, consequences, and correction. N Engl J Med. 2015;372(1):55–65.",
+    "url": "https://doi.org/10.1056/NEJMra1404489"
+   },
+   {
+    "title": "Tzamaloukas AH, et al. Serum sodium concentration and tonicity in hyperglycemic crises. J Am Heart Assoc. 2019;8(19):e011786.",
+    "url": "https://doi.org/10.1161/JAHA.118.011786"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "270 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. Glucose without insulin counts towards tonicity."
+   },
+   {
+    "text": "294 mmol/kg",
+    "isCorrect": true,
+    "explanation": "Correct. 2 × 132 + 30 = 294; urea is left out."
+   },
+   {
+    "text": "300 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. That includes urea, which doesn't move water."
+   },
+   {
+    "text": "306 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. Recheck the arithmetic."
+   }
+  ],
+  "explanation": "Tonicity (effective osmolality) is roughly 2 × Na + glucose: 264 + 30 = 294 mmol/kg. Urea is left out because it crosses cell membranes. The glucose is doing real osmotic work, which is why the sodium is low."
+ },
+ {
+  "text": "A grossly lipaemic sample has sodium 124 mmol/L on the main analyser, glucose 5 and urea 5 mmol/L, and measured osmolality 289 mmol/kg. What is the most likely explanation for the gap of 31?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "ADVANCED",
+  "tags": [
+   "c1-2",
+   "core",
+   "pseudohyponatraemia"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Gennari FJ. Current concepts. Serum osmolality. Uses and limitations. N Engl J Med. 1984;310(2):102–5.",
+    "url": "https://doi.org/10.1056/NEJM198401123100207"
+   },
+   {
+    "title": "Kim GH. Pseudohyponatremia: does it matter in current clinical practice? Electrolyte Blood Press. 2006;4(2):77–82.",
+    "url": "https://doi.org/10.5049/EBP.2006.4.2.77"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "Ethanol",
+    "isCorrect": false,
+    "explanation": "No. Nothing in the history or sample points to it, and the lipaemia explains the gap."
+   },
+   {
+    "text": "Methanol",
+    "isCorrect": false,
+    "explanation": "No. The sample is lipaemic, which explains the gap without a toxic alcohol."
+   },
+   {
+    "text": "A falsely low sodium from lipaemia (pseudohyponatraemia)",
+    "isCorrect": true,
+    "explanation": "Correct. The indirect method assumes about 93% water, and the lipid takes up more of the litre."
+   },
+   {
+    "text": "Kidney failure",
+    "isCorrect": false,
+    "explanation": "No. Urea is normal, and kidney failure raises the gap only a little."
+   }
+  ],
+  "explanation": "The main analyser's indirect ISE dilutes a measured volume of whole plasma and assumes it is about 93% water. Lipid takes up more of the litre, so the sodium reads falsely low and the calculated osmolality falls. The osmometer measures the water phase and stays normal. Check a direct sodium."
+ },
+ {
+  "text": "Why does a normal osmolal gap not rule out a toxic alcohol?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "ADVANCED",
+  "tags": [
+   "c1-2",
+   "core",
+   "toxic alcohols"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Hoffman RS, et al. Osmol gaps revisited: normal values and limitations. J Toxicol Clin Toxicol. 1993;31(1):81–93.",
+    "url": "https://doi.org/10.3109/15563659309000375"
+   },
+   {
+    "title": "Kraut JA, Xing SX. Approach to the evaluation of a patient with an increased serum osmolal gap and high-anion-gap metabolic acidosis. Am J Kidney Dis. 2011;58(3):480–4.",
+    "url": "https://doi.org/10.1053/j.ajkd.2011.05.018"
+   },
+   {
+    "title": "Kraut JA, Mullins ME. Toxic alcohols. N Engl J Med. 2018;378(3):270–80.",
+    "url": "https://doi.org/10.1056/NEJMra1615295"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "Because the healthy range is wide, and as the alcohol is broken down into acids the osmolal gap falls",
+    "isCorrect": true,
+    "explanation": "Correct. A dangerous amount can hide in a 'normal' gap, and a late sample may show little gap."
+   },
+   {
+    "text": "Because toxic alcohols are charged and don't raise osmolality",
+    "isCorrect": false,
+    "explanation": "No. The parent alcohols are uncharged and do raise it."
+   },
+   {
+    "text": "Because freezing point osmometers miss toxic alcohols",
+    "isCorrect": false,
+    "explanation": "No. It's the vapour pressure method that misses volatile alcohols."
+   },
+   {
+    "text": "Because the formula already includes toxic alcohols",
+    "isCorrect": false,
+    "explanation": "No. The formula doesn't count them."
+   }
+  ],
+  "explanation": "Healthy people range from about −14 to +10 mmol/kg, so a significant amount of alcohol can leave the gap 'normal'. And as alcohol dehydrogenase breaks the alcohol down into acids, the osmolal gap falls while the anion gap rises."
+ },
+ {
+  "text": "Why can a vapour pressure osmometer miss ethanol?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "BEGINNER",
+  "tags": [
+   "c1-2",
+   "reserve",
+   "osmometry"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Sweeney TE, Beuchat CA. Limitations of methods of osmometry: measuring the osmolality of biological fluids. Am J Physiol. 1993;264(3 Pt 2):R469–80.",
+    "url": "https://doi.org/10.1152/ajpregu.1993.264.3.R469"
+   },
+   {
+    "title": "Walker JA, et al. The missing gap. A pitfall in the diagnosis of alcohol intoxication by osmometry. Arch Intern Med. 1986;146(9):1843–4.",
+    "url": "https://doi.org/10.1001/archinte.146.9.1843"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "Ethanol is volatile, so it escapes into the vapour and isn't counted",
+    "isCorrect": true,
+    "explanation": "Correct. The measured osmolality comes out too low."
+   },
+   {
+    "text": "Ethanol freezes at a higher temperature than water",
+    "isCorrect": false,
+    "explanation": "No. The vapour pressure method doesn't use freezing."
+   },
+   {
+    "text": "Ethanol binds to plasma proteins",
+    "isCorrect": false,
+    "explanation": "No. That isn't the reason."
+   },
+   {
+    "text": "Ethanol is removed during centrifugation",
+    "isCorrect": false,
+    "explanation": "No. Centrifugation doesn't remove it."
+   }
+  ],
+  "explanation": "A vapour pressure osmometer measures how much dissolved particles lower the vapour pressure of water. Volatile alcohols evaporate into the vapour themselves, so they aren't counted."
+ },
+ {
+  "text": "Freezing point depression is a colligative property. What does that mean?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "BEGINNER",
+  "tags": [
+   "c1-2",
+   "reserve",
+   "osmometry"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Sweeney TE, Beuchat CA. Limitations of methods of osmometry: measuring the osmolality of biological fluids. Am J Physiol. 1993;264(3 Pt 2):R469–80.",
+    "url": "https://doi.org/10.1152/ajpregu.1993.264.3.R469"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "It depends on the number of dissolved particles, not what they are",
+    "isCorrect": true,
+    "explanation": "Correct. That is why an osmometer can count all particles together."
+   },
+   {
+    "text": "It depends on the mass of the dissolved particles",
+    "isCorrect": false,
+    "explanation": "No. Mass doesn't matter; particle number does."
+   },
+   {
+    "text": "It only applies to charged particles",
+    "isCorrect": false,
+    "explanation": "No. Uncharged particles count too."
+   },
+   {
+    "text": "It depends on the sample's colour",
+    "isCorrect": false,
+    "explanation": "No. Colour has no effect."
+   }
+  ],
+  "explanation": "Colligative properties, including freezing point depression and vapour pressure lowering, depend on how many particles are dissolved, not on their identity."
+ },
+ {
+  "text": "What is by far the commonest cause of a raised osmolal gap?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "BEGINNER",
+  "tags": [
+   "c1-2",
+   "reserve",
+   "osmolal gap"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Gennari FJ. Current concepts. Serum osmolality. Uses and limitations. N Engl J Med. 1984;310(2):102–5.",
+    "url": "https://doi.org/10.1056/NEJM198401123100207"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "Ethanol",
+    "isCorrect": true,
+    "explanation": "Correct. It is present in high molar concentration and the formula doesn't count it."
+   },
+   {
+    "text": "Methanol",
+    "isCorrect": false,
+    "explanation": "No. Methanol is dangerous but much less common."
+   },
+   {
+    "text": "Mannitol",
+    "isCorrect": false,
+    "explanation": "No. It's a cause, but far less common."
+   },
+   {
+    "text": "Lithium",
+    "isCorrect": false,
+    "explanation": "No. Lithium is not a recognised cause."
+   }
+  ],
+  "explanation": "A large gap means a small uncharged molecule the formula doesn't know about is present in high molar concentration. By far the commonest is ethanol."
+ },
+ {
+  "text": "What is the usual upper limit quoted for the osmolal gap?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "BEGINNER",
+  "tags": [
+   "c1-2",
+   "reserve",
+   "osmolal gap"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Choy KW, Wijeratne N, Lu ZX, Doery JC. Harmonisation of osmolal gap — can we use a common formula? Clin Biochem Rev. 2016;37(3):113–9.",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5111243"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "About 2 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. Gaps of a few mmol/kg either side of zero are normal."
+   },
+   {
+    "text": "About 10 mmol/kg",
+    "isCorrect": true,
+    "explanation": "Correct. But the normal range is wide."
+   },
+   {
+    "text": "About 20 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. That is above the usual limit."
+   },
+   {
+    "text": "About 30 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. That is well above the usual limit."
+   }
+  ],
+  "explanation": "The usual upper limit quoted is about 10 mmol/kg, though each formula has its own normal gap and measurement uncertainty alone adds about ±7 mmol/kg."
+ },
+ {
+  "text": "An emergency department study found a mean osmolal gap of −2 mmol/kg with a standard deviation of 6. Roughly what range covers healthy people?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-2",
+   "reserve",
+   "osmolal gap",
+   "statistics"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Hoffman RS, et al. Osmol gaps revisited: normal values and limitations. J Toxicol Clin Toxicol. 1993;31(1):81–93.",
+    "url": "https://doi.org/10.3109/15563659309000375"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "−8 to +4 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. That is only one standard deviation either side."
+   },
+   {
+    "text": "−14 to +10 mmol/kg",
+    "isCorrect": true,
+    "explanation": "Correct. Two standard deviations either side of −2."
+   },
+   {
+    "text": "0 to +10 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. Healthy gaps can be negative."
+   },
+   {
+    "text": "−2 to +6 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. That mixes the mean and the SD."
+   }
+  ],
+  "explanation": "Mean ± 2 standard deviations: −2 ± 12 gives about −14 to +10 mmol/kg. The wide range is one reason a 'normal' gap can hide a toxic alcohol."
+ },
+ {
+  "text": "Why is sodium doubled in the calculated osmolality formula?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-2",
+   "reserve",
+   "calculation"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Gennari FJ. Current concepts. Serum osmolality. Uses and limitations. N Engl J Med. 1984;310(2):102–5.",
+    "url": "https://doi.org/10.1056/NEJM198401123100207"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "To stand in for its partner anions, mainly chloride and bicarbonate",
+    "isCorrect": true,
+    "explanation": "Correct. Every positive charge is balanced by a negative one."
+   },
+   {
+    "text": "Because sodium ions are twice as heavy as other particles",
+    "isCorrect": false,
+    "explanation": "No. Osmolality counts particles, not mass."
+   },
+   {
+    "text": "To correct for the 93% water content of plasma",
+    "isCorrect": false,
+    "explanation": "No. That isn't what the doubling does."
+   },
+   {
+    "text": "Because sodium is measured in half-units",
+    "isCorrect": false,
+    "explanation": "No. Sodium is reported in mmol/L like the others."
+   }
+  ],
+  "explanation": "Plasma is electrically neutral, so counting sodium twice roughly covers chloride and bicarbonate. The other ions are small enough to leave out."
+ },
+ {
+  "text": "Ethanol has a molar mass of about 46 g/mol. About how much is 50 mmol/L of ethanol in g/L?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-2",
+   "reserve",
+   "ethanol",
+   "units"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Purssell RA, et al. Derivation and validation of a formula to calculate the contribution of ethanol to the osmolal gap. Ann Emerg Med. 2001;38(6):653–9.",
+    "url": "https://doi.org/10.1067/mem.2001.119455"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "0.23 g/L",
+    "isCorrect": false,
+    "explanation": "No. That's ten times too low."
+   },
+   {
+    "text": "2.3 g/L",
+    "isCorrect": true,
+    "explanation": "Correct. 50 mmol/L × 46 mg/mmol = 2,300 mg/L."
+   },
+   {
+    "text": "23 g/L",
+    "isCorrect": false,
+    "explanation": "No. That's ten times too high."
+   },
+   {
+    "text": "46 g/L",
+    "isCorrect": false,
+    "explanation": "No. That would be about 1,000 mmol/L."
+   }
+  ],
+  "explanation": "50 mmol/L × 46 g/mol = 2,300 mg/L, about 2.3 g/L or 230 mg/dL. At a factor of 1.25 this ethanol adds about 62 mmol/kg to the measured osmolality."
+ },
+ {
+  "text": "In uncontrolled diabetes with a very high glucose, why do cells lose water?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-2",
+   "reserve",
+   "tonicity",
+   "glucose"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Tzamaloukas AH, et al. Serum sodium concentration and tonicity in hyperglycemic crises. J Am Heart Assoc. 2019;8(19):e011786.",
+    "url": "https://doi.org/10.1161/JAHA.118.011786"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "Without insulin, glucose builds up outside cells and raises tonicity",
+    "isCorrect": true,
+    "explanation": "Correct. It acts like sodium as an effective osmole."
+   },
+   {
+    "text": "Glucose enters cells and pulls water in",
+    "isCorrect": false,
+    "explanation": "No. That would make cells swell."
+   },
+   {
+    "text": "Insulin itself pulls water out of cells",
+    "isCorrect": false,
+    "explanation": "No. The problem is the lack of insulin."
+   },
+   {
+    "text": "High glucose lowers the measured osmolality",
+    "isCorrect": false,
+    "explanation": "No. It raises it."
+   }
+  ],
+  "explanation": "When insulin is lacking, glucose accumulates in the extracellular fluid and raises tonicity, shifting water out of cells. Insulin treatment brings tonicity down; some organs, such as the brain and liver, take up glucose without insulin."
+ },
+ {
+  "text": "Gram for gram, why does methanol raise the osmolal gap more than ethylene glycol?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-2",
+   "reserve",
+   "toxic alcohols"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Kraut JA, Xing SX. Approach to the evaluation of a patient with an increased serum osmolal gap and high-anion-gap metabolic acidosis. Am J Kidney Dis. 2011;58(3):480–4.",
+    "url": "https://doi.org/10.1053/j.ajkd.2011.05.018"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "Methanol has a lower molar mass, so each gram adds more particles",
+    "isCorrect": true,
+    "explanation": "Correct. About 32 g/mol against 62 g/mol."
+   },
+   {
+    "text": "Methanol is charged",
+    "isCorrect": false,
+    "explanation": "No. Both are uncharged alcohols."
+   },
+   {
+    "text": "Ethylene glycol isn't measured by the osmometer",
+    "isCorrect": false,
+    "explanation": "No. Freezing point osmometry counts it."
+   },
+   {
+    "text": "Methanol is more toxic",
+    "isCorrect": false,
+    "explanation": "No. Toxicity doesn't change the particle count."
+   }
+  ],
+  "explanation": "The gap counts particles, not grams. Methanol (32 g/mol) is about half the molar mass of ethylene glycol (62 g/mol), so the same g/L gives about twice as many particles."
+ },
+ {
+  "text": "Sodium 138, glucose 5.5 and urea 4.5 mmol/L, ethanol 50 mmol/L, measured osmolality 352 mmol/kg. What is the residual gap with an ethanol factor of 1.0?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-2",
+   "reserve",
+   "ethanol",
+   "case"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Purssell RA, et al. Derivation and validation of a formula to calculate the contribution of ethanol to the osmolal gap. Ann Emerg Med. 2001;38(6):653–9.",
+    "url": "https://doi.org/10.1067/mem.2001.119455"
+   },
+   {
+    "title": "Lynd LD, et al. An evaluation of the osmole gap as a screening test for toxic alcohol poisoning. BMC Emerg Med. 2008;8:5.",
+    "url": "https://doi.org/10.1186/1471-227X-8-5"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "About 4 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. That uses the 1.25 factor."
+   },
+   {
+    "text": "About 16 mmol/kg",
+    "isCorrect": true,
+    "explanation": "Correct. 286 + 50 = 336; 352 − 336 = 16."
+   },
+   {
+    "text": "About 62 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. That is the ethanol contribution at 1.25."
+   },
+   {
+    "text": "About 66 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. That is the gap before ethanol is added."
+   }
+  ],
+  "explanation": "Calculated = 2 × 138 + 5.5 + 4.5 = 286. With a factor of 1.0, ethanol adds 50, giving 336, so the residual gap is 16. With 1.25 it would be about 4. Know which factor your lab uses."
+ },
+ {
+  "text": "How do the antidotes for methanol and ethylene glycol poisoning work?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "INTERMEDIATE",
+  "tags": [
+   "c1-2",
+   "reserve",
+   "toxic alcohols",
+   "treatment"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Kraut JA, Mullins ME. Toxic alcohols. N Engl J Med. 2018;378(3):270–80.",
+    "url": "https://doi.org/10.1056/NEJMra1615295"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "They block alcohol dehydrogenase, the enzyme that starts the breakdown into toxic acids",
+    "isCorrect": true,
+    "explanation": "Correct. That's why early treatment matters."
+   },
+   {
+    "text": "They bind the alcohol in the blood",
+    "isCorrect": false,
+    "explanation": "No. They act on the enzyme."
+   },
+   {
+    "text": "They speed up the breakdown of the alcohol",
+    "isCorrect": false,
+    "explanation": "No. They slow it."
+   },
+   {
+    "text": "They neutralise the acids directly",
+    "isCorrect": false,
+    "explanation": "No. That is the role of bicarbonate, not the antidotes."
+   }
+  ],
+  "explanation": "Fomepizole and ethanol itself block alcohol dehydrogenase, so less of the alcohol is converted into its toxic acids (formic acid from methanol; glycolic and oxalic acids from ethylene glycol)."
+ },
+ {
+  "text": "A patient arrives a day after drinking an unknown liquid. Osmolal gap 6 mmol/kg, anion gap 28 mmol/L, bicarbonate 8 mmol/L. Which interpretation fits best?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "ADVANCED",
+  "tags": [
+   "c1-2",
+   "reserve",
+   "toxic alcohols",
+   "acid-base"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Kraut JA, Xing SX. Approach to the evaluation of a patient with an increased serum osmolal gap and high-anion-gap metabolic acidosis. Am J Kidney Dis. 2011;58(3):480–4.",
+    "url": "https://doi.org/10.1053/j.ajkd.2011.05.018"
+   },
+   {
+    "title": "Kraut JA, Mullins ME. Toxic alcohols. N Engl J Med. 2018;378(3):270–80.",
+    "url": "https://doi.org/10.1056/NEJMra1615295"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "A toxic alcohol is ruled out because the osmolal gap is normal",
+    "isCorrect": false,
+    "explanation": "No. Late after ingestion the alcohol has been converted to acids."
+   },
+   {
+    "text": "A late toxic alcohol ingestion remains possible: the alcohol has been converted to acids",
+    "isCorrect": true,
+    "explanation": "Correct. The osmolal gap falls as the anion gap rises."
+   },
+   {
+    "text": "The results point to a lab error",
+    "isCorrect": false,
+    "explanation": "No. The pattern is typical of a late presentation."
+   },
+   {
+    "text": "This is ethanol intoxication",
+    "isCorrect": false,
+    "explanation": "No. Ethanol doesn't cause a severe high anion gap acidosis by itself."
+   }
+  ],
+  "explanation": "As a toxic alcohol is broken down, the uncharged alcohol disappears and charged acids take its place. A late patient can have a normal osmolal gap with a severe high anion gap acidosis. Request specific methanol and ethylene glycol testing."
+ },
+ {
+  "text": "A patient with kidney failure has a urea of 40 mmol/L and a high measured osmolality. Are their brain cells shrinking?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "ADVANCED",
+  "tags": [
+   "c1-2",
+   "reserve",
+   "tonicity",
+   "urea"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Sterns RH. Disorders of plasma sodium — causes, consequences, and correction. N Engl J Med. 2015;372(1):55–65.",
+    "url": "https://doi.org/10.1056/NEJMra1404489"
+   },
+   {
+    "title": "Oster JR, Singer I. Hyponatremia, hyposmolality, and hypotonicity: tables and fables. Arch Intern Med. 1999;159(4):333–6.",
+    "url": "https://doi.org/10.1001/archinte.159.4.333"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "Yes, because osmolality is high",
+    "isCorrect": false,
+    "explanation": "No. High osmolality from urea doesn't move water."
+   },
+   {
+    "text": "No, because urea crosses cell membranes, so tonicity is unchanged",
+    "isCorrect": true,
+    "explanation": "Correct. Urea is an ineffective osmole."
+   },
+   {
+    "text": "Yes, because urea is an effective osmole",
+    "isCorrect": false,
+    "explanation": "No. Urea spreads to both sides."
+   },
+   {
+    "text": "No, because the kidney excretes the urea immediately",
+    "isCorrect": false,
+    "explanation": "No. The urea is high precisely because the kidney can't excrete it."
+   }
+  ],
+  "explanation": "Urea raises the measured osmolality but spreads across cell membranes, so it doesn't create a pull on water. Tonicity, roughly 2 × Na + glucose, is what decides whether cells shrink."
+ },
+ {
+  "text": "The same patient's results are reported by two labs. Lab A, using an ethanol factor of 1.25, reports a residual gap of 4. Lab B, using a factor of 1.0, reports 16. Which statement is correct?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "ADVANCED",
+  "tags": [
+   "c1-2",
+   "reserve",
+   "ethanol",
+   "interpretation"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Purssell RA, et al. Derivation and validation of a formula to calculate the contribution of ethanol to the osmolal gap. Ann Emerg Med. 2001;38(6):653–9.",
+    "url": "https://doi.org/10.1067/mem.2001.119455"
+   },
+   {
+    "title": "Lynd LD, et al. An evaluation of the osmole gap as a screening test for toxic alcohol poisoning. BMC Emerg Med. 2008;8:5.",
+    "url": "https://doi.org/10.1186/1471-227X-8-5"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "Lab B has made an analytical error",
+    "isCorrect": false,
+    "explanation": "No. Both labs can be measuring correctly."
+   },
+   {
+    "text": "The difference comes from the ethanol factor, not the patient, so know which factor your lab uses",
+    "isCorrect": true,
+    "explanation": "Correct. The same results give different residual gaps."
+   },
+   {
+    "text": "A residual gap of 16 proves a toxic alcohol",
+    "isCorrect": false,
+    "explanation": "No. It depends on the factor and is a screening finding only."
+   },
+   {
+    "text": "The factor makes no difference above 10 mmol/kg",
+    "isCorrect": false,
+    "explanation": "No. It changes the conclusion here."
+   }
+  ],
+  "explanation": "Each mmol/L of ethanol adds about 1.25 mmol/kg in one validated study; some labs and studies use 1.0. With high ethanol levels the choice can move the residual gap across the usual limit of 10."
+ },
+ {
+  "text": "In a study of patients tested for methanol and ethylene glycol, a gap above 10 picked up every patient who needed dialysis but flagged many who didn't need an antidote. What does that make the osmolal gap?",
+  "categorySlug": "electrolytes",
+  "subtopic": "Osmolality and osmolal gap",
+  "difficulty": "ADVANCED",
+  "tags": [
+   "c1-2",
+   "reserve",
+   "toxic alcohols",
+   "screening"
+  ],
+  "author": "Orville Malijan",
+  "references": [
+   {
+    "title": "Lynd LD, et al. An evaluation of the osmole gap as a screening test for toxic alcohol poisoning. BMC Emerg Med. 2008;8:5.",
+    "url": "https://doi.org/10.1186/1471-227X-8-5"
+   },
+   {
+    "title": "Kraut JA, Mullins ME. Toxic alcohols. N Engl J Med. 2018;378(3):270–80.",
+    "url": "https://doi.org/10.1056/NEJMra1615295"
+   }
+  ],
+  "lessonSlugs": [
+   "c1-2-osmolality-osmolal-gap"
+  ],
+  "options": [
+   {
+    "text": "A screening tool: when a toxic alcohol is suspected, the answer is a specific measurement of the alcohol",
+    "isCorrect": true,
+    "explanation": "Correct. Sensitive at that threshold, but not specific."
+   },
+   {
+    "text": "A diagnostic test that confirms poisoning",
+    "isCorrect": false,
+    "explanation": "No. It flagged many patients who didn't need treatment."
+   },
+   {
+    "text": "A test that should no longer be used",
+    "isCorrect": false,
+    "explanation": "No. It's useful as a quick screen."
+   },
+   {
+    "text": "A replacement for measuring the alcohol itself",
+    "isCorrect": false,
+    "explanation": "No. Specific measurement gives the answer."
+   }
+  ],
+  "explanation": "At a threshold of 10, the osmole gap had a sensitivity of 1 for patients needing dialysis but many false positives. Use it as a quick screen and confirm with specific methanol and ethylene glycol testing."
+ }
+]
