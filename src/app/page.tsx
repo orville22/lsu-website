@@ -77,7 +77,12 @@ export default async function Home() {
               </span>
             </div>
           </div>
-          <ScienceVisual />
+          <ScienceVisual
+            lessonHref={(() => {
+              const lesson = items.find((l) => l.slug === 'c1-1-water-sodium-homeostasis');
+              return lesson ? lessonUrl(lesson) : undefined;
+            })()}
+          />
         </div>
       </section>
       <div className="principle-strip">

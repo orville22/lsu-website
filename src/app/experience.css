@@ -1471,3 +1471,36 @@ h3 {
 .balance-pill-green text {
   fill: var(--scene-paper);
 }
+.hero-art {
+  min-width: 0;
+}
+.hero-art-caption {
+  max-width: 460px;
+  margin: var(--space-5) 0 0 var(--space-2);
+  color: var(--muted);
+  font-size: var(--text-caption);
+  line-height: 1.5;
+}
+.hero-art-caption em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--ink);
+}
+.hero-art-caption a {
+  color: var(--action);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+@media (max-width: 680px) {
+  .hero-art {
+    display: grid;
+    justify-items: center;
+  }
+  .hero-art-caption {
+    margin-left: 0;
+    width: calc(100% - 7px);
+    max-width: 470px;
+  }
+}
