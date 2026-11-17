@@ -1,14 +1,15 @@
 'use client';
 /*
  * C1.2 interactive I2: effective and ineffective osmoles.
- * Add 60 mmol/kg of one solute to the fluid around a cell. Sodium and glucose
- * stay outside, so tonicity rises and water leaves; urea and ethanol spread to
- * both sides, so osmolality rises but tonicity and cell water don't change.
- * Cell water follows the simple osmometer relation (volume ∝ 1 / tonicity), and
- * the drawn cell's area is in proportion to it.
+ * Add 60 mmol/kg of one solute to the fluid around a cell. Each choice plays on
+ * a loop: the solute arrives, then either water leaves and the cell shrinks
+ * (sodium, glucose without insulin) or the solute spreads into the cell and
+ * nothing moves (urea, ethanol, glucose with insulin). Cell water follows the
+ * simple osmometer relation (volume ∝ 1 / tonicity); the drawn area matches it.
  */
-import { useState } from 'react';
-import { C, Frame, Ion } from '../kit';
+import { useState, type CSSProperties } from 'react';
+import { Arrow, C, CellBlob, Droplet, Frame, Ion, Responsive, type Layout } from '../kit';
+import { LoopBar, useLoop } from '../loop';
 
 export const BASE = 290;
 export const ADDED = 60;
@@ -18,7 +19,7 @@ const SOLUTES = [
     key: 'none',
     label: 'Nothing added',
     effective: false,
-    colour: C.muted,
+    colour: '',
     text: 'Inside and outside both sit at 290 mmol/kg, so water has no reason to move. Pick a solute to add.',
   },
   {
@@ -33,14 +34,14 @@ const SOLUTES = [
     label: 'Glucose, no insulin',
     effective: true,
     colour: 'var(--ix-solid-green)',
-    text: 'Without insulin, glucose can’t get into cells such as muscle and fat, so it stays outside and pulls water out just as sodium does. This is what happens in uncontrolled diabetes.',
+    text: 'Without insulin, glucose builds up outside many cells, so it pulls water out just as sodium does. This is what happens in uncontrolled diabetes.',
   },
   {
     key: 'gluIns',
     label: 'Glucose, with insulin',
     effective: false,
     colour: 'var(--ix-solid-green)',
-    text: 'With insulin working, glucose moves into cells and is used, so it doesn’t stay outside to pull water out. Simplified: some cells, such as brain cells, take up glucose without insulin.',
+    text: 'With insulin working, glucose moves into cells and is used, so it doesn’t stay outside to pull water out. Some organs, such as the brain and liver, take up glucose without insulin.',
   },
   {
     key: 'urea',
@@ -68,91 +69,79 @@ export function cellState(key: SoluteKey) {
   return { osm, tonicity, waterChange, effective: s.effective };
 }
 
-// Fixed positions so server and client render the same picture.
+const PHASES = ['Before', 'Solute added', 'Response'];
+const DURATIONS = [1200, 1800, 5200];
+
 const OUT = [
-  [44, 60],
-  [90, 52],
-  [214, 54],
-  [256, 66],
-  [40, 120],
-  [262, 124],
-  [38, 186],
-  [260, 190],
-  [56, 220],
-  [120, 226],
-  [190, 224],
-  [248, 218],
-  [70, 92],
-  [232, 96],
+  [44, 66],
+  [90, 58],
+  [214, 58],
+  [256, 72],
+  [40, 124],
+  [262, 128],
+  [38, 190],
+  [260, 192],
+  [56, 222],
+  [120, 228],
+  [190, 226],
+  [248, 220],
+  [70, 96],
+  [232, 100],
 ];
 const IN = [
-  [132, 118],
-  [168, 114],
-  [150, 150],
-  [124, 160],
-  [174, 164],
-  [152, 94],
+  [134, 122],
+  [168, 116],
+  [150, 152],
+  [126, 162],
+  [174, 166],
+  [154, 98],
 ];
-const ADD_OUT = [
-  [60, 72],
-  [240, 82],
-  [44, 150],
-  [256, 156],
-  [72, 204],
-  [230, 204],
-  [150, 46],
-  [150, 230],
+/** Where added particles land; the last three move into the cell for solutes that cross. */
+const ADD = [
+  [60, 80],
+  [240, 88],
+  [44, 152],
+  [256, 158],
+  [72, 206],
+  [230, 206],
+  [150, 52],
+  [150, 234],
+  [266, 104],
 ];
-const ADD_IN = [
-  [140, 132],
-  [166, 140],
-  [146, 176],
+const INTO = [
+  [142, 136],
+  [166, 144],
+  [148, 176],
 ];
 const ANGLES = [0, Math.PI / 4, (3 * Math.PI) / 4, Math.PI, (5 * Math.PI) / 4, (7 * Math.PI) / 4];
 
-function Beaker({ solute }: { solute: (typeof SOLUTES)[number] }) {
+const flow = (dx: number, dy: number, delay: number) =>
+  ({
+    '--dx': `${dx}px`,
+    '--dy': `${dy}px`,
+    '--delay': `${delay}s`,
+    '--dur': '1.8s',
+  }) as CSSProperties;
+
+function Beaker({ id, solute, p }: { id: string; solute: (typeof SOLUTES)[number]; p: number }) {
   const st = cellState(solute.key);
   const cx = 150,
-    cy = 140,
-    r0 = 64;
-  const r = r0 * Math.sqrt(BASE / st.tonicity);
-  const outs = solute.key === 'none' ? [] : st.effective ? ADD_OUT : ADD_OUT.slice(0, 5);
-  const ins = solute.key === 'none' || st.effective ? [] : ADD_IN;
-  const glass = 'M14 18H20V222Q20 236 34 236H266Q280 236 280 222V18H286';
+    cy = 144,
+    r0 = 62;
+  const scale = st.effective && p >= 2 ? Math.sqrt(BASE / st.tonicity) : 1;
+  const none = solute.key === 'none';
+  const crosses = !none && !st.effective;
   return (
-    <svg
-      className="ix-svg ix-beaker ix-cell"
-      viewBox="0 0 300 262"
-      role="img"
-      aria-label={`A cell in fluid after adding ${solute.label.toLowerCase()}`}
-    >
-      <defs>
-        <marker
-          id="ix-c1-2-cell-arrow"
-          viewBox="0 0 10 10"
-          refX={8}
-          refY={5}
-          markerWidth={4.2}
-          markerHeight={4.2}
-          orient="auto-start-reverse"
-        >
-          <path
-            d="M1 1L9 5L1 9Q2.6 5 1 1z"
-            fill={C.accent}
-            stroke={C.accent}
-            strokeLinejoin="round"
-          />
-        </marker>
-      </defs>
-      <ellipse cx={150} cy={248} rx={128} ry={8} fill={C.drop} />
+    <g>
+      <ellipse cx={150} cy={252} rx={128} ry={8} fill={C.drop} />
       <path
-        d="M20 36H280V222Q280 236 266 236H34Q20 236 20 222Z"
+        d="M20 40H280V226Q280 240 266 240H34Q20 240 20 226Z"
         fill={C.water}
         fillOpacity={0.16}
       />
-      <path d="M20 36H280" stroke={C.water} strokeWidth={2} strokeLinecap="round" />
+      <path d="M20 40H280" stroke={C.water} strokeWidth={2} strokeLinecap="round" />
       {OUT.map(([x, y]) => (
-        <circle key={`o${x}-${y}`} cx={x} cy={y} r={3.5} fill={C.muted} opacity={0.7} />
+        <circle key={`o${x}-${y}`} cx={x} cy={y} r={3.5} fill={C.muted} opacity={0.65} />
       ))}
       {st.effective && (
         <circle
@@ -161,61 +150,81 @@ function Beaker({ solute }: { solute: (typeof SOLUTES)[number] }) {
           r={r0}
           fill="none"
           stroke={C.muted}
-          strokeWidth={1.2}
+          strokeWidth={1.3}
           strokeDasharray="4 4"
         />
       )}
-      <circle cx={cx} cy={cy + 4} r={r} fill={C.drop} />
-      <circle
-        cx={cx}
-        cy={cy}
-        r={r}
-        fill="var(--ix-tint-water)"
-        stroke={C.outline}
-        strokeWidth={2.5}
-      />
-      <path
-        d={`M${cx - r * 0.62} ${cy - r * 0.38}a${r * 0.72} ${r * 0.72} 0 0 1 ${r * 0.5} -${r * 0.4}`}
-        stroke={C.highlight}
-        strokeWidth={4}
-        strokeLinecap="round"
-        fill="none"
-      />
-      {IN.map(([x, y]) => (
-        <circle key={`i${x}-${y}`} cx={x} cy={y} r={3.5} fill={C.muted} opacity={0.7} />
-      ))}
-      {[...outs, ...ins].map(([x, y]) => (
-        <Ion key={`a${x}-${y}`} x={x} y={y} r={6} fill={solute.colour} />
-      ))}
-      {st.effective &&
-        ANGLES.map((a) => (
-          <path
-            key={a}
-            d={`M${cx + (r + 5) * Math.cos(a)} ${cy + (r + 5) * Math.sin(a)}L${cx + (r + 27) * Math.cos(a)} ${cy + (r + 27) * Math.sin(a)}`}
-            stroke={C.accent}
-            strokeWidth={2.5}
-            strokeLinecap="round"
-            markerEnd="url(#ix-c1-2-cell-arrow)"
-          />
+      <CellBlob cx={cx} cy={cy} r={r0} seed={2} scale={scale} slow>
+        {IN.map(([x, y]) => (
+          <circle key={`i${x}-${y}`} cx={x} cy={y} r={3.5} fill={C.muted} opacity={0.65} />
         ))}
+      </CellBlob>
+      {!none &&
+        ADD.map(([x, y], i) => {
+          const moves = crosses && i >= ADD.length - 3 && p >= 2;
+          const [tx, ty] = moves ? INTO[i - (ADD.length - 3)] : [x, y];
+          return (
+            <g
+              key={`a${x}-${y}`}
+              className={moves ? 'ix-anim-slow' : 'ix-anim'}
+              style={{
+                transformBox: 'view-box',
+                opacity: p >= 1 ? 1 : 0,
+                transform: p >= 1 ? `translate(${tx - x}px, ${ty - y}px)` : `translate(0, -70px)`,
+              }}
+            >
+              <Ion x={x} y={y} r={6.5} fill={solute.colour} />
+            </g>
+          );
+        })}
+      {st.effective &&
+        p >= 2 &&
+        ANGLES.map((a, i) => {
+          const r = r0 * scale + 6;
+          return (
+            <g key={a}>
+              <Arrow
+                id={id}
+                d={`M${cx + r * Math.cos(a)} ${cy + r * Math.sin(a)}L${cx + (r + 24) * Math.cos(a)} ${cy + (r + 24) * Math.sin(a)}`}
+                accent
+              />
+              <g className="ix-flow" style={flow(24 * Math.cos(a), 24 * Math.sin(a), i * 0.3)}>
+                <Droplet x={cx + r * Math.cos(a)} y={cy + r * Math.sin(a)} s={0.65} />
+              </g>
+            </g>
+          );
+        })}
       <path
-        d={glass}
+        d="M14 22H20V226Q20 240 34 240H266Q280 240 280 226V22H286"
         fill="none"
         stroke={C.outline}
         strokeWidth={3}
         strokeLinejoin="round"
         strokeLinecap="round"
       />
-    </svg>
+      <path d="M30 56V220" stroke={C.highlight} strokeWidth={4} strokeLinecap="round" />
+    </g>
   );
 }
 
 const signed = (n: number) => (n < 0 ? `−${-n}%` : n > 0 ? `+${n}%` : 'no change');
 
 export function CellTonicity() {
-  const [key, setKey] = useState<SoluteKey>('none');
+  const [key, setKey] = useState<SoluteKey>('na');
+  const loop = useLoop(DURATIONS, key);
+  const p = loop.phase;
   const solute = SOLUTES.find((s) => s.key === key)!;
   const st = cellState(key);
+  const shown = {
+    osm: p >= 1 ? st.osm : BASE,
+    tonicity: p >= 2 ? st.tonicity : BASE,
+    water: p >= 2 ? st.waterChange : 0,
+  };
+  const layout = (w: number): Layout => ({
+    w,
+    h: 262,
+    draw: (id) => <Beaker id={id} solute={solute} p={p} />,
+  });
   return (
     <Frame
       title="Only particles that stay outside the cell pull water out of it"
@@ -231,31 +240,44 @@ export function CellTonicity() {
             aria-pressed={key === s.key}
             onClick={() => setKey(s.key)}
           >
+            {s.colour && (
+              <span className="ix-swatch" style={{ background: s.colour }} aria-hidden="true" />
+            )}
             {s.label}
           </button>
         ))}
       </div>
+      {key !== 'none' && <LoopBar labels={PHASES} {...loop} />}
       <div className="ix-row">
-        <Beaker solute={solute} />
+        <Responsive
+          name="c1-2-cell"
+          label={`A cell in fluid after adding ${solute.label.toLowerCase()}`}
+          wide={layout(300)}
+          narrow={layout(300)}
+        />
         <div className="ix-row-side">
           <div className="ix-readout" aria-live="polite">
             <p>
               <strong>
-                {st.effective ? 'Water leaves the cell and it shrinks' : 'No net water movement'}
+                {st.effective && p >= 2
+                  ? 'Water leaves the cell and it shrinks'
+                  : 'No net water movement'}
               </strong>
             </p>
             <dl className="ix-stats">
               <div>
                 <dt>Measured osmolality</dt>
-                <dd>{st.osm} mmol/kg</dd>
+                <dd>{shown.osm} mmol/kg</dd>
               </div>
               <div>
                 <dt>Tonicity (effective osmolality)</dt>
-                <dd className={st.effective ? 'ix-hot' : undefined}>{st.tonicity} mmol/kg</dd>
+                <dd className={shown.tonicity > BASE ? 'ix-hot' : undefined}>
+                  {shown.tonicity} mmol/kg
+                </dd>
               </div>
               <div>
                 <dt>Cell water</dt>
-                <dd className={st.effective ? 'ix-hot' : undefined}>{signed(st.waterChange)}</dd>
+                <dd className={shown.water ? 'ix-hot' : undefined}>{signed(shown.water)}</dd>
               </div>
             </dl>
             <p className="ix-sub">{solute.text}</p>

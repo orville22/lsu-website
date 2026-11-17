@@ -1,16 +1,29 @@
 'use client';
 /*
  * C1.1 new visual (learner review #2): water follows sodium.
- * Aldosterone keeps sodium → osmolality edges up → ADH and thirst respond →
- * water is kept and drunk → the ECF grows while the sodium concentration
- * returns to where it started. That is why the sodium system sets volume.
- * Numbers are a toy model: ECF 18 L at 140 mmol/L; 72 mmol of sodium kept,
- * then 0.5 L of water.
+ * The extracellular fluid is drawn as a pool around a few cells, fed by the
+ * kidney (sodium) and by drinking and the kidney keeping water. Plays on a loop:
+ * aldosterone keeps sodium → the fluid becomes saltier → osmoreceptors switch on
+ * ADH and thirst → water arrives, the pool grows and the concentration returns.
+ * Toy numbers: ECF 18 L at 140 mmol/L; 72 mmol of sodium kept, then 0.5 L water.
  */
-import { Arrow, C, Frame, Node, Responsive, type Layout, type NodeSpec } from '../kit';
-import { StepControls, useSteps } from '../steps';
+import type { CSSProperties } from 'react';
+import {
+  Arrow,
+  C,
+  CellBlob,
+  Droplet,
+  Frame,
+  Ion,
+  Node,
+  Responsive,
+  type Layout,
+  type NodeSpec,
+} from '../kit';
+import { LoopBar, useLoop } from '../loop';
 
-const STEPS = ['Start', 'Sodium kept', 'ADH and thirst', 'Water follows'];
+const PHASES = ['Start', 'Sodium kept', 'ADH and thirst', 'Water follows'];
+const DURATIONS = [2400, 2800, 2600, 4600];
 
 export const STATES = [
   { na: 2520, litres: 18 },
@@ -21,95 +34,140 @@ export const STATES = [
 export const conc = (i: number) => Math.round(STATES[i].na / STATES[i].litres);
 
 const TEXT = [
-  'A healthy extracellular fluid (ECF): sodium 140 mmol/L. Then the kidney is told to keep sodium.',
+  'A healthy extracellular fluid (ECF), the fluid around the cells: sodium 140 mmol/L.',
   'Aldosterone makes the kidney keep extra sodium. The same water now holds more sodium, so the concentration and the osmolality edge up.',
   'The osmoreceptors sense the higher osmolality. ADH rises and so does thirst.',
-  'The kidney keeps water and the person drinks. The ECF grows until the sodium concentration is back where it started. More sodium has become more volume, not a higher sodium result.',
+  'The kidney keeps water and the person drinks. The ECF grows until the sodium concentration is back where it started: more sodium has become more volume, not a higher sodium result.',
 ];
 
-const DOTS = [
-  [0.12, 0.2],
-  [0.3, 0.12],
-  [0.5, 0.24],
-  [0.7, 0.14],
-  [0.88, 0.22],
-  [0.2, 0.42],
-  [0.4, 0.5],
-  [0.62, 0.4],
-  [0.82, 0.5],
-  [0.1, 0.68],
-  [0.32, 0.76],
-  [0.55, 0.66],
-  [0.75, 0.78],
-  [0.9, 0.7],
+/** A smooth organic outline with separate x and y radii. */
+function pool(cx: number, cy: number, rx: number, ry: number) {
+  const n = 10;
+  const pts = Array.from({ length: n }, (_, i) => {
+    const a = (i / n) * Math.PI * 2;
+    const k = 1 + 0.06 * Math.sin(3 * a + 1.3) + 0.04 * Math.cos(4 * a + 0.4);
+    return [cx + Math.cos(a) * rx * k, cy + Math.sin(a) * ry * k];
+  });
+  const p = (i: number) => pts[((i % n) + n) % n];
+  let d = `M${p(0)[0].toFixed(1)} ${p(0)[1].toFixed(1)}`;
+  for (let i = 0; i < n; i++) {
+    const [x0, y0] = p(i - 1);
+    const [x1, y1] = p(i);
+    const [x2, y2] = p(i + 1);
+    const [x3, y3] = p(i + 2);
+    d += `C${(x1 + (x2 - x0) / 6).toFixed(1)} ${(y1 + (y2 - y0) / 6).toFixed(1)} ${(x2 - (x3 - x1) / 6).toFixed(1)} ${(y2 - (y3 - y1) / 6).toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+  }
+  return `${d}Z`;
+}
+
+const NA = [
+  [-0.62, -0.38],
+  [-0.3, -0.62],
+  [0.15, -0.55],
+  [0.55, -0.45],
+  [0.75, 0.22],
+  [-0.8, -0.05],
+  [-0.55, 0.45],
+  [-0.28, 0.66],
+  [0.32, 0.58],
+  [0.6, 0.45],
+  [-0.05, -0.2],
+  [0.18, 0.12],
 ];
 const EXTRA = [
-  [0.45, 0.88],
-  [0.68, 0.9],
+  [-0.2, 0.2],
+  [0.2, -0.28],
+];
+const CELLS = [
+  [-0.45, 0.02, 1],
+  [0.42, -0.02, 2],
+  [0.0, 0.4, 3],
 ];
 
-function Tank({ x, y, w, h, step }: { x: number; y: number; w: number; h: number; step: number }) {
-  const bottom = y + h;
-  const level = step >= 3 ? h * 0.86 : h * 0.66;
-  const dotH = h * 0.62;
+const flow = (dx: number, dy: number, delay: number, dur = 1.8) =>
+  ({
+    '--dx': `${dx}px`,
+    '--dy': `${dy}px`,
+    '--delay': `${delay}s`,
+    '--dur': `${dur}s`,
+  }) as CSSProperties;
+
+function Pool({
+  cx,
+  cy,
+  rx,
+  ry,
+  p,
+}: {
+  cx: number;
+  cy: number;
+  rx: number;
+  ry: number;
+  p: number;
+}) {
+  const grown = p >= 3;
+  const salty = p === 1 || p === 2;
+  const d = pool(cx, cy, rx, ry);
   return (
     <g>
-      <ellipse cx={x + w / 2} cy={bottom + 10} rx={w * 0.48} ry={7} fill={C.drop} />
-      <rect
-        className="ix-grow"
-        x={x}
-        y={bottom - level}
-        width={w}
-        height={level}
-        fill={C.water}
-        fillOpacity={0.22}
-      />
-      <path
-        className="ix-anim"
-        d={`M${x} ${bottom - h * 0.66}H${x + w}`}
-        stroke={C.water}
-        strokeWidth={2.5}
-        style={{ transform: `translate(0, ${step >= 3 ? -(h * 0.2) : 0}px)` }}
-      />
-      {DOTS.map(([fx, fy]) => (
-        <circle
-          key={`${fx}-${fy}`}
-          cx={x + 14 + fx * (w - 28)}
-          cy={bottom - dotH + fy * (dotH - 10)}
-          r={6}
-          fill={C.sodium}
-          stroke={C.outline}
-          strokeWidth={1.2}
+      <g
+        className="ix-anim-slow"
+        style={{
+          transformOrigin: `${cx}px ${cy}px`,
+          transformBox: 'view-box',
+          transform: `scale(${grown ? 1.12 : 1})`,
+        }}
+      >
+        <path d={d} transform="translate(0 5)" fill={C.drop} />
+        <path d={d} fill="var(--ix-tint-water)" stroke={C.outline} strokeWidth={2.5} />
+        <path
+          className="ix-anim-slow"
+          d={d}
+          fill="var(--ix-solid-sodium)"
+          style={{ opacity: salty ? 0.16 : 0 }}
         />
+        <path
+          d={pool(cx, cy, rx - 6, ry - 6)}
+          fill="none"
+          stroke={C.water}
+          strokeOpacity={0.5}
+          strokeWidth={1.5}
+          strokeDasharray="10 8"
+        />
+      </g>
+      {CELLS.map(([fx, fy, seed]) => (
+        <CellBlob
+          key={seed}
+          cx={cx + fx * rx}
+          cy={cy + fy * ry}
+          r={Math.min(rx, ry) * 0.2}
+          seed={seed}
+        />
+      ))}
+      {NA.map(([fx, fy]) => (
+        <Ion key={`${fx}${fy}`} x={cx + fx * rx} y={cy + fy * ry} r={6} fill={C.sodium} />
       ))}
       {EXTRA.map(([fx, fy]) => (
-        <circle
-          key={`e${fx}`}
-          className="ix-anim"
-          cx={x + 14 + fx * (w - 28)}
-          cy={bottom - dotH + fy * (dotH - 10)}
-          r={7.5}
-          fill={C.sodium}
-          stroke={C.ink}
-          strokeWidth={2}
-          style={{ opacity: step >= 1 ? 1 : 0 }}
-        />
+        <g key={`e${fx}`} className="ix-anim" style={{ opacity: p >= 1 ? 1 : 0 }}>
+          <Ion x={cx + fx * rx} y={cy + fy * ry} r={7.5} fill={C.sodium} />
+          <circle
+            cx={cx + fx * rx}
+            cy={cy + fy * ry}
+            r={11}
+            fill="none"
+            stroke={C.ink}
+            strokeWidth={1.5}
+            strokeDasharray="3 3"
+          />
+        </g>
       ))}
-      <path
-        d={`M${x - 6} ${y}H${x}V${bottom - 12}Q${x} ${bottom} ${x + 12} ${bottom}H${x + w - 12}Q${x + w} ${bottom} ${x + w} ${bottom - 12}V${y}H${x + w + 6}`}
-        fill="none"
-        stroke={C.outline}
-        strokeWidth={3}
-        strokeLinejoin="round"
-        strokeLinecap="round"
-      />
       <text
-        x={x + w / 2}
-        y={y - 10}
+        x={cx}
+        y={cy - ry - 14}
         textAnchor="middle"
-        fontSize={12}
+        fontSize={12.5}
         fontWeight={600}
-        fill={C.muted}
+        fill={C.ink}
       >
         Extracellular fluid
       </text>
@@ -117,122 +175,138 @@ function Tank({ x, y, w, h, step }: { x: number; y: number; w: number; h: number
   );
 }
 
-const ACTIVE: number[][] = [[], [0], [0, 1], [0, 1, 2]];
+const N: Record<string, Omit<NodeSpec, 'x' | 'y' | 'w'>> = {
+  kidney: {
+    title: 'Kidney',
+    body: ['aldosterone:', 'keeps sodium'],
+    hue: 'sodium',
+    icon: 'kidney',
+  },
+  brain: {
+    title: 'Osmoreceptors',
+    body: ['ADH and', 'thirst rise'],
+    hue: 'mustard',
+    icon: 'brain',
+  },
+  water: {
+    title: 'Water in',
+    body: ['kept by the kidney', 'and drunk'],
+    hue: 'water',
+    icon: 'drop',
+  },
+};
 
-function Chain({
-  id,
-  nodes,
-  step,
-  links,
-}: {
-  id: string;
-  nodes: NodeSpec[];
-  step: number;
-  links: string[];
-}) {
+function Lit({ n, on }: { n: NodeSpec; on: boolean }) {
   return (
-    <g>
-      {links.map((d, i) => (
-        <g key={d} className="ix-anim" style={{ opacity: step > i + 1 ? 1 : 0.25 }}>
-          <Arrow id={id} d={d} accent={step > i + 1} />
-        </g>
-      ))}
-      {nodes.map((n, i) => (
-        <g
-          key={n.title}
-          className="ix-anim"
-          style={{ opacity: ACTIVE[step].includes(i) ? 1 : 0.35 }}
-        >
-          <Node {...n} tone={ACTIVE[step].at(-1) === i ? 'accent' : 'plain'} />
-        </g>
-      ))}
+    <g className="ix-anim" style={{ opacity: on ? 1 : 0.45 }}>
+      <Node {...n} tone={on ? 'accent' : 'plain'} />
     </g>
   );
 }
 
-const nodeText: Omit<NodeSpec, 'x' | 'y' | 'w'>[] = [
-  { title: 'Aldosterone', body: 'kidney keeps sodium', hue: 'sodium', icon: 'salt' },
-  {
-    title: 'Osmolality edges up',
-    body: ['osmoreceptors respond:', 'ADH and thirst rise'],
-    hue: 'mustard',
-    icon: 'brain',
-  },
-  { title: 'Water kept and drunk', body: 'the ECF grows', hue: 'water', icon: 'drop' },
-];
-
 export function WaterFollowsSodium() {
-  const s = useSteps(STEPS.length);
-  const { step } = s;
+  const loop = useLoop(DURATIONS);
+  const p = loop.phase;
   const wide: Layout = {
-    w: 660,
-    h: 300,
+    w: 700,
+    h: 330,
     draw: (id) => (
       <g>
-        <Tank x={30} y={50} w={220} h={220} step={step} />
-        <Chain
-          id={id}
-          step={step}
-          nodes={nodeText.map((n, i) => ({ ...n, x: 480, y: 70 + i * 92, w: 240 }))}
-          links={['M480 100V132', 'M480 192V224']}
-        />
+        <Pool cx={350} cy={180} rx={150} ry={112} p={p} />
+        <Lit n={{ ...N.kidney, x: 84, y: 180, w: 140 }} on={p === 1} />
+        <Lit n={{ ...N.brain, x: 610, y: 82, w: 150 }} on={p === 2} />
+        <Lit n={{ ...N.water, x: 610, y: 270, w: 150 }} on={p === 3} />
+        <g className="ix-anim" style={{ opacity: p === 1 ? 1 : 0.3 }}>
+          <Arrow id={id} d="M156 180H188" accent={p === 1} />
+        </g>
+        <g className="ix-anim" style={{ opacity: p === 2 ? 1 : 0.3 }}>
+          <Arrow id={id} d="M470 112Q500 82 532 82" accent={p === 2} />
+        </g>
+        <g className="ix-anim" style={{ opacity: p >= 2 ? 1 : 0.3 }}>
+          <Arrow id={id} d="M610 114V238" accent={p === 3} dashed />
+        </g>
+        <g className="ix-anim" style={{ opacity: p === 3 ? 1 : 0.3 }}>
+          <Arrow id={id} d="M532 270Q500 260 488 240" accent={p === 3} />
+        </g>
+        {p === 1 &&
+          [0, 1, 2].map((i) => (
+            <g key={`k${i}`} className="ix-flow" style={flow(90, 0, i * 0.6)}>
+              <Ion x={150} y={180} r={6} fill={C.sodium} />
+            </g>
+          ))}
+        {p === 3 &&
+          [0, 1, 2, 3].map((i) => (
+            <g key={`w${i}`} className="ix-flow" style={flow(-80, -50, i * 0.45)}>
+              <Droplet x={540} y={272} />
+            </g>
+          ))}
       </g>
     ),
   };
   const narrow: Layout = {
     w: 340,
-    h: 560,
+    h: 580,
     draw: (id) => (
       <g>
-        <Tank x={70} y={34} w={200} h={200} step={step} />
-        <Chain
-          id={id}
-          step={step}
-          nodes={nodeText.map((n, i) => ({ ...n, x: 170, y: 306 + i * 92, w: 260 }))}
-          links={['M170 336V368', 'M170 428V460']}
-        />
+        <Pool cx={170} cy={150} rx={130} ry={98} p={p} />
+        <Lit n={{ ...N.kidney, x: 170, y: 340, w: 230 }} on={p === 1} />
+        <Lit n={{ ...N.brain, x: 170, y: 432, w: 230 }} on={p === 2} />
+        <Lit n={{ ...N.water, x: 170, y: 524, w: 230 }} on={p === 3} />
+        <Arrow id={id} d="M170 370V398" accent={p >= 2} />
+        <Arrow id={id} d="M170 462V490" accent={p >= 3} />
+        {p === 1 &&
+          [0, 1, 2].map((i) => (
+            <g key={`k${i}`} className="ix-flow" style={flow(0, -70, i * 0.6)}>
+              <Ion x={170} y={300} r={6} fill={C.sodium} />
+            </g>
+          ))}
+        {p === 3 &&
+          [0, 1, 2, 3].map((i) => (
+            <g key={`w${i}`} className="ix-flow" style={flow(0, 70, i * 0.45)}>
+              <Droplet x={100 + i * 45} y={4} />
+            </g>
+          ))}
       </g>
     ),
   };
-  const st = STATES[step];
-  const c = conc(step);
+  const st = STATES[p];
+  const c = conc(p);
   return (
     <Frame
       title="Keep sodium, and water follows: the ECF grows while the sodium result stays put"
-      keyText="Orange dots are sodium; the blue fill is the extracellular fluid. Step through, or press Play."
-      note="Teaching model: an ECF of 18 L, with the changes drawn larger than life. In the body the steps overlap, so the sodium result barely moves at all."
+      keyText="The pool is the fluid around the cells. Orange balls are sodium; ringed ones are the sodium the kidney kept."
+      note="Teaching model: an ECF of 18 L, with the changes drawn larger than life. In the body these steps overlap, so the sodium result barely moves at all."
       wide
     >
-      <StepControls labels={STEPS} {...s} />
+      <LoopBar labels={PHASES} {...loop} />
       <Responsive
         name="c1-1-water-follows"
         label="Kept sodium raises osmolality, ADH and thirst follow, and the extra water restores the sodium concentration"
         wide={wide}
         narrow={narrow}
       />
-      <div className={`ix-readout${c > 140 ? ' ix-readout-warn' : ''}`} aria-live="polite">
+      <div
+        className={`ix-readout ix-caption${c > 140 ? ' ix-readout-warn' : ''}`}
+        aria-live="polite"
+      >
         <p>
-          <strong>
-            Step {step + 1}: {STEPS[step]}
-          </strong>
+          <strong>{PHASES[p]}</strong>
         </p>
         <dl className="ix-stats">
           <div>
             <dt>Sodium in the ECF</dt>
-            <dd className={step >= 1 ? 'ix-hot' : undefined}>
-              {st.na.toLocaleString('en-AU')} mmol
-            </dd>
+            <dd className={p >= 1 ? 'ix-hot' : undefined}>{st.na.toLocaleString('en-AU')} mmol</dd>
           </div>
           <div>
             <dt>ECF volume</dt>
-            <dd className={step >= 3 ? 'ix-hot' : undefined}>{st.litres.toFixed(1)} L</dd>
+            <dd className={p >= 3 ? 'ix-hot' : undefined}>{st.litres.toFixed(1)} L</dd>
           </div>
           <div>
             <dt>Sodium result</dt>
             <dd>{c} mmol/L</dd>
           </div>
         </dl>
-        <p className="ix-sub">{TEXT[step]}</p>
+        <p className="ix-sub">{TEXT[p]}</p>
       </div>
     </Frame>
   );

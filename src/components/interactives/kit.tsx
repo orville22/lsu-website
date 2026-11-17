@@ -7,7 +7,7 @@
  * a readable size and no JavaScript is needed to choose. Titles, keys and
  * explanations sit in HTML around the SVG so they wrap naturally.
  */
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 export const C = {
   ink: 'var(--ix-ink)',
@@ -446,5 +446,114 @@ export function Frame({
       {children}
       {note && <p className="ix-note">{note}</p>}
     </div>
+  );
+}
+
+/* ---------- Richer elements (organic cells, water drops) ---------- */
+
+/** A smooth, slightly irregular closed outline around (cx, cy). Same seed, same shape. */
+export function blobPath(cx: number, cy: number, r: number, seed = 1, wobble = 0.05) {
+  const n = 12;
+  const pts = Array.from({ length: n }, (_, i) => {
+    const a = (i / n) * Math.PI * 2;
+    const k = 1 + wobble * Math.sin(3 * a + seed) + wobble * 0.6 * Math.cos(5 * a + seed * 2);
+    return [cx + Math.cos(a) * r * k, cy + Math.sin(a) * r * k];
+  });
+  const p = (i: number) => pts[((i % n) + n) % n];
+  let d = `M${p(0)[0].toFixed(1)} ${p(0)[1].toFixed(1)}`;
+  for (let i = 0; i < n; i++) {
+    const [x0, y0] = p(i - 1);
+    const [x1, y1] = p(i);
+    const [x2, y2] = p(i + 1);
+    const [x3, y3] = p(i + 2);
+    const c1 = [x1 + (x2 - x0) / 6, y1 + (y2 - y0) / 6];
+    const c2 = [x2 - (x3 - x1) / 6, y2 - (y3 - y1) / 6];
+    d += `C${c1[0].toFixed(1)} ${c1[1].toFixed(1)} ${c2[0].toFixed(1)} ${c2[1].toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+  }
+  return `${d}Z`;
+}
+
+/**
+ * A cell: organic outline, a two-line membrane (the lipid bilayer, suggested),
+ * a tinted cytoplasm and a nucleus. `scale` swells or shrinks it about its centre
+ * with a smooth transition; `swell` instead loops a slow swell (CSS animation).
+ */
+export function CellBlob({
+  cx,
+  cy,
+  r,
+  seed = 1,
+  scale = 1,
+  swell,
+  fill = 'var(--ix-tint-green)',
+  nucleus = true,
+  slow,
+  children,
+}: {
+  cx: number;
+  cy: number;
+  r: number;
+  seed?: number;
+  scale?: number;
+  /** Loop a slow change to this scale and back. */
+  swell?: number;
+  fill?: string;
+  nucleus?: boolean;
+  /** Use a slow transition when `scale` changes. */
+  slow?: boolean;
+  children?: ReactNode;
+}) {
+  const outer = blobPath(cx, cy, r, seed);
+  const inner = blobPath(cx, cy, r - 4, seed);
+  const style = {
+    transformOrigin: `${cx}px ${cy}px`,
+    transformBox: 'view-box',
+    ...(swell ? { '--s': swell } : { transform: `scale(${scale})` }),
+  } as CSSProperties;
+  return (
+    <g className={swell ? 'ix-swell' : slow ? 'ix-anim-slow' : 'ix-anim'} style={style}>
+      <path d={outer} transform="translate(0 4)" fill={C.drop} />
+      <path d={outer} fill={fill} stroke={C.outline} strokeWidth={2.5} />
+      <path d={inner} fill="none" stroke={C.outline} strokeOpacity={0.35} strokeWidth={1.2} />
+      <path
+        d={`M${cx - r * 0.62} ${cy - r * 0.3}a${r * 0.7} ${r * 0.7} 0 0 1 ${r * 0.42} -${r * 0.42}`}
+        stroke={C.highlight}
+        strokeWidth={3.5}
+        strokeLinecap="round"
+        fill="none"
+      />
+      {nucleus && (
+        <path
+          d={blobPath(cx + r * 0.18, cy + r * 0.12, r * 0.28, seed + 3, 0.08)}
+          fill="var(--ix-solid-green)"
+          fillOpacity={0.35}
+          stroke={C.outline}
+          strokeOpacity={0.6}
+          strokeWidth={1.2}
+        />
+      )}
+      {children}
+    </g>
+  );
+}
+
+/** A water drop with an outline and a highlight. */
+export function Droplet({ x, y, s = 1 }: { x: number; y: number; s?: number }) {
+  return (
+    <g transform={`translate(${x} ${y}) scale(${s})`}>
+      <path
+        d="M0 -8C-3 -3.5 -6 -1 -6 2.5a6 6 0 0 0 12 0C6 -1 3 -3.5 0 -8Z"
+        fill={C.water}
+        stroke={C.outline}
+        strokeWidth={1.2}
+      />
+      <path
+        d="M-2.6 1.5a3 3 0 0 0 1.4 2.6"
+        stroke={C.highlight}
+        strokeWidth={1.4}
+        strokeLinecap="round"
+        fill="none"
+      />
+    </g>
   );
 }
