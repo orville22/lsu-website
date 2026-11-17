@@ -15,6 +15,9 @@ import { RaasCascade } from './c1-1/raas-cascade';
 import { NormalPhysiology } from './c1-1/normal-physiology';
 import { HeartFailure } from './c1-1/heart-failure';
 import { SpotUrine } from './c1-1/spot-urine';
+import { CellTonicity } from './c1-2/cell-tonicity';
+import { GapBuilder } from './c1-2/gap-builder';
+import { GapTimeCourse } from './c1-2/gap-time-course';
 
 export const interactives: Record<InteractiveKey, ComponentType> = {
   'c1-1-concentration': ConcentrationBeaker,
@@ -27,6 +30,9 @@ export const interactives: Record<InteractiveKey, ComponentType> = {
   'c1-1-normal-physiology': NormalPhysiology,
   'c1-1-heart-failure': HeartFailure,
   'c1-1-spot-urine': SpotUrine,
+  'c1-2-cell-tonicity': CellTonicity,
+  'c1-2-gap-builder': GapBuilder,
+  'c1-2-gap-time-course': GapTimeCourse,
 };
 
 export function Interactive({ name, caption }: { name: InteractiveKey; caption?: string }) {

@@ -80,3 +80,32 @@ Text before [1].
   assert.match(errors[0], /Unknown interactive “c1-1-nope”/);
   assert.ok(!warnings.some((w) => /never cited/.test(w)));
 });
+
+test('C1.2 cell demo: only effective osmoles change tonicity', async () => {
+  const { cellState } = await import('../src/components/interactives/c1-2/cell-tonicity');
+  assert.deepEqual(cellState('none'), {
+    osm: 290,
+    tonicity: 290,
+    waterChange: 0,
+    effective: false,
+  });
+  assert.equal(cellState('na').tonicity, 350);
+  assert.equal(cellState('na').waterChange, -17);
+  assert.equal(cellState('urea').osm, 350);
+  assert.equal(cellState('urea').tonicity, 290);
+  assert.equal(cellState('eth').waterChange, 0);
+});
+
+test('C1.2 gap builder matches the lesson numbers', async () => {
+  const { calculated, gapOf, band } =
+    await import('../src/components/interactives/c1-2/gap-builder');
+  const healthy = { na: 140, glu: 5, urea: 5, eth: 0, meas: 292 };
+  assert.equal(calculated(healthy, 1.25), 290);
+  const theCase = { na: 138, glu: 5.5, urea: 4.5, eth: 50, meas: 352 };
+  assert.equal(gapOf(theCase, 1.25), 3.5);
+  assert.equal(gapOf(theCase, 1), 16);
+  assert.equal(gapOf({ ...theCase, eth: 0 }, 1.25), 66);
+  assert.equal(band(16).warn, true);
+  assert.equal(band(-2).warn, false);
+  assert.equal(band(-20).warn, true);
+});

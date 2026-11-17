@@ -14,6 +14,9 @@ export const interactiveKeys = [
   'c1-1-normal-physiology',
   'c1-1-heart-failure',
   'c1-1-spot-urine',
+  'c1-2-cell-tonicity',
+  'c1-2-gap-builder',
+  'c1-2-gap-time-course',
 ] as const;
 
 export type InteractiveKey = (typeof interactiveKeys)[number];
