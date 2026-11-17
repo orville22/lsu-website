@@ -1389,3 +1389,26 @@ h3 {
 .subscribe-page h1 {
   margin: var(--space-2) 0 var(--space-4);
 }
+
+/* External links in the main navigation (e.g. YouTube): label and arrow stay on one line. */
+.main-nav .nav-external {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.main-nav .nav-external svg {
+  flex-shrink: 0;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

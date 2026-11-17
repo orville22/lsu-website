@@ -45,8 +45,10 @@ export function Navigation({
         <nav aria-label="Main navigation" className={open ? 'main-nav open' : 'main-nav'}>
           {links.map(({ href, label, external }) =>
             external ? (
-              <a key={href} href={href} target="_blank" rel="noreferrer">
-                {label} <ArrowUpRight size={14} />
+              <a key={href} href={href} target="_blank" rel="noreferrer" className="nav-external">
+                {label}
+                <ArrowUpRight size={14} aria-hidden="true" />
+                <span className="sr-only"> (opens in a new tab)</span>
               </a>
             ) : (
               <Link
