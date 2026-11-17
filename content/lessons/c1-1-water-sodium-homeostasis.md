@@ -5,7 +5,7 @@ category: electrolytes
 subtopic: Water and sodium homeostasis
 difficulty: intermediate
 length: full
-readingMinutes: 15
+readingMinutes: 17
 description: Why serum sodium measures water balance rather than body sodium, and how vasopressin (ADH), thirst and the renin-angiotensin-aldosterone system keep both in check.
 upcoming: no
 ---
@@ -33,7 +33,7 @@ If it helps, picture a jug of cordial. Add more syrup and the drink gets stronge
 
 Try the heart failure preset. The body holds more sodium than normal, yet the result is low, because the water rose even more. You'll meet a patient like this shortly.
 
-Serum sodium follows the ratio of exchangeable sodium (plus potassium) to total body water. Sodium content sets the volume of the extracellular fluid (ECF); water balance sets the concentration.
+Serum sodium follows the ratio of exchangeable sodium (plus potassium) to total body water. Exchangeable means free to move: some of the body's sodium is locked away in bone and doesn't count [1,2]. Why potassium is in there comes in concept 2. Sodium content sets the volume of the extracellular fluid (ECF), and water balance sets the concentration. That's because sodium is held outside cells, and water follows it to keep the concentration of dissolved particles equal on both sides, so the amount of sodium decides how much water the ECF holds [1].
 
 > **Key idea**
 > A low sodium usually means too much water, not too little sodium.
@@ -51,9 +51,14 @@ You may have learnt the classic split of two-thirds inside and one-third outside
 
 @interactive(c1-1-compartments "C1.1 visual 2 · where water, sodium and potassium live")
 
-The two sides hold different salts. Sodium is mostly outside cells and potassium mostly inside, and the sodium pump in every cell membrane keeps it that way [1]. Water is different: it crosses cell membranes freely, so the solute concentration inside and outside cells stays equal [1].
+The two sides hold different salts. Sodium is mostly outside cells and potassium mostly inside. The sodium pump (Na⁺/K⁺-ATPase) in every cell membrane keeps it that way: it uses energy to push three sodium ions out for every two potassium ions it brings in [1,24]. Water is different: it crosses cell membranes freely, and it moves towards whichever side has more dissolved particles until both sides match. So the solute concentration inside and outside cells stays equal [1].
 
 That has a direct consequence. If the ECF becomes more dilute, water moves into cells and they swell; if it becomes more concentrated, water leaves and they shrink. This effect of plasma on cell volume is called **tonicity** [1]. It's why sodium disorders show up as neurological symptoms: brain cells are swelling or shrinking [1].
+
+> **Key term · osmolality**
+> Osmolality is the concentration of all the dissolved particles in a kilogram of water, in mmol/kg. In plasma, sodium and its partner anions make up most of it. C1.2 covers how the lab measures it.
+
+@interactive(c1-1-cell-volume "C1.1 visual · cells swell and shrink")
 
 > **Go deeper · where the cordial analogy breaks**
 > Your body isn't one jug. Potassium inside cells draws water in too, which is why potassium belongs in the sodium-to-water ratio. It's also why replacing potassium raises serum sodium much as giving sodium would [1].
@@ -65,7 +70,7 @@ That has a direct consequence. If the ECF becomes more dilute, water moves into 
 Concentration and amount are different things, so the body controls them separately, using two systems that each have their own sensors, hormones and kidney actions:
 
 - **The water system** watches tonicity. Its tools are antidiuretic hormone (ADH, also called vasopressin or arginine vasopressin, AVP) and thirst, and it sets the sodium concentration.
-- **The sodium system** watches how well the circulation is filled. Its tools are the renin-angiotensin-aldosterone system (RAAS) and the natriuretic peptides, and it sets the volume of the ECF.
+- **The sodium system** watches how well the arteries are filled, a quantity called the effective arterial blood volume (concept 5 explains it). Its tools are the renin-angiotensin-aldosterone system (RAAS) and the natriuretic peptides, and it sets the volume of the ECF.
 
 @interactive(c1-1-two-systems "C1.1 visual 3 · the two control systems")
 
@@ -73,13 +78,15 @@ Most of the time the two systems work side by side without conflict. The highlig
 
 ### 4. The water system: ADH and thirst
 
-**The sensors.** Specialised neurons called osmoreceptors sit in circumventricular organs of the brain, small areas outside the blood–brain barrier, so they can sense the plasma directly [4].
+**The sensors.** Specialised neurons called osmoreceptors sit in circumventricular organs of the brain, small areas outside the blood–brain barrier, so they can sense the plasma directly [4]. When plasma becomes more concentrated, these cells, and the ADH-making cells themselves, shrink slightly. The shrinking opens stretch-sensitive channels and makes them fire, and that is the signal [23].
 
 **The two responses.** They trigger release of ADH from the posterior pituitary, and they make you thirsty [4]. ADH saves water you already have; thirst brings in more. Osmolality isn't ADH's only trigger: a large fall in blood volume switches it on too, which you'll see in the interactive in concept 6 and again in the case.
 
-**How ADH works.** ADH binds V2 receptors on the principal cells of the collecting duct. This moves aquaporin-2 water channels from vesicles inside the cell into the membrane facing the urine, so water is drawn back into the blood [1,5]. With ADH high, the urine becomes concentrated. With ADH suppressed, the channels are withdrawn and the kidney excretes dilute urine, clearing free water.
+**How ADH works.** ADH binds V2 receptors on the principal cells of the collecting duct. This moves aquaporin-2 water channels from vesicles inside the cell into the membrane facing the urine [1,5]. An open channel only lets water move if something pulls it. The pull comes from the inner kidney: the loops of Henle pump salt into the tissue of the medulla, so it gets saltier with depth, from about 300 mmol/kg near the cortex to about 1,200 mmol/kg at the tip [22]. The collecting duct runs down through that salty tissue, so water leaves the urine through the open channels, crosses the cell and exits through aquaporin-3 and -4 on the blood side [5,22]. With ADH high, the urine becomes concentrated. With ADH suppressed, the channels are withdrawn and the kidney excretes dilute urine, clearing free water: water passed without extra solute, which dilutes the urine.
 
-**How sensitive it is.** The system responds to changes in osmolality of only 1–2% [6,7]. In human studies ADH switches on at about 284 mmol/kg, with thirst starting at a similar point [8]. Put in sodium terms, ADH becomes detectable once plasma sodium rises above about 135 mmol/L, and by about 145 mmol/L the urine is maximally concentrated, near 1,200 mmol/kg [1]. That's the sodium reference interval, seen from the hormone's side.
+@interactive(c1-1-adh-water "C1.1 visual · how ADH gets water back")
+
+**How sensitive it is.** The system responds to changes in osmolality of only 1–2% [6,7]. In human studies ADH switches on at about 284 mmol/kg, with thirst starting at a similar point [8]. Because sodium and its partner anions make up most of osmolality (C1.2), the switch-on point can be put in sodium terms: ADH becomes detectable once plasma sodium rises above about 135 mmol/L, and by about 145 mmol/L the urine is maximally concentrated, near 1,200 mmol/kg [1]. That's the sodium reference interval, seen from the hormone's side.
 
 @interactive(c1-1-adh-switch "C1.1 visual 4 · the ADH switch")
 
@@ -95,7 +102,9 @@ Most of the time the two systems work side by side without conflict. The highlig
 
 ### 5. The sodium system: the RAAS and natriuretic peptides
 
-**What it watches.** Here's the surprising part: the sodium system doesn't measure total body fluid. It measures how well the arteries are filled, a quantity called the effective arterial blood volume [9]. A patient can carry litres of extra fluid in their tissues and still have underfilled arteries.
+**What it watches.** Here's the surprising part: the sodium system doesn't measure total body fluid. It measures how well the arteries are filled, a quantity called the effective arterial blood volume [9]. A patient can carry litres of extra fluid in their tissues and still have underfilled arteries. The sensors are baroreceptors, stretch sensors in the walls of the carotid sinus, the aortic arch and the left ventricle. They signal to the brain and, through the sympathetic nerves, to the kidney [9,25]. Fluid that has leaked out of the capillaries into the tissues sits outside the circulation, where these sensors can't count it [9,26].
+
+@interactive(c1-1-underfilled-arteries "C1.1 visual · full tissues, underfilled arteries")
 
 **The cascade.** When filling falls, the kidney releases renin (how that happens is below). Renin cuts angiotensinogen, made by the liver, into angiotensin I, and angiotensin-converting enzyme (ACE) turns that into angiotensin II [10].
 
@@ -111,11 +120,16 @@ In a real scenario, such as blood loss or a weak heart, the three signals tend t
 
 @interactive(c1-1-raas-cascade "C1.1 visual 5 · the RAAS cascade")
 
-**What angiotensin II does.** It drives aldosterone release from the adrenal cortex [10]. Together with the sympathetic nervous system and ADH, it also constricts blood vessels to support blood pressure in the short term [9].
+**What angiotensin II does.** It drives aldosterone release from the adrenal cortex [10]. It also stimulates thirst and ADH release, so it brings in water as well as keeping salt [4]. Together with the sympathetic nervous system and ADH, it also constricts blood vessels to support blood pressure in the short term [9].
 
-**What aldosterone does.** It acts on principal cells in the last part of the nephron, increasing the activity of epithelial sodium channels (ENaC). More sodium is reabsorbed from the urine, and potassium and hydrogen ions are secreted in exchange [10]. Water follows the retained sodium, and the circulation refills.
+**What aldosterone does.** It acts on principal cells in the last part of the nephron, increasing the activity of epithelial sodium channels (ENaC). More sodium is reabsorbed from the urine, and potassium and hydrogen ions are secreted in exchange [10]. Water follows the retained sodium, but not by itself. Keeping sodium nudges osmolality up; the osmoreceptors notice, ADH and thirst respond, and the extra water brings the concentration back down. The ECF grows while the sodium result barely changes. That's why the sodium system sets volume, not concentration [1].
+
+@interactive(c1-1-water-follows-sodium "C1.1 visual · water follows sodium")
 
 **The counterweight.** When the heart's chambers are stretched by too much volume, they release atrial and B-type natriuretic peptides (ANP and BNP), which push the kidney to excrete sodium [11].
+
+> **Go deeper · what the natriuretic peptides do**
+> ANP and BNP raise the kidney's filtration rate, damp down renin and aldosterone, and reduce sodium reabsorption in the tubule, so more sodium leaves in the urine [11]. BNP and its fragment NT-proBNP are measured in the lab to help diagnose heart failure [11].
 
 **Quick check.** Which system would you expect to respond first after a very salty meal? *Answer: the water system. Osmolality rises, so ADH and thirst kick in first; the extra sodium is then excreted as the ECF expands and the RAAS is switched down.*
 
@@ -161,7 +175,7 @@ Heart failure explains both. The weak pump leaves the arteries underfilled, even
 
 @interactive(c1-1-heart-failure "C1.1 visual 7 · why heart failure lowers sodium")
 
-Angiotensin II also stimulates thirst, which adds to the water load [4,13].
+Angiotensin II's push on thirst (concept 5) adds to the water load [4,13].
 
 **Quick check.** Why does a patient with oedema keep releasing ADH when his plasma osmolality is low? *Answer: its baroreceptors sense underfilled arteries, and that volume signal overrides the osmotic signal to switch ADH off.*
 
@@ -190,7 +204,7 @@ Table: Tests for water and sodium balance
 
 | Test | What it tells you | Watch out for |
 | --- | --- | --- |
-| Sodium | The solute-to-water ratio (concept 1) | Main analysers use indirect ISE, blood gas analysers direct ISE (L3.2, C1.4). Australasian harmonised adult interval 135–145 mmol/L [18] |
+| Sodium | The solute-to-water ratio (concept 1) | Main analysers use an indirect ion-selective electrode (ISE), which dilutes the sample and assumes plasma is about 93% water; blood gas analysers use a direct ISE, which doesn't (C1.2, C1.4) [27]. Australasian harmonised adult interval 135–145 mmol/L [18] |
 | Plasma osmolality | Whether plasma is truly hypotonic | Measured by freezing point depression; compare with calculated osmolality (C1.2) |
 | Urine osmolality | Whether ADH is acting on the kidney | Collect the spot urine at the same time as the blood |
 | Urine sodium | Whether the kidney is holding sodium | Diuretics push it up and can mislead (C1.6) |
@@ -293,3 +307,9 @@ Giving him sodium would only add to his oedema. Treatment targets the heart fail
 19. Bankir L, Bichet DG, Morgenthaler NG. Vasopressin: physiology, assessment and osmosensation. J Intern Med. 2017;282(4):284–97. doi:10.1111/joim.12645
 20. Adler GK, Stowasser M, Correa RR, Khan N, Kline G, McGowan MJ, et al. Primary aldosteronism: an Endocrine Society clinical practice guideline. J Clin Endocrinol Metab. 2025;110(9):2453–95. doi:10.1210/clinem/dgaf284
 21. Rutledge AC, Johnston A, Bailey D, Booth RA, Edmond P, Leung V, et al. Survey of renin and aldosterone testing practices by Ontario laboratories — providing insight into best practices. Pract Lab Med. 2021;25:e00229. doi:10.1016/j.plabm.2021.e00229
+22. Sands JM, Layton HE. The physiology of urinary concentration: an update. Semin Nephrol. 2009;29(3):178–95. doi:10.1016/j.semnephrol.2009.03.008
+23. Tasker JG, Prager-Khoutorsky M, Teruyama R, Lemos JR, Armstrong WE. Advances in the neurophysiology of magnocellular neuroendocrine cells. J Neuroendocrinol. 2020;32(4):e12826. doi:10.1111/jne.12826
+24. Cordeiro BM, Fontes CFL, Meyer-Fernandes JR. Molecular basis of Na, K–ATPase regulation of diseases: hormone and FXYD2 interactions. Int J Mol Sci. 2024;25(24):13398. doi:10.3390/ijms252413398
+25. Schrier RW, Abraham WT. Hormones and hemodynamics in heart failure. N Engl J Med. 1999;341(8):577–85. doi:10.1056/NEJM199908193410806
+26. Levick JR, Michel CC. Microvascular fluid exchange and the revised Starling principle. Cardiovasc Res. 2010;87(2):198–210. doi:10.1093/cvr/cvq062
+27. Kim GH. Pseudohyponatremia: does it matter in current clinical practice? Electrolyte Blood Press. 2006;4(2):77–82. doi:10.5049/EBP.2006.4.2.77
