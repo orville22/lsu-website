@@ -103,9 +103,9 @@ export default async function Home() {
       {topics.length > 0 && (
         <section className="section container home-topics">
           <SectionHeading
-            eyebrow="Your learning starts here"
-            title="One discipline. A world to explore."
-            description="Build your clinical chemistry knowledge, one concept at a time."
+            eyebrow="The curriculum"
+            title="Clinical chemistry, topic by topic"
+            description="Each topic starts with the physiology and works through to the result on the report."
             href="/learn"
             linkText="Explore the learning hub"
           />
