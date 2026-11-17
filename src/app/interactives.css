@@ -757,3 +757,34 @@
     transition: none;
   }
 }
+
+/* Lesson list styles must not reach lists inside an illustration (stage row, legend). */
+.content-block .ix ol,
+.content-block .ix ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  font-size: inherit;
+  line-height: inherit;
+}
+.content-block .ix .ix-legend {
+  margin-top: var(--space-4);
+}
+.content-block .ix li + li {
+  margin-top: 0;
+}
+.content-block .ix li::marker {
+  content: none;
+}
+.ix-phases li {
+  display: flex;
+  align-items: center;
+}
+.ix-phases button {
+  line-height: 1.2;
+}
+.content-block .ix .ix-phases,
+.content-block .ix .ix-legend {
+  font-size: var(--text-caption);
+  line-height: 1.4;
+}
