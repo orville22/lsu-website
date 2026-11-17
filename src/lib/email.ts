@@ -122,3 +122,34 @@ export function listUnsubscribeHeaders(id: string, settings: EmailSettings) {
     'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
   };
 }
+
+/** Personal invite for a volunteer reviewer. The link is the reviewer's key, so it is sent only to them. */
+export function reviewerInviteEmail(settings: EmailSettings, r: { name: string; link: string }) {
+  const first = r.name.split(/\s+/)[0] || r.name;
+  const html = layout(
+    settings,
+    `<h1 style="margin:0 0 12px;font-size:24px;line-height:1.25;">You’re invited to review Lab Science Unfiltered</h1>
+     <p style="margin:0 0 12px;">Hi ${escape(first)},</p>
+     <p style="margin:0 0 12px;">Thank you for offering to help. Lab Science Unfiltered isn’t open to the public yet, and this personal link lets you see the whole site before it launches.</p>
+     ${button(r.link, 'Open the site')}
+     <p style="margin:0 0 12px;">On every page you’ll find a <strong>Feedback</strong> button with five short questions. Answer as many as you like; the most useful thing you can tell us is anything that’s unclear, wrong or out of step with how your laboratory works.</p>
+     <p style="margin:0;color:${muted};font-size:14px;">Please don’t forward this email: the link is yours, and your feedback is recorded under your name. If you didn’t ask to review the site, ignore this email.</p>`,
+  );
+  const text = `You're invited to review Lab Science Unfiltered
+
+Hi ${first},
+
+Thank you for offering to help. Lab Science Unfiltered isn't open to the public yet, and this personal link lets you see the whole site before it launches:
+
+${r.link}
+
+On every page you'll find a Feedback button with five short questions. Answer as many as you like; the most useful thing you can tell us is anything that's unclear, wrong or out of step with how your laboratory works.
+
+Please don't forward this email: the link is yours, and your feedback is recorded under your name. If you didn't ask to review the site, ignore this email.
+
+--
+Lab Science Unfiltered, an independent educational website run by Orville Malijan, Melbourne, Australia.
+${settings.siteUrl} · Contact: ${siteConfig.contactUrl}
+`;
+  return { subject: 'Your invitation to review Lab Science Unfiltered', html, text };
+}

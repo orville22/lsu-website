@@ -5,8 +5,12 @@ import { BrandMark } from '@/components/brand-mark';
 import { Navigation, type NavLink } from '@/components/navigation';
 import { siteState } from '@/lib/visibility';
 import { siteConfig } from '@/lib/site-config';
+import { headers } from 'next/headers';
+import { FeedbackButton } from '@/components/review';
+import { comingSoonEnabled } from '@/lib/reviewers';
 import './globals.css';
 import './experience.css';
+import './review.css';
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.SITE_URL || 'http://localhost:3000'),
   title: {
@@ -24,6 +28,39 @@ export const metadata: Metadata = {
   },
 };
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  // Set by src/proxy.ts, which strips any client-supplied copies.
+  const h = await headers();
+  if (h.get('x-lsu-gate') === 'closed')
+    return (
+      <html lang="en" suppressHydrationWarning>
+        <body>
+          <main id="main">{children}</main>
+          <footer className="soon-footer">
+            <div className="container">
+              <span>© {new Date().getFullYear()} Lab Science Unfiltered</span>
+              <span>
+                <Link className="text-link" href="/privacy">
+                  Privacy
+                </Link>
+                {' · '}
+                <a
+                  className="text-link"
+                  href={siteConfig.contactUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Contact
+                </a>
+              </span>
+            </div>
+          </footer>
+        </body>
+      </html>
+    );
+  const viewer = h.get('x-lsu-viewer');
+  const reviewerName =
+    viewer === 'reviewer' ? decodeURIComponent(h.get('x-lsu-reviewer-name') || '') : '';
+  const preview = comingSoonEnabled() && (viewer === 'reviewer' || viewer === 'admin');
   // If the database is unreachable, keep a minimal working navigation.
   const { show, lessonCount } = await siteState().catch(() => ({
     lessonCount: 0,
@@ -56,6 +93,22 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <a className="skip-link" href="#main">
           Skip to content
         </a>
+        {preview && (
+          <div className="preview-banner" role="note">
+            {viewer === 'reviewer' ? (
+              <>
+                <strong>Reviewer preview.</strong> Thanks for helping,{' '}
+                {reviewerName.split(/\s+/)[0]}. The site isn’t public yet: use the Feedback button
+                on any page.
+              </>
+            ) : (
+              <>
+                <strong>Coming-soon mode is on.</strong> The public sees the coming-soon page; you
+                and invited reviewers see the full site.
+              </>
+            )}
+          </div>
+        )}
         <Navigation links={navLinks} cta={cta} search={lessonCount > 0} />
         <main id="main">{children}</main>
         <footer className="site-footer">
@@ -108,6 +161,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <span>Educational content. Always follow your laboratory’s validated procedures.</span>
           </div>
         </footer>
+        {(viewer === 'reviewer' || preview) && <FeedbackButton />}
       </body>
     </html>
   );

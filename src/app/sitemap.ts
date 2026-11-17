@@ -1,9 +1,12 @@
 import type { MetadataRoute } from 'next';
 import { db } from '@/lib/db';
 import { siteState } from '@/lib/visibility';
+import { comingSoonEnabled } from '@/lib/reviewers';
 export const dynamic = 'force-dynamic';
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.SITE_URL || 'http://localhost:3000';
+  // While coming soon, every other URL shows the same holding page.
+  if (comingSoonEnabled()) return [{ url: base }, { url: base + '/privacy' }];
   const { show } = await siteState();
   const sections = [
     '',

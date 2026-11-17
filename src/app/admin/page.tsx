@@ -8,6 +8,9 @@ import { LessonImportPanel } from '@/components/lesson-import-panel';
 import { lessonUrl } from '@/lib/content';
 import { ImportPanel } from '@/components/import-panel';
 import { TaxonomyForm } from '@/components/taxonomy-form';
+import { AddReviewerForm, ResolveToggle, ReviewerActions } from '@/components/review';
+import { comingSoonEnabled, type FeedbackAnswers } from '@/lib/reviewers';
+import { emailSettings } from '@/lib/subscribers';
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Administration', robots: { index: false, follow: false } };
 type Params = {
@@ -28,9 +31,15 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       </div>
     );
   const p = await searchParams;
-  const tab = ['questions', 'lessons', 'import', 'categories', 'subscribers', 'audit'].includes(
-    p.tab || '',
-  )
+  const tab = [
+    'questions',
+    'lessons',
+    'import',
+    'categories',
+    'subscribers',
+    'reviewers',
+    'audit',
+  ].includes(p.tab || '')
     ? p.tab!
     : 'overview';
   const [categories, lessonOptions, disciplines] = await Promise.all([
@@ -85,6 +94,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           ['import', 'Import & export'],
           ['categories', 'Categories'],
           ['subscribers', 'Subscribers'],
+          ['reviewers', 'Reviewers'],
           ['audit', 'Audit history'],
         ].map(([id, label]) => (
           <Link href={`/admin?tab=${id}`} className={tab === id ? 'active' : ''} key={id}>
@@ -133,6 +143,8 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
             </>
           ) : tab === 'subscribers' ? (
             <Subscribers />
+          ) : tab === 'reviewers' ? (
+            <Reviewers params={p} />
           ) : tab === 'audit' ? (
             <Audit />
           ) : (
@@ -197,6 +209,170 @@ async function Subscribers() {
           </tbody>
         </table>
       </div>
+    </>
+  );
+}
+const reviewerStatus: Record<string, string> = {
+  REQUESTED: 'Asked to review',
+  INVITED: 'Invited, not opened yet',
+  ACTIVE: 'Active',
+  REVOKED: 'Access revoked',
+  DECLINED: 'Declined',
+};
+const day = (d?: Date | null) => (d ? d.toISOString().slice(0, 10) : '—');
+async function Reviewers({ params }: { params: Params }) {
+  const show = params.status === 'all' ? undefined : params.status === 'resolved';
+  const [reviewers, feedback, counts] = await Promise.all([
+    db.reviewer.findMany({
+      orderBy: [{ status: 'asc' }, { createdAt: 'desc' }],
+      include: { _count: { select: { feedback: true } } },
+    }),
+    db.feedback.findMany({
+      where: show === undefined ? {} : { resolved: show },
+      orderBy: { createdAt: 'desc' },
+      take: 200,
+      include: { reviewer: { select: { name: true, role: true } } },
+    }),
+    db.feedback.groupBy({ by: ['resolved'], _count: { _all: true } }),
+  ]);
+  const canEmail = !!emailSettings();
+  const open = counts.find((c) => !c.resolved)?._count._all ?? 0;
+  const done = counts.find((c) => c.resolved)?._count._all ?? 0;
+  const n = (st: string) => reviewers.filter((r) => r.status === st).length;
+  return (
+    <>
+      <div className={comingSoonEnabled() ? 'warning-message' : 'success-message'} role="status">
+        {comingSoonEnabled()
+          ? 'Coming-soon mode is on: the public sees the coming-soon page. Set COMING_SOON=off in Vercel and redeploy to open the site.'
+          : 'Coming-soon mode is off: the site is public. Reviewers can still leave feedback.'}
+      </div>
+      <div className="stats-grid">
+        {[
+          ['Requests waiting', n('REQUESTED')],
+          ['Invited', n('INVITED')],
+          ['Active reviewers', n('ACTIVE')],
+          ['Feedback to read', open],
+        ].map(([label, value]) => (
+          <div className="stat" key={label}>
+            <span>{label}</span>
+            <strong>{value}</strong>
+          </div>
+        ))}
+      </div>
+      <AddReviewerForm canEmail={canEmail} />
+      <h2>People</h2>
+      {reviewers.length === 0 ? (
+        <div className="empty-state">
+          <h3>No reviewers yet</h3>
+          <p>Requests from the coming-soon page appear here for you to approve.</p>
+        </div>
+      ) : (
+        <div className="admin-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Reviewer</th>
+                <th>Status</th>
+                <th>Activity</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reviewers.map((r) => (
+                <tr key={r.id}>
+                  <td>
+                    <strong>{r.name}</strong>
+                    <br />
+                    {r.email}
+                    <br />
+                    <span className="count-label">
+                      {r.role || '—'} · {r.source === 'request' ? 'asked via form' : 'added by you'}{' '}
+                      · {day(r.createdAt)}
+                    </span>
+                    {r.note && <p className="count-label">“{r.note}”</p>}
+                  </td>
+                  <td>{reviewerStatus[r.status]}</td>
+                  <td>
+                    <span className="count-label">
+                      Invited {day(r.invitedAt)}
+                      <br />
+                      Last seen {day(r.lastSeenAt)}
+                      <br />
+                      {r._count.feedback} feedback
+                    </span>
+                  </td>
+                  <td>
+                    <ReviewerActions id={r.id} status={r.status} canEmail={canEmail} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <h2 style={{ marginTop: 48 }}>Feedback</h2>
+      <nav className="admin-tabs" aria-label="Feedback filter">
+        {[
+          ['open', `To read (${open})`],
+          ['resolved', `Dealt with (${done})`],
+          ['all', 'All'],
+        ].map(([id, label]) => (
+          <Link
+            key={id}
+            href={`/admin?tab=reviewers&status=${id}`}
+            className={(params.status || 'open') === id ? 'active' : ''}
+          >
+            {label}
+          </Link>
+        ))}
+      </nav>
+      <div className="form-actions">
+        <a className="button button-outline" href="/api/admin/feedback">
+          Export all feedback (CSV)
+        </a>
+      </div>
+      {feedback.length === 0 ? (
+        <div className="empty-state">
+          <h3>Nothing here</h3>
+          <p>Feedback from the button on each page appears here, newest first.</p>
+        </div>
+      ) : (
+        <div className="feedback-list">
+          {feedback.map((f) => {
+            const a = (f.answers || {}) as FeedbackAnswers;
+            return (
+              <article key={f.id} className={`feedback-item${f.resolved ? ' resolved' : ''}`}>
+                <div className="feedback-meta">
+                  <strong>
+                    {f.reviewer?.name ?? (f.actor ? `You (${f.actor})` : 'Removed reviewer')}
+                  </strong>
+                  {f.reviewer?.role && <span>{f.reviewer.role}</span>}
+                  <a className="text-link" href={f.path} target="_blank" rel="noreferrer">
+                    {f.path}
+                  </a>
+                  <span>{f.createdAt.toISOString().slice(0, 16).replace('T', ' ')} UTC</span>
+                  <ResolveToggle id={f.id} resolved={f.resolved} />
+                </div>
+                <dl className="feedback-answers">
+                  <dt>Clarity</dt>
+                  <dd>{a.clarity ? `${a.clarity} / 5` : '—'}</dd>
+                  <dt>Level</dt>
+                  <dd>{a.level || '—'}</dd>
+                  <dt>Inaccuracy</dt>
+                  <dd className={a.accuracy === 'Yes' ? 'flag' : ''}>
+                    {a.accuracy || '—'}
+                    {a.accuracyDetail ? `: ${a.accuracyDetail}` : ''}
+                  </dd>
+                  <dt>Visuals helped</dt>
+                  <dd>{a.visuals || '—'}</dd>
+                  <dt>One change</dt>
+                  <dd>{a.change || '—'}</dd>
+                </dl>
+              </article>
+            );
+          })}
+        </div>
+      )}
     </>
   );
 }

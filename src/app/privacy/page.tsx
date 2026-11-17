@@ -59,6 +59,15 @@ export default function Privacy() {
         straight away.
       </p>
       <p>
+        <strong>Volunteer reviewers (by invitation).</strong> If you ask to review the site before
+        launch, we store your name, email address, how you describe yourself and anything you write
+        in the request. If we invite you, your personal link sets a cookie (
+        <code>lsu_reviewer</code>) that lets you see the full site for up to 90 days, and we record
+        when you first and last opened it. Feedback you send with the on-page form is stored with
+        your name and the page it is about. We use all of this only to run the review programme and
+        improve the lessons, and we don’t publish your name or feedback without asking you.
+      </p>
+      <p>
         <strong>Preventing abuse.</strong> To limit automated misuse, the site keeps short-lived
         request counters. These are stored as keyed hashes, reset within an hour and are then
         deleted. The site does not store your IP address in its database.
@@ -90,6 +99,10 @@ export default function Privacy() {
           Your email address is kept while you are subscribed. Sign-ups that are never confirmed,
           and addresses that unsubscribe, are deleted automatically after 30 days.
         </li>
+        <li>
+          Reviewer details and feedback are kept until the review programme ends, then deleted. Ask
+          us at any time and we’ll remove yours sooner.
+        </li>
         <li>Information in your browser stays until you clear your cookies and site data.</li>
       </ul>
 
@@ -109,11 +122,12 @@ export default function Privacy() {
 
       <h2>Your choices</h2>
       <p>
-        You can unsubscribe from email updates using the link in any email we send. Clearing cookies
-        and site data for this website removes the quiz identifier and anything saved in your
-        browser. Because quiz records are stored only against a hashed identifier, we can’t link
-        them to you, and they are deleted automatically after 30 days. If you have a question, a
-        concern or a request, use the {contact}.
+        You can unsubscribe from email updates using the link in any email we send. Reviewers can
+        ask us to withdraw their access or delete their details at any time. Clearing cookies and
+        site data for this website removes the quiz identifier and anything saved in your browser.
+        Because quiz records are stored only against a hashed identifier, we can’t link them to you,
+        and they are deleted automatically after 30 days. If you have a question, a concern or a
+        request, use the {contact}.
       </p>
       <p>
         We aim to handle personal information in line with the Australian Privacy Principles, and to

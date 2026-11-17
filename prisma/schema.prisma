@@ -173,3 +173,56 @@ model Subscriber {
   updatedAt DateTime @updatedAt
   @@index([status, updatedAt])
 }
+enum ReviewerStatus {
+  REQUESTED
+  INVITED
+  ACTIVE
+  REVOKED
+  DECLINED
+}
+/// Invited volunteer reviewers. While the site is "coming soon", a reviewer's
+/// personal invite link sets the lsu_reviewer cookie, which lets them see the
+/// whole site and leave feedback. Only the link token's SHA-256 is stored.
+model Reviewer {
+  id String @id @default(cuid())
+  name String
+  /// Trimmed and lower-cased.
+  email String @unique
+  /// How they describe themselves, e.g. "Student" or "Practising scientist".
+  role String @default("")
+  /// What they wrote when asking to review, if they used the request form.
+  note String @default("")
+  /// "request" (public form) or "admin" (added by an administrator).
+  source String @default("admin")
+  status ReviewerStatus @default(REQUESTED)
+  tokenHash String? @unique
+  invitedAt DateTime?
+  firstSeenAt DateTime?
+  lastSeenAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  feedback Feedback[]
+  @@index([status, createdAt])
+}
+/// Feedback left with the on-page button by a reviewer or an administrator.
+model Feedback {
+  id String @id @default(cuid())
+  reviewerId String?
+  reviewer Reviewer? @relation(fields:[reviewerId], references:[id], onDelete:SetNull)
+  /// Set when an administrator left it.
+  actor String?
+  /// Path of the page the feedback is about, e.g. /learn/clinical-chemistry/electrolytes/c1-2-...
+  path String
+  /// "page" for the guided five-question review.
+  kind String @default("page")
+  /// Answer to "How clear was this page?" (1–5), copied out for sorting.
+  rating Int?
+  /// All answers, keyed by question id (see src/lib/reviewers.ts).
+  answers Json @default("{}")
+  /// Free-text answers joined, for search and CSV export.
+  comment String @default("")
+  resolved Boolean @default(false)
+  createdAt DateTime @default(now())
+  @@index([createdAt])
+  @@index([path])
+}
