@@ -84,7 +84,7 @@ Subtract the calculated osmolality from the measured osmolality and you get the 
 
 $$\text{Osmolal gap} = \text{measured osmolality} - \text{calculated osmolality}$$
 
-In most people the two nearly match. A large gap means something else is in the plasma in high molar concentration: a small, uncharged molecule the formula doesn't know about. Small matters because the gap counts particles, not grams: a light molecule adds many particles per gram (see the methanol panel below) [12]. By far the commonest is ethanol [1].
+In most people the two nearly match. A large gap means something else is in the plasma in high molar concentration: a small, uncharged molecule the formula doesn't know about. Small matters because the gap counts particles, not grams: a light molecule adds many particles per gram (see the methanol panel below) [12]. By far the most common is ethanol [1].
 
 Back at the party, the calculated osmolality is the guest list (sodium, glucose and urea) and the measured osmolality is the headcount at the door. The gap is everyone who turned up without being on the list.
 
@@ -126,7 +126,7 @@ You can already calculate the gap from concepts 3 and 5. The harder question is 
 
 Anything that adds a lot of small, uncharged particles the formula doesn't count can raise the gap. The list falls into three groups [1,12]:
 
-- **Alcohols and glycols.** Ethanol is by far the commonest. Methanol, ethylene glycol, isopropanol and propylene glycol (a solvent in some intravenous drugs) are the dangerous ones.
+- **Alcohols and glycols.** Ethanol is by far the most common. Methanol, ethylene glycol, isopropanol and propylene glycol (a solvent in some intravenous drugs) are the dangerous ones.
 - **Other things given in hospital.** Mannitol, and glycine from bladder irrigation fluids.
 - **The patient's own particles.** Ketoacidosis, lactic acidosis and kidney failure can all raise the gap a little, because they add particles the formula doesn't capture.
 
@@ -204,7 +204,7 @@ One more thing to notice. With an ethanol factor of 1.0 instead of 1.25, the res
 - Calculated osmolality = 2 × Na + glucose + urea, all in mmol/L.
 - Sodium and glucose set tonicity. Urea and ethanol raise osmolality but cross cell membranes, so they don't move water.
 - Osmolal gap = measured − calculated. About 10 mmol/kg is the usual upper limit, but the normal range is wide.
-- Ethanol is the commonest cause of a raised gap. Add 1.25 × ethanol (mmol/L) and read the residual gap.
+- Ethanol is the most common cause of a raised gap. Add 1.25 × ethanol (mmol/L) and read the residual gap.
 - A normal gap never rules out a toxic alcohol; as the alcohol is broken down, the osmolal gap falls and the anion gap rises.
 
 ## Try it
