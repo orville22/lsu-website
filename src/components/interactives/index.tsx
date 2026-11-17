@@ -18,6 +18,12 @@ import { SpotUrine } from './c1-1/spot-urine';
 import { CellTonicity } from './c1-2/cell-tonicity';
 import { GapBuilder } from './c1-2/gap-builder';
 import { GapTimeCourse } from './c1-2/gap-time-course';
+import { AdhWater } from './c1-1/adh-water';
+import { WaterFollowsSodium } from './c1-1/water-follows-sodium';
+import { PlasmaLitre } from './c1-2/plasma-litre';
+import { CellVolume } from './c1-1/cell-volume';
+import { UnderfilledArteries } from './c1-1/underfilled-arteries';
+import { FreezingCurve } from './c1-2/freezing-curve';
 
 export const interactives: Record<InteractiveKey, ComponentType> = {
   'c1-1-concentration': ConcentrationBeaker,
@@ -33,6 +39,12 @@ export const interactives: Record<InteractiveKey, ComponentType> = {
   'c1-2-cell-tonicity': CellTonicity,
   'c1-2-gap-builder': GapBuilder,
   'c1-2-gap-time-course': GapTimeCourse,
+  'c1-1-adh-water': AdhWater,
+  'c1-1-water-follows-sodium': WaterFollowsSodium,
+  'c1-2-plasma-litre': PlasmaLitre,
+  'c1-1-cell-volume': CellVolume,
+  'c1-1-underfilled-arteries': UnderfilledArteries,
+  'c1-2-freezing-curve': FreezingCurve,
 };
 
 export function Interactive({ name, caption }: { name: InteractiveKey; caption?: string }) {
