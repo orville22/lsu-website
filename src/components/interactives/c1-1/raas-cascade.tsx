@@ -1,14 +1,19 @@
 'use client';
 /*
  * C1.1 visual 5: the RAAS cascade, with natriuretic peptides as the counterweight.
- * Plays on a loop: each step lights in turn and a pulse runs along the arrow to
- * the next, so the cause-and-effect order reads without clicking.
+ * A step-through: each step lights in turn and a pulse runs along the arrow to
+ * the next. Play advances it automatically.
  */
 import { Arrow, C, Frame, Label, Node, Responsive, edges, type NodeSpec } from '../kit';
-import { LoopBar, useLoop } from '../loop';
+import { StepControls, useSteps } from '../steps';
 
 const STEPS: Omit<NodeSpec, 'x' | 'y' | 'w'>[] = [
-  { icon: 'vessel', hue: 'sodium', title: 'Low filling', body: 'underfilled arteries' },
+  {
+    icon: 'vessel',
+    hue: 'sodium',
+    title: 'Reduced EABV',
+    body: ['effective arterial', 'blood volume falls'],
+  },
   { icon: 'kidney', hue: 'sodium', title: 'Renin', body: 'juxtaglomerular cells' },
   { icon: 'hormone', hue: 'sodium', title: 'Angiotensin I', body: 'from angiotensinogen' },
   { icon: 'hormone', hue: 'sodium', title: 'Angiotensin II', body: 'made by ACE' },
@@ -24,7 +29,7 @@ const COUNTER: Omit<NodeSpec, 'x' | 'y' | 'w'> = {
 };
 
 const PHASES = [
-  'Low filling',
+  'Reduced EABV',
   'Renin',
   'Angiotensin I',
   'Angiotensin II',
@@ -33,9 +38,8 @@ const PHASES = [
   'Sodium kept',
   'Counterweight',
 ];
-const DURATIONS = [2200, 1700, 1700, 2000, 1700, 1700, 2600, 2800];
 const TEXT = [
-  'The arteries are underfilled: less pressure reaches the kidney, less salt reaches the macula densa, and the sympathetic nerves fire.',
+  'The effective arterial blood volume (EABV) falls: the arteries are underfilled, less pressure reaches the kidney, less salt reaches the macula densa, and the sympathetic nerves fire.',
   'Juxtaglomerular cells in the afferent arteriole release renin.',
   'Renin cuts angiotensinogen, made by the liver, into angiotensin I.',
   'Angiotensin-converting enzyme (ACE) turns angiotensin I into angiotensin II. It also constricts blood vessels and stimulates thirst and ADH.',
@@ -94,26 +98,26 @@ function Link({
 }
 
 export function RaasCascade() {
-  const loop = useLoop(DURATIONS);
-  const p = loop.phase;
+  const s = useSteps(PHASES.length, 2600);
+  const p = s.step;
   return (
     <Frame
-      title="Low arterial filling sets off a cascade that ends with the kidney keeping sodium"
-      note="Plays on a loop; pause it or tap a stage to hold it."
+      title="A fall in effective arterial blood volume sets off a cascade that ends with the kidney keeping sodium"
+      note="Step through, or press Play to run it."
       wide
     >
-      <LoopBar labels={PHASES} {...loop} />
+      <StepControls labels={PHASES} {...s} />
       <Responsive
         name="raas"
-        label="Low arterial filling triggers a cascade that ends with the kidney keeping sodium"
+        label="A fall in effective arterial blood volume triggers a cascade that ends with the kidney keeping sodium"
         wide={{
           w: 760,
-          h: 250,
+          h: 272,
           draw: (id) => {
             const W = 164,
               xs = [106, 290, 474, 658],
-              ra = 48,
-              rb = 180;
+              ra = 52,
+              rb = 188;
             const pos: [number, number][] = [
               [xs[0], ra],
               [xs[1], ra],
@@ -123,8 +127,14 @@ export function RaasCascade() {
               [xs[2], rb],
               [xs[1], rb],
             ];
-            const n: NodeSpec[] = STEPS.map((s, i) => ({ ...s, x: pos[i][0], y: pos[i][1], w: W }));
-            const c: NodeSpec = { ...COUNTER, x: xs[0], y: rb, w: W };
+            const n: NodeSpec[] = STEPS.map((s, i) => ({
+              ...s,
+              x: pos[i][0],
+              y: pos[i][1],
+              w: W,
+              h: 60,
+            }));
+            const c: NodeSpec = { ...COUNTER, x: xs[0], y: rb, w: W, h: 60 };
             const links: [[number, number], [number, number]][] = [
               [
                 [edges(n[0]).right, ra],
@@ -162,7 +172,7 @@ export function RaasCascade() {
                 <g className="ix-anim" style={{ opacity: p === 7 ? 1 : 0.45 }}>
                   <Node {...c} tone={p === 7 ? 'accent' : 'dashed'} />
                 </g>
-                <Label x={xs[0]} y={rb + 48}>
+                <Label x={xs[0]} y={rb + 52}>
                   the counterweight
                 </Label>
               </>
@@ -171,10 +181,16 @@ export function RaasCascade() {
         }}
         narrow={{
           w: 360,
-          h: 600,
+          h: 690,
           draw: (id) => {
-            const n: NodeSpec[] = STEPS.map((s, i) => ({ ...s, x: 180, y: 34 + i * 72, w: 240 }));
-            const c: NodeSpec = { ...COUNTER, x: 180, y: 562, w: 240 };
+            const n: NodeSpec[] = STEPS.map((s, i) => ({
+              ...s,
+              x: 180,
+              y: 40 + i * 82,
+              w: 240,
+              h: 60,
+            }));
+            const c: NodeSpec = { ...COUNTER, x: 180, y: 646, w: 240, h: 60 };
             return (
               <>
                 {n.slice(0, -1).map((s, i) => (
@@ -193,7 +209,7 @@ export function RaasCascade() {
                 <g className="ix-anim" style={{ opacity: p === 7 ? 1 : 0.45 }}>
                   <Node {...c} tone={p === 7 ? 'accent' : 'dashed'} />
                 </g>
-                <Label x={180} y={532}>
+                <Label x={180} y={606}>
                   The counterweight
                 </Label>
               </>
