@@ -1,82 +1,146 @@
+// Homepage hero illustration. Tracks the current lesson focus (C1.1, water and sodium
+// homeostasis): serum sodium as a balance between water (ADH and thirst) and sodium
+// (the RAAS and aldosterone). Colours come from the brand tokens via CSS (.balance-*).
+
+function Drop({ x, y, s = 1 }: { x: number; y: number; s?: number }) {
+  return (
+    <g className="balance-drop" transform={`translate(${x} ${y}) scale(${s})`}>
+      <path d="M0-26C9-13 17-4 17 6a17 17 0 0 1-34 0C-17-4-9-13 0-26Z" />
+      <path className="balance-drop-shine" d="M-8 4a8 8 0 0 0 5 9" />
+    </g>
+  );
+}
+
+function Ion({ x, y, r = 21 }: { x: number; y: number; r?: number }) {
+  return (
+    <g className="balance-ion">
+      <circle cx={x} cy={y} r={r} />
+      <text x={x} y={y + 6}>
+        Na⁺
+      </text>
+    </g>
+  );
+}
+
+function Pill({
+  x,
+  y,
+  w,
+  label,
+  tone,
+}: {
+  x: number;
+  y: number;
+  w: number;
+  label: string;
+  tone: string;
+}) {
+  return (
+    <g className={`balance-pill balance-pill-${tone}`}>
+      <rect x={x} y={y} width={w} height={32} rx={16} />
+      <text x={x + w / 2} y={y + 22}>
+        {label}
+      </text>
+    </g>
+  );
+}
+
 export function ScienceVisual() {
   return (
     <figure
-      className="science-visual pump-illustration"
-      aria-label="Sodium–potassium pump: three sodium ions out, two potassium ions in, using ATP."
+      className="science-visual pump-illustration balance-illustration"
+      aria-label="Serum sodium as a balance: water, controlled by ADH and thirst, on one side; sodium, controlled by the RAAS and aldosterone, on the other."
     >
-      <svg viewBox="0 0 600 500" role="img" aria-labelledby="pump-title pump-description">
-        <title id="pump-title">Small ions. Big ideas.</title>
-        <desc id="pump-description">
-          A schematic cell membrane. The sodium–potassium ATPase transports three Na⁺ from inside to
-          outside and two K⁺ from outside to inside per cycle, using ATP.
+      <svg viewBox="0 0 600 500" role="img" aria-labelledby="balance-title balance-description">
+        <title id="balance-title">Water and sodium in balance</title>
+        <desc id="balance-description">
+          A balance scale. The left pan holds water drops, labelled ADH and thirst. The right pan
+          holds sodium ions, labelled RAAS and aldosterone. A readout above the scale shows a serum
+          sodium of 140 mmol/L: the result reflects the ratio of sodium to water.
         </desc>
-        <text x="30" y="40" className="pump-space-label">
-          Outside the cell
+
+        {/* background specks */}
+        <g className="balance-specks">
+          <circle cx="62" cy="128" r="5" />
+          <circle cx="540" cy="150" r="7" />
+          <circle cx="508" cy="58" r="4" />
+          <circle cx="88" cy="210" r="3" />
+          <circle cx="560" cy="250" r="4" />
+          <circle cx="40" cy="300" r="6" />
+        </g>
+
+        <text x="36" y="58" className="balance-kicker">
+          Serum sodium
         </text>
-        <text x="30" y="470" className="pump-space-label">
-          Inside the cell
+        <text x="36" y="84" className="balance-sub">
+          a ratio, not an amount
         </text>
-        {Array.from({ length: 18 }, (_, i) => (
-          <g key={i} className="pump-membrane" opacity={i > 6 && i < 12 ? 0.14 : 0.55}>
-            <circle cx={i * 36} cy="231" r="8" />
-            <path d={`M${i * 36 - 4} 240v22m8-22v22`} />
-            <circle cx={i * 36} cy="293" r="8" />
-            <path d={`M${i * 36 - 4} 284v-14m8 14v-14`} />
-          </g>
-        ))}
-        <path
-          className="pump-body"
-          d="M253 180c-28-61-61-47-51-13l37 85c7 18-9 55-22 78-20 36 20 58 39 29l40-63 32 61c17 32 62 9 45-23l-35-65c-10-20 3-44 11-61l26-54c15-32-23-50-42-18l-36 60-27-53Z"
-        />
-        <path
-          className="pump-arrow sodium-arrow"
-          d="M161 350c-42-45-44-113-7-165m-21 6 21-6 1 23"
-        />
-        <path
-          className="pump-arrow potassium-arrow"
-          d="M445 165c42 53 47 122 5 173m-1-23 1 23 22-6"
-        />
-        <g className="pump-ion sodium-ion">
-          <circle cx="128" cy="116" r="38" />
-          <text x="128" y="127">
+
+        {/* readout */}
+        <g className="balance-readout">
+          <rect x="340" y="30" width="226" height="72" rx="20" />
+          <text x="362" y="76" className="balance-readout-ion">
             Na⁺
           </text>
-        </g>
-        <g className="pump-ion sodium-ion">
-          <circle cx="298" cy="88" r="32" />
-          <text x="298" y="99">
-            Na⁺
+          <text x="414" y="81" className="balance-readout-value">
+            140
+          </text>
+          <text x="492" y="80" className="balance-readout-unit">
+            mmol/L
           </text>
         </g>
-        <g className="pump-ion sodium-ion">
-          <circle cx="480" cy="100" r="35" />
-          <text x="480" y="111">
-            Na⁺
-          </text>
-        </g>
-        <g className="pump-ion potassium-ion">
-          <circle cx="154" cy="415" r="33" />
-          <text x="154" y="426">
-            K⁺
-          </text>
-        </g>
-        <g className="pump-ion potassium-ion">
-          <circle cx="488" cy="411" r="34" />
-          <text x="488" y="422">
-            K⁺
-          </text>
-        </g>
-        <rect x="18" y="251" width="110" height="38" rx="8" className="pump-label-backdrop" />
-        <rect x="466" y="251" width="111" height="38" rx="8" className="pump-label-backdrop" />
-        <text x="24" y="278" className="pump-direction sodium-direction">
-          3 Na⁺ out
+
+        {/* stand */}
+        <path className="balance-stand" d="M292 196h16l10 222h-36Z" />
+        <path className="balance-stand" d="M226 440c0-14 12-24 26-24h96c14 0 26 10 26 24Z" />
+
+        {/* needle */}
+        <path className="balance-needle" d="M300 196V112" />
+        <circle className="balance-needle-tip" cx="300" cy="108" r="8" />
+
+        {/* hangers */}
+        <path
+          className="balance-hanger"
+          d="M150 198 82 300M150 198l68 102M450 198l-68 102M450 198l68 102"
+        />
+
+        {/* beam */}
+        <rect className="balance-beam" x="96" y="186" width="408" height="16" rx="8" />
+        <circle className="balance-pivot" cx="300" cy="194" r="15" />
+        <circle className="balance-hook" cx="150" cy="194" r="7" />
+        <circle className="balance-hook" cx="450" cy="194" r="7" />
+
+        {/* left pan: water */}
+        <Drop x={120} y={283} s={0.95} />
+        <Drop x={160} y={280} s={1.1} />
+        <Drop x={196} y={287} s={0.85} />
+        <Drop x={141} y={252} s={0.8} />
+        <Drop x={179} y={250} s={0.75} />
+        <path className="balance-pan" d="M66 300h168c0 26-36 44-84 44s-84-18-84-44Z" />
+
+        {/* right pan: sodium */}
+        <Ion x={412} y={278} />
+        <Ion x={454} y={281} />
+        <Ion x={495} y={279} r={19} />
+        <Ion x={433} y={242} r={19} />
+        <Ion x={474} y={243} r={18} />
+        <path className="balance-pan" d="M366 300h168c0 26-36 44-84 44s-84-18-84-44Z" />
+
+        {/* labels */}
+        <text x="150" y="382" className="balance-label">
+          Water
         </text>
-        <text x="473" y="278" className="pump-direction">
-          2 K⁺ in
+        <Pill x={72} y={398} w={70} label="ADH" tone="pink" />
+        <Pill x={150} y={398} w={84} label="Thirst" tone="pink" />
+
+        <text x="450" y="382" className="balance-label">
+          Sodium
         </text>
-        <path d="m286 382-12 22h15l-7 20 30-30h-16l8-12Z" className="pump-energy" />
-        <text x="286" y="450" textAnchor="middle" className="pump-atp">
-          ATP → ADP + Pᵢ
+        <Pill x={364} y={398} w={72} label="RAAS" tone="green" />
+        <Pill x={442} y={398} w={124} label="Aldosterone" tone="green" />
+
+        <text x="300" y="478" className="balance-caption">
+          Sodium ÷ water = the number on the report
         </text>
       </svg>
     </figure>
