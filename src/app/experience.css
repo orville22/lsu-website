@@ -172,65 +172,6 @@ h3 {
 .pump-illustration text {
   font-family: var(--font-sans);
 }
-.pump-space-label {
-  fill: var(--scene-paper);
-  font-size: 22px;
-  font-weight: 500;
-}
-.pump-membrane circle {
-  fill: var(--scene-paper);
-}
-.pump-membrane path {
-  fill: none;
-  stroke: var(--scene-paper);
-  stroke-width: 3;
-  stroke-linecap: round;
-}
-.pump-body {
-  fill: var(--brand-mustard);
-  filter: drop-shadow(0 6px 0 #1f326c33);
-}
-.pump-arrow {
-  fill: none;
-  stroke: var(--scene-paper);
-  stroke-width: 5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.sodium-arrow {
-  stroke: var(--brand-mustard);
-}
-.pump-ion circle {
-  fill: var(--brand-tomato);
-}
-.potassium-ion circle {
-  fill: var(--brand-pink);
-}
-.pump-ion text {
-  fill: var(--scene-ink);
-  font-size: 30px;
-  font-weight: 600;
-  text-anchor: middle;
-}
-.pump-direction {
-  fill: var(--scene-paper);
-  font-size: 22px;
-  font-weight: 600;
-}
-.pump-label-backdrop {
-  fill: var(--scene-blue);
-}
-.sodium-direction {
-  fill: var(--scene-paper);
-}
-.pump-energy {
-  fill: var(--brand-mustard);
-}
-.pump-atp {
-  fill: var(--scene-paper);
-  font-size: 22px;
-  font-weight: 500;
-}
 .principle-strip {
   background: var(--brand-mustard);
   border: 0;
@@ -1411,4 +1352,122 @@ h3 {
   clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* Homepage hero: water and sodium balance (science-visual.tsx) */
+.balance-specks circle {
+  fill: var(--scene-paper);
+  opacity: 0.22;
+}
+.balance-kicker {
+  fill: var(--scene-paper);
+  font-size: 26px;
+  font-weight: 700;
+}
+.balance-sub {
+  fill: var(--scene-paper);
+  opacity: 0.8;
+  font-size: 18px;
+  font-weight: 500;
+}
+.balance-readout rect {
+  fill: var(--scene-paper);
+  filter: drop-shadow(0 6px 0 #1f326c40);
+}
+.balance-readout-ion {
+  fill: var(--brand-tomato-ink, var(--brand-tomato));
+  font-family: var(--font-mono);
+  font-size: 24px;
+  font-weight: 700;
+}
+.balance-readout-value {
+  fill: var(--scene-ink);
+  font-size: 40px;
+  font-weight: 800;
+}
+.balance-readout-unit {
+  fill: var(--scene-ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+.balance-stand,
+.balance-beam {
+  fill: var(--brand-mustard);
+  filter: drop-shadow(0 6px 0 #1f326c33);
+}
+.balance-pivot,
+.balance-hook {
+  fill: var(--scene-paper);
+}
+.balance-needle {
+  stroke: var(--scene-paper);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+.balance-needle-tip {
+  fill: var(--brand-tomato);
+}
+.balance-hanger {
+  fill: none;
+  stroke: var(--scene-paper);
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0.85;
+}
+.balance-pan {
+  fill: var(--scene-paper);
+  filter: drop-shadow(0 7px 0 #1f326c40);
+}
+.balance-drop path:first-child {
+  fill: #cfe2ff;
+  stroke: var(--scene-paper);
+  stroke-width: 3;
+}
+.balance-drop-shine {
+  fill: none;
+  stroke: var(--scene-paper);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.balance-ion circle {
+  fill: var(--brand-tomato);
+  filter: drop-shadow(0 4px 0 #1f326c33);
+}
+.balance-ion text {
+  fill: var(--scene-ink);
+  font-size: 15px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+.balance-label {
+  fill: var(--scene-paper);
+  font-size: 24px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+.balance-pill rect {
+  filter: drop-shadow(0 4px 0 #1f326c33);
+}
+.balance-pill-pink rect {
+  fill: var(--brand-pink);
+}
+.balance-pill-green rect {
+  fill: var(--brand-green);
+}
+.balance-pill text {
+  fill: var(--scene-ink);
+  font-size: 16px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+.balance-caption {
+  fill: var(--scene-paper);
+  font-size: 19px;
+  font-weight: 500;
+  text-anchor: middle;
+}
+.balance-pill-green text {
+  fill: var(--scene-paper);
 }
