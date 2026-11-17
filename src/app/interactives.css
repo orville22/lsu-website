@@ -454,3 +454,110 @@
   border-left: 2px dashed var(--ix-arrow);
   z-index: 1;
 }
+
+/* C1.2: stat list, gap bars and legend */
+.ix-stats {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-3) 0;
+}
+.ix-stats > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-3);
+  border-bottom: 1px dashed var(--ix-edge);
+  padding-bottom: var(--space-1);
+}
+.ix-stats dt {
+  color: var(--ix-muted);
+}
+.ix-stats dd {
+  margin: 0;
+  font-weight: var(--weight-heading);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.ix-stats dd.ix-hot {
+  color: var(--ix-accent);
+}
+.ix-cell {
+  max-width: 18rem;
+}
+.ix-choices-tight {
+  margin-top: 0;
+}
+.ix-bars {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: var(--space-3) var(--space-3);
+  align-items: center;
+  margin-top: var(--space-5);
+  font-size: var(--text-small);
+  font-weight: var(--weight-heading);
+}
+.ix-bar-label small {
+  display: block;
+  font-weight: var(--weight-body);
+  color: var(--ix-muted);
+  font-size: var(--text-caption);
+}
+.ix-bar-track {
+  display: flex;
+  height: 34px;
+}
+.ix-seg {
+  display: block;
+  height: 100%;
+  flex: none;
+  border-top: 1.5px solid var(--ix-outline);
+  border-bottom: 1.5px solid var(--ix-outline);
+  box-shadow: 0 4px 0 var(--ix-drop);
+  transition: width var(--motion-fast) var(--motion-ease);
+}
+.ix-seg:first-child {
+  border-left: 1.5px solid var(--ix-outline);
+  border-radius: 6px 0 0 6px;
+}
+.ix-seg:last-child {
+  border-right: 1.5px solid var(--ix-outline);
+  border-radius: 0 6px 6px 0;
+}
+.ix-seg:only-child {
+  border-radius: 6px;
+}
+.ix-seg-gap {
+  background: transparent;
+  border: 2px dashed var(--ix-ink) !important;
+  border-radius: 0 6px 6px 0;
+  box-shadow: none;
+}
+.ix-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  list-style: none;
+  padding: 0;
+  margin: var(--space-4) 0 0;
+  font-size: var(--text-caption);
+  color: var(--ix-muted);
+}
+.ix-legend li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.ix-legend i {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1.5px solid var(--ix-outline);
+}
+.ix-legend i.ix-legend-gap {
+  border: 2px dashed var(--ix-ink);
+}
+@media (max-width: 560px) {
+  .ix-bars {
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+  }
+}

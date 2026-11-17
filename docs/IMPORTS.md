@@ -58,6 +58,9 @@ Lesson diagrams and interactives are built into the site as components (`src/com
 | `c1-1-adh-switch-patient` | C1.1   | Visual 6: the ADH switch applied to the case patient  |
 | `c1-1-heart-failure`      | C1.1   | Visual 7: why heart failure lowers sodium             |
 | `c1-1-spot-urine`         | C1.1   | Visual 8: reading the spot urine                      |
+| `c1-2-cell-tonicity`      | C1.2   | I2: effective and ineffective osmoles (a cell)        |
+| `c1-2-gap-builder`        | C1.2   | I1: the gap builder (presets, sliders, factor)        |
+| `c1-2-gap-time-course`    | C1.2   | Visual 2: osmolal gap and anion gap over time         |
 
 To add one: write the component under `src/components/interactives/<lesson>/`, register it in `src/components/interactives/index.tsx` and add its key to `src/lib/interactive-keys.ts`. The test in `tests/interactives.test.tsx` renders every registered key.
 
