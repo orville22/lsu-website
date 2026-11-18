@@ -16,6 +16,8 @@ export const siteConfig = {
   youtubeUrl: 'https://www.youtube.com/@labscienceunfiltered' as string | null,
   /** Where visitors contact LSU (privacy requests, corrections). Shown in the footer and privacy page. */
   contactUrl: 'https://orvillemalijan.com',
+  /** Volunteer reviewer programme: the /review page, lesson note and feedback tools. */
+  reviewProgramme: true,
   /** Date the privacy page last changed in substance. */
-  privacyUpdated: '17 November 2026',
+  privacyUpdated: '18 November 2026',
 };

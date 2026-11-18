@@ -8,6 +8,7 @@ export default function robots(): MetadataRoute.Robots {
         '/admin',
         '/api/',
         '/subscribe/',
+        '/review/lessons/',
         '/demo/',
         '/practice/',
         '/cases/a-low-sodium-result',

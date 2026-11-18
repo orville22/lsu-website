@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { db } from '@/lib/db';
 import { siteState } from '@/lib/visibility';
+import { siteConfig } from '@/lib/site-config';
 export const dynamic = 'force-dynamic';
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.SITE_URL || 'http://localhost:3000';
@@ -11,6 +12,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...(show.practice ? ['/practice'] : []),
     ...(show.cases ? ['/cases'] : []),
     ...(show.watch ? ['/watch'] : []),
+    ...(siteConfig.reviewProgramme ? ['/review'] : []),
     '/privacy',
   ];
   const lessons = await db.lesson.findMany({

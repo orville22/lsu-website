@@ -3,7 +3,9 @@ import katex from 'katex';
 import { db } from '@/lib/db';
 import { lessonUrl } from '@/lib/content';
 import { blockSchema } from '@/lib/validation';
-import { DraftNotice, Breadcrumbs, ShortLessonNotice } from './ui';
+import { DraftNotice, Breadcrumbs, ShortLessonNotice, EarlyVersionNotice } from './ui';
+import { ErrorReport } from './review';
+import { siteConfig } from '@/lib/site-config';
 import { RichText, InlineText } from './rich-text';
 import { ReferenceList, toReferences } from './reference-list';
 import { siteState } from '@/lib/visibility';
@@ -18,11 +20,15 @@ import { z } from 'zod';
 export async function Lesson({
   lesson,
   preview,
+  reviewerPreview = false,
 }: {
   lesson: NonNullable<Awaited<ReturnType<typeof fetchLesson>>>;
   /** Administrator preview of an unpublished lesson. */
   preview: boolean;
+  /** A lesson in review, shown to volunteer reviewers. */
+  reviewerPreview?: boolean;
 }) {
+  const isPublic = !preview && !reviewerPreview;
   const topic = lessonPresentation(lesson);
   const blocks = z.array(blockSchema).parse(lesson.blocks);
   const refs = toReferences(lesson.references);
@@ -74,6 +80,7 @@ export async function Lesson({
         </aside>
         <article className="article">
           {preview && <DraftNotice variant={lesson.isDemo ? 'demo' : 'preview'} />}
+          {reviewerPreview && <DraftNotice variant="review" />}
           <div className="lesson-visual">
             <TopicArt kind={topic.artwork} />
           </div>
@@ -94,6 +101,7 @@ export async function Lesson({
           </div>
           <p className="lead">{lesson.description}</p>
           {lesson.depth === 'SHORT' && <ShortLessonNotice />}
+          {isPublic && siteConfig.reviewProgramme && <EarlyVersionNotice />}
           <section className="objectives" id="objectives">
             <h2>What you’ll take away</h2>
             <ul>
@@ -196,7 +204,7 @@ export async function Lesson({
               </Link>
             </section>
           )}
-          {!preview && (
+          {isPublic && (
             <SubscribeCallout
               source={`lesson:${lesson.slug}`}
               variant="lesson"
@@ -214,6 +222,11 @@ export async function Lesson({
               </p>
             )}
           </section>
+          {isPublic && (
+            <div className="error-report-wrap">
+              <ErrorReport />
+            </div>
+          )}
           {related.length > 0 && (
             <section className="references">
               <h2>{preview ? 'Related unpublished lessons' : 'Related lessons'}</h2>

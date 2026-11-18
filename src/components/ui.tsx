@@ -30,7 +30,7 @@ export function SectionHeading({
     </div>
   );
 }
-export function DraftNotice({ variant = 'demo' }: { variant?: 'demo' | 'preview' }) {
+export function DraftNotice({ variant = 'demo' }: { variant?: 'demo' | 'preview' | 'review' }) {
   return (
     <div className="draft-notice" role="note">
       <span className="status-dot" />
@@ -39,11 +39,30 @@ export function DraftNotice({ variant = 'demo' }: { variant?: 'demo' | 'preview'
           <strong>Demonstration content.</strong> AI-generated draft awaiting scientific review. For
           testing the platform; not approved teaching material.
         </span>
+      ) : variant === 'review' ? (
+        <span>
+          <strong>In review.</strong> Only volunteer reviewers can see this lesson, and it may
+          change before it’s published. Please don’t share it.
+        </span>
       ) : (
         <span>
           <strong>Unpublished preview.</strong> Only signed-in administrators can see this page.
         </span>
       )}
+    </div>
+  );
+}
+/** Shown on public lessons while the volunteer review programme runs. */
+export function EarlyVersionNotice() {
+  return (
+    <div className="early-notice" role="note">
+      <span className="early-pill">Early version</span>
+      <span>
+        Lessons on this site are being reviewed by laboratory scientists and students.{' '}
+        <Link className="text-link" href="/review">
+          Volunteer to review
+        </Link>
+      </span>
     </div>
   );
 }

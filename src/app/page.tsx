@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { siteConfig } from '@/lib/site-config';
 import {
   ArrowRight,
   ArrowUpRight,
@@ -243,6 +244,22 @@ export default async function Home() {
       )}
       <div className="container">
         <SubscribeCallout source="home" />
+        {siteConfig.reviewProgramme && (
+          <section className="review-callout" aria-labelledby="review-callout-heading">
+            <div>
+              <p className="eyebrow">Volunteer reviewers</p>
+              <h2 id="review-callout-heading">Help review the lessons.</h2>
+              <p>
+                LSU is new, and its lessons are being reviewed by people who study and work in the
+                lab. Reviewers see lessons before they go public and send feedback with a few short
+                questions.
+              </p>
+            </div>
+            <Link href="/review" className="button button-outline">
+              Volunteer as a reviewer <ArrowUpRight size={17} />
+            </Link>
+          </section>
+        )}
       </div>
       <section id="about" className="about-section">
         <div className="container about-grid">

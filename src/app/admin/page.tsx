@@ -8,6 +8,8 @@ import { LessonImportPanel } from '@/components/lesson-import-panel';
 import { lessonUrl } from '@/lib/content';
 import { ImportPanel } from '@/components/import-panel';
 import { TaxonomyForm } from '@/components/taxonomy-form';
+import { AdminFeedbackActions, AdminReviewerActions } from '@/components/review';
+import { reviewerRoles } from '@/lib/reviewers';
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Administration', robots: { index: false, follow: false } };
 type Params = {
@@ -28,9 +30,16 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       </div>
     );
   const p = await searchParams;
-  const tab = ['questions', 'lessons', 'import', 'categories', 'subscribers', 'audit'].includes(
-    p.tab || '',
-  )
+  const tab = [
+    'questions',
+    'lessons',
+    'import',
+    'categories',
+    'subscribers',
+    'reviewers',
+    'feedback',
+    'audit',
+  ].includes(p.tab || '')
     ? p.tab!
     : 'overview';
   const [categories, lessonOptions, disciplines] = await Promise.all([
@@ -85,6 +94,8 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           ['import', 'Import & export'],
           ['categories', 'Categories'],
           ['subscribers', 'Subscribers'],
+          ['reviewers', 'Reviewers'],
+          ['feedback', 'Feedback'],
           ['audit', 'Audit history'],
         ].map(([id, label]) => (
           <Link href={`/admin?tab=${id}`} className={tab === id ? 'active' : ''} key={id}>
@@ -133,6 +144,10 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
             </>
           ) : tab === 'subscribers' ? (
             <Subscribers />
+          ) : tab === 'reviewers' ? (
+            <Reviewers />
+          ) : tab === 'feedback' ? (
+            <FeedbackList showResolved={p.status === 'resolved'} />
           ) : tab === 'audit' ? (
             <Audit />
           ) : (
@@ -467,6 +482,241 @@ async function Audit() {
           </tbody>
         </table>
       </div>
+    </>
+  );
+}
+
+const roleLabel = (r: string) => reviewerRoles[r as keyof typeof reviewerRoles] ?? r;
+const day = (d: Date | null) => (d ? d.toISOString().slice(0, 10) : '—');
+
+async function Reviewers() {
+  const rows = await db.reviewer.findMany({
+    orderBy: { createdAt: 'desc' },
+    include: { _count: { select: { feedback: true } } },
+  });
+  const requested = rows.filter((r) => r.status === 'REQUESTED');
+  const approved = rows.filter((r) => r.status === 'APPROVED');
+  const ended = rows.filter((r) => r.status === 'DECLINED' || r.status === 'REVOKED');
+  return (
+    <>
+      <div className="stats-grid">
+        {[
+          ['Waiting for a decision', requested.length],
+          ['Active reviewers', approved.length],
+          ['Feedback received', rows.reduce((n, r) => n + r._count.feedback, 0)],
+          ['Happy to be credited', approved.filter((r) => r.creditConsent).length],
+        ].map(([label, value]) => (
+          <div className="stat" key={label}>
+            <span>{label}</span>
+            <strong>{value}</strong>
+          </div>
+        ))}
+      </div>
+      <p className="muted">
+        Lessons set to <strong>In review</strong> are visible to active reviewers at{' '}
+        <code>/review</code>. Approving a request emails a personal link; a new link replaces the
+        old one.
+      </p>
+      <h2>Requests</h2>
+      {requested.length ? (
+        <div className="admin-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Person</th>
+                <th>Role and note</th>
+                <th>Asked</th>
+                <th>Decision</th>
+              </tr>
+            </thead>
+            <tbody>
+              {requested.map((r) => (
+                <tr key={r.id}>
+                  <td>
+                    <strong>{r.name}</strong>
+                    <br />
+                    {r.email}
+                    {r.country && <span className="muted"> · {r.country}</span>}
+                  </td>
+                  <td>
+                    {roleLabel(r.role)}
+                    {r.creditConsent && <span className="muted"> · happy to be credited</span>}
+                    {r.note && <p className="small">{r.note}</p>}
+                  </td>
+                  <td>{day(r.createdAt)}</td>
+                  <td>
+                    <AdminReviewerActions id={r.id} actions={['approve', 'decline', 'delete']} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p className="empty-state">No requests waiting.</p>
+      )}
+      <h2>Active reviewers</h2>
+      {approved.length ? (
+        <div className="admin-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Person</th>
+                <th>Role</th>
+                <th>Invited</th>
+                <th>Last seen</th>
+                <th>Feedback</th>
+                <th>Access</th>
+              </tr>
+            </thead>
+            <tbody>
+              {approved.map((r) => (
+                <tr key={r.id}>
+                  <td>
+                    <strong>{r.name}</strong>
+                    <br />
+                    {r.email}
+                  </td>
+                  <td>{roleLabel(r.role)}</td>
+                  <td>{day(r.invitedAt)}</td>
+                  <td>{day(r.lastSeenAt)}</td>
+                  <td>{r._count.feedback}</td>
+                  <td>
+                    <AdminReviewerActions id={r.id} actions={['resend', 'revoke', 'delete']} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p className="empty-state">No active reviewers yet.</p>
+      )}
+      {ended.length > 0 && (
+        <>
+          <h2>Declined or revoked</h2>
+          <p className="muted">Deleted automatically 30 days after the decision.</p>
+          <div className="admin-table">
+            <table>
+              <tbody>
+                {ended.map((r) => (
+                  <tr key={r.id}>
+                    <td>
+                      {r.name} · {r.email}
+                    </td>
+                    <td>{r.status === 'DECLINED' ? 'Declined' : 'Revoked'}</td>
+                    <td>{day(r.updatedAt)}</td>
+                    <td>
+                      <AdminReviewerActions id={r.id} actions={['approve', 'delete']} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+    </>
+  );
+}
+
+const levelLabel: Record<string, string> = {
+  TOO_BASIC: 'Too basic',
+  ABOUT_RIGHT: 'About right',
+  TOO_ADVANCED: 'Too advanced',
+};
+
+async function FeedbackList({ showResolved }: { showResolved: boolean }) {
+  const [rows, counts] = await Promise.all([
+    db.feedback.findMany({
+      where: { status: showResolved ? 'RESOLVED' : 'OPEN' },
+      orderBy: { createdAt: 'desc' },
+      include: { reviewer: { select: { name: true, role: true } } },
+      take: 300,
+    }),
+    db.feedback.groupBy({ by: ['status'], _count: { _all: true } }),
+  ]);
+  const count = (s: string) => counts.find((c) => c.status === s)?._count._all ?? 0;
+  const pages = new Map<string, typeof rows>();
+  for (const r of rows) pages.set(r.path, [...(pages.get(r.path) ?? []), r]);
+  return (
+    <>
+      <div className="form-actions">
+        <Link
+          className={`button button-small ${showResolved ? 'button-outline' : ''}`}
+          href="/admin?tab=feedback"
+        >
+          Open ({count('OPEN')})
+        </Link>
+        <Link
+          className={`button button-small ${showResolved ? '' : 'button-outline'}`}
+          href="/admin?tab=feedback&status=resolved"
+        >
+          Resolved ({count('RESOLVED')})
+        </Link>
+        <a className="button button-small button-outline" href="/api/admin/feedback">
+          Export all feedback (CSV)
+        </a>
+      </div>
+      {pages.size === 0 && <p className="empty-state">Nothing here yet.</p>}
+      {[...pages.entries()].map(([path, items]) => (
+        <section key={path} className="feedback-group">
+          <h2>
+            <a className="text-link" href={path} target="_blank" rel="noreferrer">
+              {items[0].pageTitle || path}
+            </a>{' '}
+            <span className="muted small">
+              {path} · {items.length} item{items.length === 1 ? '' : 's'}
+            </span>
+          </h2>
+          {items.map((f) => (
+            <article key={f.id} className="feedback-item">
+              <header>
+                <strong>
+                  {f.kind === 'ERROR'
+                    ? 'Error report (anonymous)'
+                    : f.reviewer
+                      ? `${f.reviewer.name} · ${roleLabel(f.reviewer.role)}`
+                      : 'Reviewer (details removed or administrator test)'}
+                </strong>
+                <span className="muted small">
+                  {f.createdAt.toISOString().slice(0, 16).replace('T', ' ')} UTC
+                </span>
+              </header>
+              <dl>
+                {f.clarity !== null && (
+                  <>
+                    <dt>Clarity</dt>
+                    <dd>{f.clarity} / 5</dd>
+                  </>
+                )}
+                {f.level && (
+                  <>
+                    <dt>Level</dt>
+                    <dd>{levelLabel[f.level] ?? f.level}</dd>
+                  </>
+                )}
+                {(
+                  [
+                    ['Accuracy', f.accuracy],
+                    ['Illustrations', f.illustrations],
+                    ['Missing or confusing', f.missing],
+                    [f.kind === 'ERROR' ? 'Report' : 'Other', f.comment],
+                  ] as const
+                ).map(([label, text]) =>
+                  text ? (
+                    <div key={label} className="feedback-text">
+                      <dt>{label}</dt>
+                      <dd>{text}</dd>
+                    </div>
+                  ) : null,
+                )}
+              </dl>
+              <AdminFeedbackActions id={f.id} status={f.status} />
+            </article>
+          ))}
+        </section>
+      ))}
     </>
   );
 }
