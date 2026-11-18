@@ -84,14 +84,21 @@ export default async function ComingSoon({
             <SubscribeForm source="coming-soon" consentText={CONSENT_TEXT} />
           </article>
         )}
-        <article className="soon-card soon-card-review" id="review" aria-labelledby="review-title">
-          <p className="eyebrow">Volunteer reviewers</p>
-          <h2 id="review-title">Read it before anyone else</h2>
-          <p>
-            We’re inviting a small group of students, educators and laboratory professionals to read
-            the lessons before launch and tell us what’s unclear, wrong or missing. Each reviewer
-            gets a personal link to the full site and a short feedback form on every page.
-          </p>
+        <article
+          className={`soon-card soon-card-review${canEmail ? '' : ' soon-card-wide'}`}
+          id="review"
+          aria-labelledby="review-title"
+        >
+          <div className="soon-card-intro">
+            <p className="eyebrow">Volunteer reviewers</p>
+            <h2 id="review-title">Read it before anyone else</h2>
+            <p>
+              We’re inviting a small group of students, educators and laboratory professionals to
+              read the lessons before launch and tell us what’s unclear, wrong or missing. Each
+              reviewer gets a personal link to the full site and a short feedback form on every
+              page.
+            </p>
+          </div>
           <ReviewerRequestForm />
         </article>
         {siteConfig.youtubeUrl && (

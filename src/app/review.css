@@ -39,6 +39,18 @@
   margin-bottom: var(--space-5);
   line-height: var(--leading-body);
 }
+.soon-card-wide {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: var(--space-10);
+  align-items: start;
+}
+.soon-card-intro > p:last-child {
+  color: var(--muted);
+  line-height: var(--leading-body);
+  margin-bottom: var(--space-5);
+}
 .soon-card-review {
   border-top: 5px solid var(--brand-mustard);
 }
@@ -99,6 +111,7 @@
   justify-content: space-between;
 }
 @media (max-width: 860px) {
+  .soon-card-wide,
   .soon-cards,
   .review-request-grid {
     grid-template-columns: 1fr;
@@ -156,6 +169,7 @@
   outline-offset: 3px;
 }
 .fb-dialog {
+  margin: auto;
   width: min(600px, calc(100vw - 24px));
   max-height: calc(100dvh - 24px);
   border: 1px solid var(--line);
@@ -300,8 +314,15 @@
   color: var(--muted);
   font-size: var(--text-caption);
 }
-.fb-form .field textarea {
-  margin-left: 0;
+.fb-q.field > .fb-legend {
+  display: flex;
+  font-size: inherit;
+  font-weight: 600;
+  color: var(--ink);
+}
+.fb-q.field > textarea {
+  margin-left: calc(24px + var(--space-3));
+  width: calc(100% - 24px - var(--space-3));
 }
 .fb-q.field textarea,
 .fb-detail textarea {
@@ -345,6 +366,10 @@
   }
   .fb-detail {
     margin-left: 0;
+  }
+  .fb-q.field > textarea {
+    margin-left: 0;
+    width: 100%;
   }
 }
 

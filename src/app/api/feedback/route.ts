@@ -22,7 +22,7 @@ export async function POST(req: Request) {
         track: author.track,
         path,
         kind: 'page',
-        rating: answers.clarity ?? null,
+        rating: typeof answers.clarity === 'number' ? answers.clarity : null,
         answers,
         comment: feedbackComment(answers),
       },

@@ -480,6 +480,13 @@ export function ReviewerActions({
             Decline
           </button>
         )}
+        <button
+          className="button button-small button-outline"
+          disabled={busy}
+          onClick={() => act('track', false, { track: track === 'expert' ? 'learner' : 'expert' })}
+        >
+          {track === 'expert' ? 'Make learner' : 'Make expert'}
+        </button>
         {!live && (
           <button
             className="button button-small button-outline"
