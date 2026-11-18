@@ -17,15 +17,24 @@ export const REVIEWER_COOKIE = 'lsu_reviewer';
 /** Invite cookies last 90 days; revoking the reviewer ends access immediately. */
 export const REVIEWER_COOKIE_MAX_AGE = 60 * 60 * 24 * 90;
 
-/** On unless COMING_SOON=off is set in the environment. */
+/**
+ * Off by default: the site is public and reviewers work alongside everyone
+ * else. Set COMING_SOON=on to show the public the coming-soon page instead.
+ */
 export function comingSoonEnabled(env: Partial<Record<string, string>> = process.env) {
-  return (env.COMING_SOON || '').toLowerCase() !== 'off';
+  return (env.COMING_SOON || '').toLowerCase() === 'on';
 }
 
 export const inviteTokenShape = /^[A-Za-z0-9_-]{32,64}$/;
 
 /** Pages anyone can open while the site is coming soon. */
-const OPEN_PAGES = [/^\/coming-soon\/?$/, /^\/privacy\/?$/, /^\/subscribe(\/|$)/, /^\/admin(\/|$)/];
+const OPEN_PAGES = [
+  /^\/coming-soon\/?$/,
+  /^\/review\/?$/,
+  /^\/privacy\/?$/,
+  /^\/subscribe(\/|$)/,
+  /^\/admin(\/|$)/,
+];
 /** API routes anyone can call; each one does its own checks. */
 const OPEN_API = [
   /^\/api\/subscribe(\/|$)/,

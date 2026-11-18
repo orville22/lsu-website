@@ -60,7 +60,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const viewer = h.get('x-lsu-viewer');
   const reviewerName =
     viewer === 'reviewer' ? decodeURIComponent(h.get('x-lsu-reviewer-name') || '') : '';
-  const preview = comingSoonEnabled() && (viewer === 'reviewer' || viewer === 'admin');
+  const comingSoon = comingSoonEnabled();
+  const banner = viewer === 'reviewer' || (viewer === 'admin' && comingSoon);
   // If the database is unreachable, keep a minimal working navigation.
   const { show, lessonCount } = await siteState().catch(() => ({
     lessonCount: 0,
@@ -93,13 +94,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <a className="skip-link" href="#main">
           Skip to content
         </a>
-        {preview && (
+        {banner && (
           <div className="preview-banner" role="note">
             {viewer === 'reviewer' ? (
               <>
-                <strong>Reviewer preview.</strong> Thanks for helping,{' '}
-                {reviewerName.split(/\s+/)[0]}. The site isn’t public yet: use the Feedback button
-                on any page.
+                <strong>Reviewer mode.</strong> Thanks for helping, {reviewerName}. Use the Feedback
+                button on any page.
               </>
             ) : (
               <>
@@ -148,6 +148,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <a href={siteConfig.contactUrl} target="_blank" rel="noreferrer">
                 Contact <ArrowUpRight size={13} />
               </a>
+              <Link href="/review">Help review LSU</Link>
               <Link href="/privacy">Privacy</Link>
             </div>
             <div className="footer-note">
@@ -161,7 +162,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <span>Educational content. Always follow your laboratory’s validated procedures.</span>
           </div>
         </footer>
-        {(viewer === 'reviewer' || preview) && (
+        {(viewer === 'reviewer' || viewer === 'admin') && (
           <FeedbackButton
             track={
               viewer === 'reviewer' && h.get('x-lsu-track') !== 'expert' ? 'learner' : 'expert'

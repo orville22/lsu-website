@@ -1,16 +1,14 @@
-# Coming-soon mode and volunteer reviewers
+# Volunteer reviewers (and optional coming-soon mode)
 
-While coming-soon mode is on, the public sees `/coming-soon` in place of every page (the URL they typed stays in the address bar). Invited reviewers and signed-in administrators see the whole site, with a banner at the top and a **Feedback** button on every page.
+The site is public. Invited reviewers browse it like everyone else, plus a "Reviewer mode" banner and a **Feedback** button on every page. Signed-in administrators also get the Feedback button (with the expert questions).
 
-## What the public sees
+## Asking to review
 
-`/coming-soon` has:
+`/review` (linked in the footer as "Help review LSU") explains the programme and has the request form: name, email, role, optional note; rate-limited, with a honeypot. Requests arrive in **Admin → Reviewers** as _Asked to review_.
 
-- email sign-up (shown only when Resend is configured; see [EMAIL.md](EMAIL.md))
-- a request form to become a reviewer (name, email, role, optional note; rate-limited, honeypot)
-- a link to the YouTube channel (`siteConfig.youtubeUrl`)
+## Coming-soon mode (off)
 
-Still open to everyone: `/privacy`, `/subscribe/*`, `/admin` (sign-in), `/invite/*`, `robots.txt`, `sitemap.xml` and the APIs those pages use. Every other API answers 403. The sitemap lists only the homepage and privacy page while coming soon. The rules live in `gateFor()` in `src/lib/reviewers.ts` and are enforced in `src/proxy.ts`.
+Set `COMING_SOON=on` in Vercel and redeploy to hide the site: the public then sees `/coming-soon` (email sign-up, reviewer request form, YouTube link) in place of every page, while reviewers and administrators keep full access. `/privacy`, `/review`, `/subscribe/*`, `/admin`, `/invite/*`, `robots.txt`, `sitemap.xml` and the APIs those pages use stay open; other APIs answer 403. The rules live in `gateFor()` in `src/lib/reviewers.ts`, enforced in `src/proxy.ts`. Remove the variable to open the site again.
 
 ## Inviting reviewers
 
@@ -48,10 +46,6 @@ The Feedback button opens the questions for the reviewer's track (`FEEDBACK_QUES
 7. What would you change? Include anything a learner could misapply at the bench.
 
 Clarity, accuracy, visuals and the change question share ids across tracks, so learner and expert answers line up in the CSV. Read feedback under **Admin → Reviewers → Feedback**, tick **Dealt with**, or **Export all feedback (CSV)**. To change wording, edit a question's `label`; give a question with a new meaning a new `id`.
-
-## Turning it off
-
-Set `COMING_SOON=off` in Vercel → Settings → Environment Variables (Production) and redeploy. The site opens to everyone; reviewers keep the Feedback button. Remove the variable (or set any other value) to turn coming-soon mode back on.
 
 ## Release
 

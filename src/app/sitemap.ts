@@ -6,7 +6,8 @@ export const dynamic = 'force-dynamic';
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.SITE_URL || 'http://localhost:3000';
   // While coming soon, every other URL shows the same holding page.
-  if (comingSoonEnabled()) return [{ url: base }, { url: base + '/privacy' }];
+  if (comingSoonEnabled())
+    return [{ url: base }, { url: base + '/privacy' }, { url: base + '/review' }];
   const { show } = await siteState();
   const sections = [
     '',
@@ -14,6 +15,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...(show.practice ? ['/practice'] : []),
     ...(show.cases ? ['/cases'] : []),
     ...(show.watch ? ['/watch'] : []),
+    '/review',
     '/privacy',
   ];
   const lessons = await db.lesson.findMany({

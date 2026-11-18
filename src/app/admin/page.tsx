@@ -249,8 +249,8 @@ async function Reviewers({ params }: { params: Params }) {
     <>
       <div className={comingSoonEnabled() ? 'warning-message' : 'success-message'} role="status">
         {comingSoonEnabled()
-          ? 'Coming-soon mode is on: the public sees the coming-soon page. Set COMING_SOON=off in Vercel and redeploy to open the site.'
-          : 'Coming-soon mode is off: the site is public. Reviewers can still leave feedback.'}
+          ? 'Coming-soon mode is on: the public sees the coming-soon page. Remove COMING_SOON from Vercel and redeploy to open the site.'
+          : 'The site is public. Reviewers see a Feedback button on every page; volunteers can ask to join at /review.'}
       </div>
       <div className="stats-grid">
         {[

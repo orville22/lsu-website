@@ -12,10 +12,10 @@ import {
 } from '../src/lib/reviewers';
 import { inviteTokenHash, newInviteToken } from '../src/lib/reviewer-tokens';
 
-test('coming-soon mode is on unless COMING_SOON=off', () => {
-  assert.equal(comingSoonEnabled({}), true);
-  assert.equal(comingSoonEnabled({ COMING_SOON: 'on' }), true);
-  assert.equal(comingSoonEnabled({ COMING_SOON: 'OFF' }), false);
+test('coming-soon mode is off unless COMING_SOON=on', () => {
+  assert.equal(comingSoonEnabled({}), false);
+  assert.equal(comingSoonEnabled({ COMING_SOON: 'off' }), false);
+  assert.equal(comingSoonEnabled({ COMING_SOON: 'ON' }), true);
 });
 
 test('the gate keeps lessons, practice and private APIs closed to the public', () => {
@@ -34,6 +34,7 @@ test('the gate keeps lessons, practice and private APIs closed to the public', (
 test('the gate leaves sign-up, invites, admin and legal pages open', () => {
   for (const p of [
     '/coming-soon',
+    '/review',
     '/privacy',
     '/subscribe/confirm',
     '/admin',
