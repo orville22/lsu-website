@@ -1,21 +1,22 @@
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { assertOrigin, errorResponse, HttpError, readJson, requireAdmin } from '@/lib/security';
-import { issueReviewerAccess, reviewerAccessUrl } from '@/lib/reviewers';
+import { REVIEWER_TRACKS, issueReviewerAccess, reviewerAccessUrl } from '@/lib/reviewers';
 import { emailSettings } from '@/lib/subscribers';
 import { reviewerInviteEmail, sendEmail } from '@/lib/email';
 export const dynamic = 'force-dynamic';
 
 const actionSchema = z.object({
   id: z.string().min(1).max(64),
-  action: z.enum(['approve', 'resend', 'decline', 'revoke', 'delete']),
+  action: z.enum(['approve', 'resend', 'decline', 'revoke', 'delete', 'track']),
+  track: z.enum(REVIEWER_TRACKS).optional(),
 });
 
 export async function POST(req: Request) {
   try {
     await assertOrigin(req);
     const actor = await requireAdmin();
-    const { id, action } = actionSchema.parse(await readJson(req));
+    const { id, action, track } = actionSchema.parse(await readJson(req));
     const row = await db.reviewer.findUnique({ where: { id } });
     if (!row) throw new HttpError(404, 'Reviewer not found.');
     const log = (after: unknown) =>
@@ -25,7 +26,7 @@ export async function POST(req: Request) {
           action: `reviewer.${action}`,
           entity: 'Reviewer',
           entityId: id,
-          before: { status: row.status },
+          before: { status: row.status, track: row.track },
           after: after as object,
         },
       });
@@ -52,6 +53,12 @@ export async function POST(req: Request) {
       }
       // The link is returned so it can be sent by hand if email isn't working.
       return Response.json({ ok: true, emailed, link });
+    }
+    if (action === 'track') {
+      if (!track) throw new HttpError(400, 'Choose learner or expert.');
+      await db.reviewer.update({ where: { id }, data: { track } });
+      await log({ track });
+      return Response.json({ ok: true });
     }
     if (action === 'delete') {
       await db.reviewer.delete({ where: { id } });

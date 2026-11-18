@@ -63,7 +63,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Navigation links={navLinks} cta={cta} search={lessonCount > 0} />
         <main id="main">{children}</main>
         {siteConfig.reviewProgramme && (reviewer || isAdmin) && (
-          <FeedbackWidget name={reviewer?.name ?? (isAdmin ? 'administrator test' : null)} />
+          <FeedbackWidget
+            name={reviewer?.name ?? (isAdmin ? 'administrator test' : null)}
+            track={reviewer?.track ?? 'expert'}
+          />
         )}
         <footer className="site-footer">
           <div className="container footer-grid">

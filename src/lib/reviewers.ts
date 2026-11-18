@@ -86,7 +86,13 @@ export async function reviewerForToken(db: PrismaClient, token: string | undefin
 
 const optionalText = (max: number) => z.string().trim().max(max).default('');
 
-/** The five guiding questions. Every field is optional, but something must be filled in. */
+/** Learners answer five guiding questions; experts answer seven (see FeedbackWidget). */
+export const REVIEWER_TRACKS = ['learner', 'expert'] as const;
+export type ReviewerTrack = (typeof REVIEWER_TRACKS)[number];
+export const asTrack = (t: string | null | undefined): ReviewerTrack =>
+  t === 'expert' ? 'expert' : 'learner';
+
+/** The guiding questions. Every field is optional, but something must be filled in. */
 export const reviewFeedbackSchema = z
   .object({
     kind: z.literal('REVIEW'),
@@ -95,6 +101,8 @@ export const reviewFeedbackSchema = z
     clarity: z.number().int().min(1).max(5).nullable().default(null),
     level: z.enum(['TOO_BASIC', 'ABOUT_RIGHT', 'TOO_ADVANCED']).nullable().default(null),
     accuracy: optionalText(4000),
+    currency: optionalText(4000),
+    references: optionalText(4000),
     illustrations: optionalText(4000),
     missing: optionalText(4000),
     comment: optionalText(4000),
@@ -103,7 +111,7 @@ export const reviewFeedbackSchema = z
     (f) =>
       f.clarity !== null ||
       f.level !== null ||
-      [f.accuracy, f.illustrations, f.missing, f.comment].some(Boolean),
+      [f.accuracy, f.currency, f.references, f.illustrations, f.missing, f.comment].some(Boolean),
     { message: 'Answer at least one question before sending.' },
   );
 

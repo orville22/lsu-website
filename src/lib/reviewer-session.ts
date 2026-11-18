@@ -2,7 +2,7 @@ import 'server-only';
 import { cache } from 'react';
 import { cookies } from 'next/headers';
 import { db } from './db';
-import { reviewerForToken } from './reviewers';
+import { asTrack, reviewerForToken } from './reviewers';
 
 export const REVIEWER_COOKIE = 'lsu_reviewer';
 /** The browser stays signed in as a reviewer for 180 days, or until access is revoked. */
@@ -26,5 +26,5 @@ export const currentReviewer = cache(async () => {
     await db.reviewer
       .update({ where: { id: row.id }, data: { lastSeenAt: new Date() } })
       .catch(() => {});
-  return { id: row.id, name: row.name };
+  return { id: row.id, name: row.name, track: asTrack(row.track) };
 });
