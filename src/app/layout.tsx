@@ -5,6 +5,8 @@ import { BrandMark } from '@/components/brand-mark';
 import { Navigation, type NavLink } from '@/components/navigation';
 import { siteState } from '@/lib/visibility';
 import { siteConfig } from '@/lib/site-config';
+import { currentReviewer } from '@/lib/reviewer-session';
+import { FeedbackWidget } from '@/components/review';
 import './globals.css';
 import './experience.css';
 export const metadata: Metadata = {
@@ -25,10 +27,12 @@ export const metadata: Metadata = {
 };
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // If the database is unreachable, keep a minimal working navigation.
-  const { show, lessonCount } = await siteState().catch(() => ({
+  const { show, lessonCount, isAdmin } = await siteState().catch(() => ({
+    isAdmin: false,
     lessonCount: 0,
     show: { practice: false, cases: false, watch: false, youtubeUrl: null as string | null },
   }));
+  const reviewer = siteConfig.reviewProgramme ? await currentReviewer().catch(() => null) : null;
   // Sections appear here only once they have published content.
   const sections: NavLink[] = [
     { href: '/learn', label: 'Learn' },
@@ -58,6 +62,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         </a>
         <Navigation links={navLinks} cta={cta} search={lessonCount > 0} />
         <main id="main">{children}</main>
+        {siteConfig.reviewProgramme && (reviewer || isAdmin) && (
+          <FeedbackWidget name={reviewer?.name ?? (isAdmin ? 'administrator test' : null)} />
+        )}
         <footer className="site-footer">
           <div className="container footer-grid">
             <div>
@@ -95,6 +102,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <a href={siteConfig.contactUrl} target="_blank" rel="noreferrer">
                 Contact <ArrowUpRight size={13} />
               </a>
+              {siteConfig.reviewProgramme && (
+                <Link href="/review">{reviewer ? 'Reviewer area' : 'Volunteer as a reviewer'}</Link>
+              )}
               <Link href="/privacy">Privacy</Link>
             </div>
             <div className="footer-note">

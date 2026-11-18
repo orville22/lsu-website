@@ -122,3 +122,31 @@ export function listUnsubscribeHeaders(id: string, settings: EmailSettings) {
     'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
   };
 }
+
+/** Sent when a volunteer reviewer request is approved (or a new link is issued). */
+export function reviewerInviteEmail(settings: EmailSettings, r: { name: string; link: string }) {
+  const first = r.name.split(/\s+/)[0] || r.name;
+  const html = layout(
+    settings,
+    `<h1 style="margin:0 0 12px;font-size:24px;line-height:1.25;">You’re in, ${escape(first)}</h1>
+     <p style="margin:0 0 12px;">Thank you for volunteering to review Lab Science Unfiltered. Your personal reviewer link is below. Open it on each device you’d like to review from.</p>
+     <p style="margin:0;">Once you’re signed in you’ll see lessons that aren’t public yet, and a <strong>Feedback</strong> button on every page with five short questions. Answer as many or as few as you like.</p>
+     ${button(r.link, 'Open reviewer access')}
+     <p style="margin:0;color:${muted};font-size:14px;">This link is personal, so please don’t share it. If you’d rather stop reviewing, use the contact form and we’ll remove your details.</p>`,
+  );
+  const text = `You're in, ${first}
+
+Thank you for volunteering to review Lab Science Unfiltered. Your personal reviewer link is below. Open it on each device you'd like to review from.
+
+Once you're signed in you'll see lessons that aren't public yet, and a Feedback button on every page with five short questions. Answer as many or as few as you like.
+
+Open reviewer access: ${r.link}
+
+This link is personal, so please don't share it. If you'd rather stop reviewing, use the contact form and we'll remove your details.
+
+--
+Lab Science Unfiltered, an independent educational website run by Orville Malijan, Melbourne, Australia.
+${settings.siteUrl} · Contact: ${siteConfig.contactUrl}
+`;
+  return { subject: 'Your Lab Science Unfiltered reviewer access', html, text };
+}

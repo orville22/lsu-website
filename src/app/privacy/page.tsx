@@ -58,6 +58,21 @@ export default function Privacy() {
         whether you open our emails. Every email has an unsubscribe link, which takes effect
         straight away.
       </p>
+      <p id="reviewers">
+        <strong>Volunteer reviewers (optional).</strong> If you volunteer to review lessons, we
+        store your name, email address, the option that describes you (for example, student or
+        laboratory scientist), your country and any note you add, whether you agreed to be thanked
+        by name, the consent statement shown with the form, and when you asked, were invited and
+        last used reviewer access. If your request is approved we email you a personal link. Opening
+        it stores a cookie (<code>lsu_reviewer</code>, lasting 180 days) that lets that browser see
+        lessons in review; we keep only a one-way hash of the link. Feedback you send through the
+        reviewer panel is stored with your name, the page it was about and when you sent it. We use
+        all of this only to run the review programme and improve the lessons, and we don’t share it.
+      </p>
+      <p>
+        <strong>Error reports.</strong> Anyone can report an error on a lesson. A report stores only
+        what you write, the page and the time; it isn’t linked to you.
+      </p>
       <p>
         <strong>Preventing abuse.</strong> To limit automated misuse, the site keeps short-lived
         request counters. These are stored as keyed hashes, reset within an hour and are then
@@ -90,6 +105,15 @@ export default function Privacy() {
           Your email address is kept while you are subscribed. Sign-ups that are never confirmed,
           and addresses that unsubscribe, are deleted automatically after 30 days.
         </li>
+        <li>
+          Volunteer requests that aren’t answered are deleted after 180 days. Declined requests and
+          revoked reviewers are deleted 30 days later. Approved reviewers’ details are kept while
+          they take part; ask through the {contact} to be removed at any time.
+        </li>
+        <li>
+          Feedback and error reports are deleted two years after they were sent. If a reviewer’s
+          details are removed, their feedback is kept without their name.
+        </li>
         <li>Information in your browser stays until you clear your cookies and site data.</li>
       </ul>
 
@@ -109,11 +133,12 @@ export default function Privacy() {
 
       <h2>Your choices</h2>
       <p>
-        You can unsubscribe from email updates using the link in any email we send. Clearing cookies
-        and site data for this website removes the quiz identifier and anything saved in your
-        browser. Because quiz records are stored only against a hashed identifier, we can’t link
-        them to you, and they are deleted automatically after 30 days. If you have a question, a
-        concern or a request, use the {contact}.
+        You can unsubscribe from email updates using the link in any email we send. Reviewers can
+        sign out of reviewer access on the review page, or ask to be removed. Clearing cookies and
+        site data for this website removes the quiz identifier and anything saved in your browser.
+        Because quiz records are stored only against a hashed identifier, we can’t link them to you,
+        and they are deleted automatically after 30 days. If you have a question, a concern or a
+        request, use the {contact}.
       </p>
       <p>
         We aim to handle personal information in line with the Australian Privacy Principles, and to

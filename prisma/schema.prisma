@@ -173,3 +173,61 @@ model Subscriber {
   updatedAt DateTime @updatedAt
   @@index([status, updatedAt])
 }
+enum ReviewerStatus {
+  REQUESTED
+  APPROVED
+  DECLINED
+  REVOKED
+}
+/// Volunteer reviewers. A request is stored as REQUESTED; approving it emails a
+/// personal access link. Only the link token's SHA-256 is stored.
+model Reviewer {
+  id String @id @default(cuid())
+  name String
+  /// Trimmed and lower-cased.
+  email String @unique
+  /// STUDENT, SCIENTIST, EDUCATOR or OTHER.
+  role String
+  country String @default("")
+  /// Optional note from the volunteer (background, interests).
+  note String @default("")
+  /// Exact consent statement shown on the request form.
+  consentText String @default("")
+  /// Agreed to be thanked by name on the site.
+  creditConsent Boolean @default(false)
+  status ReviewerStatus @default(REQUESTED)
+  accessTokenHash String? @unique
+  invitedAt DateTime?
+  lastSeenAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  feedback Feedback[]
+  @@index([status, updatedAt])
+}
+enum FeedbackStatus {
+  OPEN
+  RESOLVED
+}
+/// Page feedback: structured reviews from reviewers, and anonymous error reports.
+model Feedback {
+  id String @id @default(cuid())
+  /// REVIEW (reviewer, guided questions) or ERROR (anyone, free text).
+  kind String
+  reviewerId String?
+  reviewer Reviewer? @relation(fields: [reviewerId], references: [id], onDelete: SetNull)
+  path String
+  pageTitle String @default("")
+  /// 1 to 5.
+  clarity Int?
+  /// TOO_BASIC, ABOUT_RIGHT or TOO_ADVANCED.
+  level String?
+  accuracy String @default("")
+  illustrations String @default("")
+  missing String @default("")
+  comment String @default("")
+  status FeedbackStatus @default(OPEN)
+  resolvedAt DateTime?
+  createdAt DateTime @default(now())
+  @@index([status, createdAt])
+  @@index([path])
+}
