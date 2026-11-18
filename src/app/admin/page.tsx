@@ -9,7 +9,7 @@ import { lessonUrl } from '@/lib/content';
 import { ImportPanel } from '@/components/import-panel';
 import { TaxonomyForm } from '@/components/taxonomy-form';
 import { AdminFeedbackActions, AdminReviewerActions } from '@/components/review';
-import { reviewerRoles } from '@/lib/reviewers';
+import { reviewerRoles, asTrack } from '@/lib/reviewers';
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Administration', robots: { index: false, follow: false } };
 type Params = {
@@ -533,7 +533,10 @@ async function Reviewers() {
               {requested.map((r) => (
                 <tr key={r.id}>
                   <td>
-                    <strong>{r.name}</strong>
+                    <strong>{r.name}</strong>{' '}
+                    <span className={`track-pill ${asTrack(r.track)}`}>
+                      {asTrack(r.track) === 'expert' ? 'Expert' : 'Learner'}
+                    </span>
                     <br />
                     {r.email}
                     {r.country && <span className="muted"> · {r.country}</span>}
@@ -545,7 +548,11 @@ async function Reviewers() {
                   </td>
                   <td>{day(r.createdAt)}</td>
                   <td>
-                    <AdminReviewerActions id={r.id} actions={['approve', 'decline', 'delete']} />
+                    <AdminReviewerActions
+                      id={r.id}
+                      actions={['approve', 'decline', 'delete']}
+                      track={asTrack(r.track)}
+                    />
                   </td>
                 </tr>
               ))}
@@ -573,7 +580,10 @@ async function Reviewers() {
               {approved.map((r) => (
                 <tr key={r.id}>
                   <td>
-                    <strong>{r.name}</strong>
+                    <strong>{r.name}</strong>{' '}
+                    <span className={`track-pill ${asTrack(r.track)}`}>
+                      {asTrack(r.track) === 'expert' ? 'Expert' : 'Learner'}
+                    </span>
                     <br />
                     {r.email}
                   </td>
@@ -582,7 +592,11 @@ async function Reviewers() {
                   <td>{day(r.lastSeenAt)}</td>
                   <td>{r._count.feedback}</td>
                   <td>
-                    <AdminReviewerActions id={r.id} actions={['resend', 'revoke', 'delete']} />
+                    <AdminReviewerActions
+                      id={r.id}
+                      actions={['resend', 'revoke', 'delete']}
+                      track={asTrack(r.track)}
+                    />
                   </td>
                 </tr>
               ))}
@@ -620,10 +634,9 @@ async function Reviewers() {
   );
 }
 
-const levelLabel: Record<string, string> = {
-  TOO_BASIC: 'Too basic',
-  ABOUT_RIGHT: 'About right',
-  TOO_ADVANCED: 'Too advanced',
+const levelLabel: Record<string, Record<string, string>> = {
+  learner: { TOO_BASIC: 'Too basic', ABOUT_RIGHT: 'About right', TOO_ADVANCED: 'Too advanced' },
+  expert: { TOO_BASIC: 'Too shallow', ABOUT_RIGHT: 'About right', TOO_ADVANCED: 'Too deep' },
 };
 
 async function FeedbackList({ showResolved }: { showResolved: boolean }) {
@@ -676,7 +689,7 @@ async function FeedbackList({ showResolved }: { showResolved: boolean }) {
                   {f.kind === 'ERROR'
                     ? 'Error report (anonymous)'
                     : f.reviewer
-                      ? `${f.reviewer.name} · ${roleLabel(f.reviewer.role)}`
+                      ? `${f.reviewer.name} · ${roleLabel(f.reviewer.role)}${f.track === 'expert' ? ' · Expert' : ''}`
                       : 'Reviewer (details removed or administrator test)'}
                 </strong>
                 <span className="muted small">
@@ -692,15 +705,20 @@ async function FeedbackList({ showResolved }: { showResolved: boolean }) {
                 )}
                 {f.level && (
                   <>
-                    <dt>Level</dt>
-                    <dd>{levelLabel[f.level] ?? f.level}</dd>
+                    <dt>{f.track === 'expert' ? 'Depth' : 'Level'}</dt>
+                    <dd>{levelLabel[asTrack(f.track)][f.level] ?? f.level}</dd>
                   </>
                 )}
                 {(
                   [
                     ['Accuracy', f.accuracy],
+                    ['Out of date', f.currency],
+                    ['References', f.references],
                     ['Illustrations', f.illustrations],
-                    ['Missing or confusing', f.missing],
+                    [
+                      f.track === 'expert' ? 'Missing or bench risk' : 'Missing or confusing',
+                      f.missing,
+                    ],
                     [f.kind === 'ERROR' ? 'Report' : 'Other', f.comment],
                   ] as const
                 ).map(([label, text]) =>

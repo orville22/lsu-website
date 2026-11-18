@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Flag, MessageSquareText, X } from 'lucide-react';
+import type { ReviewerTrack } from '@/lib/reviewers';
 
 type State = { kind: 'idle' | 'busy' | 'done' | 'error'; message?: string };
 
@@ -167,13 +168,71 @@ export function ReviewerSignOut() {
 /* Feedback panel (reviewers)                                          */
 /* ------------------------------------------------------------------ */
 
-const levels = [
-  ['TOO_BASIC', 'Too basic'],
-  ['ABOUT_RIGHT', 'About right'],
-  ['TOO_ADVANCED', 'Too advanced'],
-] as const;
+const levels = {
+  learner: [
+    ['TOO_BASIC', 'Too basic'],
+    ['ABOUT_RIGHT', 'About right'],
+    ['TOO_ADVANCED', 'Too advanced'],
+  ],
+  expert: [
+    ['TOO_BASIC', 'Too shallow'],
+    ['ABOUT_RIGHT', 'About right'],
+    ['TOO_ADVANCED', 'Too deep'],
+  ],
+} as const;
 
-export function FeedbackWidget({ name }: { name: string | null }) {
+/**
+ * The questions for each track. Shared answers go in the same fields, so learner
+ * and expert feedback line up: clarity, level (depth for experts), accuracy,
+ * illustrations, missing (bench risks for experts) and comment. Experts also
+ * answer currency and references.
+ */
+type TextQ = { name: string; label: string };
+const questions = {
+  learner: {
+    clarity: 'How clear was this page?',
+    level: 'Is the level right for you?',
+    text: [
+      { name: 'accuracy', label: 'Is anything inaccurate or out of date?' },
+      { name: 'illustrations', label: 'Did the illustrations help? Which one didn’t?' },
+      { name: 'missing', label: 'What confused you, or what’s missing?' },
+    ] as TextQ[],
+    order: ['clarity', 'accuracy', 'level', 'illustrations', 'missing'],
+  },
+  expert: {
+    clarity: 'How clear would this page be for a student?',
+    level: 'Is the depth right for a laboratory science student or early-career scientist?',
+    text: [
+      { name: 'accuracy', label: 'Is anything inaccurate? Where, and what should it say?' },
+      {
+        name: 'currency',
+        label: 'Is anything out of date against current guidelines, standards or practice?',
+      },
+      {
+        name: 'references',
+        label: 'Do the references support the claims they’re attached to? Which don’t?',
+      },
+      {
+        name: 'illustrations',
+        label: 'Do the illustrations help, and are they scientifically sound?',
+      },
+      {
+        name: 'missing',
+        label: 'What’s missing, or what could a learner misapply at the bench?',
+      },
+    ] as TextQ[],
+    order: ['clarity', 'accuracy', 'currency', 'references', 'level', 'illustrations', 'missing'],
+  },
+} as const;
+
+export function FeedbackWidget({
+  name,
+  track = 'learner',
+}: {
+  name: string | null;
+  track?: ReviewerTrack;
+}) {
+  const q = questions[track];
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<State>({ kind: 'idle' });
@@ -217,6 +276,8 @@ export function FeedbackWidget({ name }: { name: string | null }) {
         clarity,
         level,
         accuracy: f.get('accuracy') || '',
+        currency: f.get('currency') || '',
+        references: f.get('references') || '',
         illustrations: f.get('illustrations') || '',
         missing: f.get('missing') || '',
         comment: f.get('comment') || '',
@@ -278,57 +339,72 @@ export function FeedbackWidget({ name }: { name: string | null }) {
             </div>
           ) : (
             <form onSubmit={submit}>
-              <p className="feedback-hint">Answer as many or as few as you like.</p>
-              <fieldset className="feedback-q">
-                <legend>1. How clear was this page?</legend>
-                <div className="feedback-scale">
-                  {[1, 2, 3, 4, 5].map((n) => (
-                    <label key={n} className={clarity === n ? 'selected' : ''}>
-                      <input
-                        type="radio"
-                        name="clarity"
-                        value={n}
-                        checked={clarity === n}
-                        onChange={() => setClarity(n)}
-                      />
+              <p className="feedback-hint">
+                {track === 'expert' ? 'Expert review. ' : ''}Answer as many or as few as you like.
+              </p>
+              {q.order.map((key, i) => {
+                const n = `${i + 1}. `;
+                if (key === 'clarity')
+                  return (
+                    <fieldset className="feedback-q" key={key}>
+                      <legend>
+                        {n}
+                        {q.clarity}
+                      </legend>
+                      <div className="feedback-scale">
+                        {[1, 2, 3, 4, 5].map((v) => (
+                          <label key={v} className={clarity === v ? 'selected' : ''}>
+                            <input
+                              type="radio"
+                              name="clarity"
+                              value={v}
+                              checked={clarity === v}
+                              onChange={() => setClarity(v)}
+                            />
+                            {v}
+                          </label>
+                        ))}
+                      </div>
+                      <div className="feedback-scale-labels" aria-hidden>
+                        <span>Confusing</span>
+                        <span>Very clear</span>
+                      </div>
+                    </fieldset>
+                  );
+                if (key === 'level')
+                  return (
+                    <fieldset className="feedback-q" key={key}>
+                      <legend>
+                        {n}
+                        {q.level}
+                      </legend>
+                      <div className="feedback-chips">
+                        {levels[track].map(([value, label]) => (
+                          <label key={value} className={level === value ? 'selected' : ''}>
+                            <input
+                              type="radio"
+                              name="level"
+                              value={value}
+                              checked={level === value}
+                              onChange={() => setLevel(value)}
+                            />
+                            {label}
+                          </label>
+                        ))}
+                      </div>
+                    </fieldset>
+                  );
+                const t = q.text.find((x) => x.name === key)!;
+                return (
+                  <label className="field feedback-q" key={key}>
+                    <span>
                       {n}
-                    </label>
-                  ))}
-                </div>
-                <div className="feedback-scale-labels" aria-hidden>
-                  <span>Confusing</span>
-                  <span>Very clear</span>
-                </div>
-              </fieldset>
-              <label className="field feedback-q">
-                <span>2. Is anything inaccurate or out of date?</span>
-                <textarea name="accuracy" maxLength={4000} rows={2} />
-              </label>
-              <fieldset className="feedback-q">
-                <legend>3. Is the level right for you?</legend>
-                <div className="feedback-chips">
-                  {levels.map(([value, label]) => (
-                    <label key={value} className={level === value ? 'selected' : ''}>
-                      <input
-                        type="radio"
-                        name="level"
-                        value={value}
-                        checked={level === value}
-                        onChange={() => setLevel(value)}
-                      />
-                      {label}
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
-              <label className="field feedback-q">
-                <span>4. Did the illustrations help? Which one didn’t?</span>
-                <textarea name="illustrations" maxLength={4000} rows={2} />
-              </label>
-              <label className="field feedback-q">
-                <span>5. What confused you, or what’s missing?</span>
-                <textarea name="missing" maxLength={4000} rows={2} />
-              </label>
+                      {t.label}
+                    </span>
+                    <textarea name={t.name} maxLength={4000} rows={2} />
+                  </label>
+                );
+              })}
               <label className="field feedback-q">
                 <span>Anything else?</span>
                 <textarea name="comment" maxLength={4000} rows={2} />
@@ -429,9 +505,12 @@ const confirmText: Record<string, string> = {
 export function AdminReviewerActions({
   id,
   actions,
+  track,
 }: {
   id: string;
   actions: ('approve' | 'resend' | 'decline' | 'revoke' | 'delete')[];
+  /** When given, shows a button to switch the reviewer's question set. */
+  track?: ReviewerTrack;
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -443,12 +522,16 @@ export function AdminReviewerActions({
     revoke: 'Revoke',
     delete: 'Delete',
   };
-  async function run(action: keyof typeof labels) {
-    if (confirmText[action] && !window.confirm(confirmText[action])) return;
+  async function run(action: keyof typeof labels | 'track') {
+    if (action !== 'track' && confirmText[action] && !window.confirm(confirmText[action])) return;
     setBusy(true);
     setNote(null);
     try {
-      const data = await send('/api/admin/reviewers', { id, action });
+      const data = await send('/api/admin/reviewers', {
+        id,
+        action,
+        ...(action === 'track' ? { track: track === 'expert' ? 'learner' : 'expert' } : {}),
+      });
       // If the email failed, keep the link on screen (refreshing would move this row).
       if (data.link && !data.emailed)
         setNote({
@@ -474,6 +557,15 @@ export function AdminReviewerActions({
           {labels[a]}
         </button>
       ))}
+      {track && (
+        <button
+          className="button button-small button-outline"
+          disabled={busy}
+          onClick={() => run('track')}
+        >
+          {track === 'expert' ? 'Make learner' : 'Make expert'}
+        </button>
+      )}
       {note && (
         <p className="small" role="status">
           {note.text}

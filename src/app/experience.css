@@ -1848,3 +1848,20 @@ h3 {
 .small {
   font-size: var(--text-small);
 }
+
+/* Reviewer track label (admin) */
+.track-pill {
+  display: inline-block;
+  font-size: var(--text-micro);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--soft-green);
+  color: var(--brand-ink);
+  vertical-align: middle;
+}
+.track-pill.expert {
+  background: var(--soft-tomato);
+}

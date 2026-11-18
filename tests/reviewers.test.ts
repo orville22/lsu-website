@@ -8,6 +8,7 @@ import {
   reviewerAccessUrl,
   reviewerForToken,
   reviewerRequestSchema,
+  asTrack,
 } from '../src/lib/reviewers';
 import { tokenHash } from '../src/lib/subscribers';
 
@@ -119,4 +120,18 @@ test('feedback: a review needs at least one answer; error reports need text', ()
     feedbackSchema.safeParse({ kind: 'ERROR', path: '/x', comment: 'Typo in the table' }).success,
     true,
   );
+});
+
+test('expert track: only "expert" is an expert; currency and references count as answers', () => {
+  assert.equal(asTrack('expert'), 'expert');
+  assert.equal(asTrack('learner'), 'learner');
+  assert.equal(asTrack(null), 'learner');
+  assert.equal(asTrack('EXPERT'), 'learner');
+  const base = { kind: 'REVIEW', path: '/learn/x' };
+  assert.equal(feedbackSchema.safeParse({ ...base, currency: '2024 guideline' }).success, true);
+  assert.equal(
+    feedbackSchema.safeParse({ ...base, references: 'Ref 3 is about urine' }).success,
+    true,
+  );
+  assert.equal(feedbackSchema.safeParse({ ...base, currency: '   ' }).success, false);
 });

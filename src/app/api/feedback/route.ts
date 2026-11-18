@@ -1,6 +1,6 @@
 import { db } from '@/lib/db';
 import { admin, assertOrigin, errorResponse, HttpError, rateLimit, readJson } from '@/lib/security';
-import { feedbackSchema } from '@/lib/reviewers';
+import { asTrack, feedbackSchema } from '@/lib/reviewers';
 import { currentReviewer } from '@/lib/reviewer-session';
 export const dynamic = 'force-dynamic';
 
@@ -14,10 +14,15 @@ export async function POST(req: Request) {
     if (f.kind === 'REVIEW') {
       const reviewer = await currentReviewer();
       // Administrators may try the form; their test entries are saved without a reviewer.
-      if (!reviewer && !(await admin()))
+      const isAdmin = !reviewer && !!(await admin());
+      if (!reviewer && !isAdmin)
         throw new HttpError(403, 'Reviewer access has ended on this browser.');
       await rateLimit('feedback-review', 60, 3600, reviewer?.id);
-      await db.feedback.create({ data: { ...f, reviewerId: reviewer?.id ?? null } });
+      // The track comes from the reviewer record, never from the form. Administrators test the expert form.
+      const track = reviewer ? asTrack(reviewer.track) : 'expert';
+      // Expert-only answers are dropped from learner submissions.
+      const data = track === 'expert' ? f : { ...f, currency: '', references: '' };
+      await db.feedback.create({ data: { ...data, track, reviewerId: reviewer?.id ?? null } });
     } else {
       await rateLimit('feedback-error', 10, 3600);
       await db.feedback.create({

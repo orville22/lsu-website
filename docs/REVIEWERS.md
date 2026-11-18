@@ -42,3 +42,19 @@ homepage section, footer link and Feedback button all disappear; stored data is 
 Each lesson has one version, so edits to a published lesson go live when saved. While traffic is
 low, reviewers comment on the live lesson and you revise it. A "draft revision" feature (live
 version stays up while reviewers see the new one) can be added later.
+
+## Expert reviewers
+
+Each reviewer is on a track: **Learner** (the default) or **Expert** (senior colleagues and academics). Switch it with **Make expert** / **Make learner** in Admin → Reviewers. The track decides which questions the Feedback panel shows; it is stored with each submission, so later switches don't relabel old feedback. Administrators testing the panel get the expert questions.
+
+| # | Learner | Expert |
+| --- | --- | --- |
+| 1 | How clear was this page? (1–5) | How clear would this page be for a student? (1–5) |
+| 2 | Is anything inaccurate or out of date? | Is anything inaccurate? Where, and what should it say? |
+| 3 | Is the level right for you? | Is anything out of date against current guidelines, standards or practice? |
+| 4 | Did the illustrations help? Which one didn't? | Do the references support the claims they're attached to? Which don't? |
+| 5 | What confused you, or what's missing? | Is the depth right for a laboratory science student or early-career scientist? |
+| 6 | — | Do the illustrations help, and are they scientifically sound? |
+| 7 | — | What's missing, or what could a learner misapply at the bench? |
+
+Shared questions save to the same fields (clarity, level/depth, accuracy, illustrations, missing), so learner and expert answers line up in the CSV. Experts add `currency` (out of date) and `references`. Migration: `20261118130000_expert_reviewers` (adds three columns to Feedback and one to Reviewer, all with defaults).

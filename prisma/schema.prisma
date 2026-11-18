@@ -196,6 +196,8 @@ model Reviewer {
   /// Agreed to be thanked by name on the site.
   creditConsent Boolean @default(false)
   status ReviewerStatus @default(REQUESTED)
+  /// "learner" or "expert": which feedback questions they see.
+  track String @default("learner")
   accessTokenHash String? @unique
   invitedAt DateTime?
   lastSeenAt DateTime?
@@ -221,7 +223,13 @@ model Feedback {
   clarity Int?
   /// TOO_BASIC, ABOUT_RIGHT or TOO_ADVANCED.
   level String?
+  /// Question set used: "learner" or "expert" (the reviewer's track when sent).
+  track String @default("learner")
   accuracy String @default("")
+  /// Expert only: anything out of date against current guidelines or practice.
+  currency String @default("")
+  /// Expert only: references that don't support the claims they're attached to.
+  references String @default("")
   illustrations String @default("")
   missing String @default("")
   comment String @default("")
