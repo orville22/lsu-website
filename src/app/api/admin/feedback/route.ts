@@ -2,7 +2,7 @@ import Papa from 'papaparse';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { assertOrigin, errorResponse, readJson, requireAdmin } from '@/lib/security';
-import type { FeedbackAnswers } from '@/lib/reviewers';
+import { ALL_FEEDBACK_COLUMNS, type FeedbackAnswers } from '@/lib/reviewers';
 export const dynamic = 'force-dynamic';
 
 /** All reviewer feedback as CSV, one row per submission. */
@@ -16,20 +16,20 @@ export async function GET() {
     const csv = Papa.unparse(
       rows.map((f) => {
         const a = (f.answers || {}) as FeedbackAnswers;
-        return {
+        const row: Record<string, string | number> = {
           submitted_at: f.createdAt.toISOString(),
           reviewer: f.reviewer?.name ?? (f.actor ? `Admin (${f.actor})` : 'Removed reviewer'),
           email: f.reviewer?.email ?? '',
           role: f.reviewer?.role ?? '',
+          track: f.track,
           page: f.path,
-          clarity_1_to_5: a.clarity ?? '',
-          level: a.level ?? '',
-          inaccuracy_spotted: a.accuracy ?? '',
-          inaccuracy_detail: a.accuracyDetail ?? '',
-          visuals_helped: a.visuals ?? '',
-          one_change: a.change ?? '',
-          resolved: f.resolved ? 'yes' : 'no',
         };
+        for (const q of ALL_FEEDBACK_COLUMNS) {
+          row[q.id] = a[q.id] ?? '';
+          if (q.type === 'choice' && q.detail) row[`${q.id}_detail`] = a[`${q.id}Detail`] ?? '';
+        }
+        row.resolved = f.resolved ? 'yes' : 'no';
+        return row;
       }),
       { escapeFormulae: true },
     );

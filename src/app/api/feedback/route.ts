@@ -11,13 +11,15 @@ export async function POST(req: Request) {
     const author = await feedbackAuthor();
     if (!author) throw new HttpError(403, 'Open your invite link again to leave feedback.');
     await rateLimit('feedback', 60, 3600, author.reviewerId || author.actor || undefined);
-    const parsed = feedbackSchema.safeParse(await readJson(req));
+    const parsed = feedbackSchema(author.track).safeParse(await readJson(req));
     if (!parsed.success)
       throw new HttpError(400, parsed.error.issues[0]?.message || 'Please check the form.');
     const { path, answers } = parsed.data;
     await db.feedback.create({
       data: {
-        ...author,
+        reviewerId: author.reviewerId,
+        actor: author.actor,
+        track: author.track,
         path,
         kind: 'page',
         rating: answers.clarity ?? null,

@@ -161,7 +161,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <span>Educational content. Always follow your laboratory’s validated procedures.</span>
           </div>
         </footer>
-        {(viewer === 'reviewer' || preview) && <FeedbackButton />}
+        {(viewer === 'reviewer' || preview) && (
+          <FeedbackButton
+            track={
+              viewer === 'reviewer' && h.get('x-lsu-track') !== 'expert' ? 'learner' : 'expert'
+            }
+          />
+        )}
       </body>
     </html>
   );

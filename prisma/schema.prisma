@@ -194,6 +194,8 @@ model Reviewer {
   note String @default("")
   /// "request" (public form) or "admin" (added by an administrator).
   source String @default("admin")
+  /// "learner" or "expert": decides which feedback questions they see.
+  track String @default("learner")
   status ReviewerStatus @default(REQUESTED)
   tokenHash String? @unique
   invitedAt DateTime?
@@ -213,8 +215,10 @@ model Feedback {
   actor String?
   /// Path of the page the feedback is about, e.g. /learn/clinical-chemistry/electrolytes/c1-2-...
   path String
-  /// "page" for the guided five-question review.
+  /// "page" for the guided page review.
   kind String @default("page")
+  /// Question set used: "learner" or "expert" (the reviewer's track when they sent it).
+  track String @default("learner")
   /// Answer to "How clear was this page?" (1–5), copied out for sorting.
   rating Int?
   /// All answers, keyed by question id (see src/lib/reviewers.ts).

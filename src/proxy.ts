@@ -15,9 +15,11 @@ import { inviteTokenHash } from '@/lib/reviewer-tokens';
 const VIEWER = 'x-lsu-viewer';
 const NAME = 'x-lsu-reviewer-name';
 const GATE = 'x-lsu-gate';
+const TRACK = 'x-lsu-track';
 const SEEN_EVERY_MS = 10 * 60 * 1000;
 
-type Viewer = { kind: 'admin' } | { kind: 'reviewer'; id: string; name: string } | null;
+type Viewer =
+  { kind: 'admin' } | { kind: 'reviewer'; id: string; name: string; track: string } | null;
 
 async function viewerFor(request: NextRequest, event: NextFetchEvent): Promise<Viewer> {
   const adminToken = request.cookies.get('lsu_admin')?.value;
@@ -31,7 +33,7 @@ async function viewerFor(request: NextRequest, event: NextFetchEvent): Promise<V
     if (reviewerToken) {
       const r = await db.reviewer.findUnique({
         where: { tokenHash: inviteTokenHash(reviewerToken) },
-        select: { id: true, name: true, status: true, lastSeenAt: true },
+        select: { id: true, name: true, status: true, lastSeenAt: true, track: true },
       });
       if (r && (r.status === 'ACTIVE' || r.status === 'INVITED')) {
         if (!r.lastSeenAt || Date.now() - r.lastSeenAt.getTime() > SEEN_EVERY_MS)
@@ -41,7 +43,7 @@ async function viewerFor(request: NextRequest, event: NextFetchEvent): Promise<V
               () => undefined,
             ),
           );
-        return { kind: 'reviewer', id: r.id, name: r.name };
+        return { kind: 'reviewer', id: r.id, name: r.name, track: r.track };
       }
     }
   } catch {
@@ -55,12 +57,16 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
   headers.delete(VIEWER);
   headers.delete(NAME);
   headers.delete(GATE);
+  headers.delete(TRACK);
 
   const hasCookie = request.cookies.has('lsu_admin') || request.cookies.has(REVIEWER_COOKIE);
   const viewer = hasCookie ? await viewerFor(request, event) : null;
   if (viewer) {
     headers.set(VIEWER, viewer.kind);
-    if (viewer.kind === 'reviewer') headers.set(NAME, encodeURIComponent(viewer.name));
+    if (viewer.kind === 'reviewer') {
+      headers.set(NAME, encodeURIComponent(viewer.name));
+      headers.set(TRACK, viewer.track === 'expert' ? 'expert' : 'learner');
+    }
   }
 
   if (comingSoonEnabled() && !viewer) {

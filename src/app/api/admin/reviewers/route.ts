@@ -3,7 +3,7 @@ import { db } from '@/lib/db';
 import { assertOrigin, errorResponse, HttpError, readJson, requireAdmin } from '@/lib/security';
 import { emailSettings } from '@/lib/subscribers';
 import { reviewerInviteEmail, sendEmail } from '@/lib/email';
-import { REVIEWER_ROLES, reviewerRequestSchema } from '@/lib/reviewers';
+import { REVIEWER_ROLES, REVIEWER_TRACKS, reviewerRequestSchema } from '@/lib/reviewers';
 import { inviteTokenHash, newInviteToken } from '@/lib/reviewer-tokens';
 export const dynamic = 'force-dynamic';
 
@@ -13,8 +13,10 @@ const body = z.discriminatedUnion('action', [
     name: z.unknown(),
     email: z.unknown(),
     role: z.unknown().optional(),
+    track: z.enum(REVIEWER_TRACKS).default('learner'),
     send: z.boolean().default(false),
   }),
+  z.object({ action: z.literal('track'), id: z.string(), track: z.enum(REVIEWER_TRACKS) }),
   z.object({ action: z.literal('invite'), id: z.string(), send: z.boolean().default(false) }),
   z.object({ action: z.enum(['revoke', 'decline', 'delete']), id: z.string() }),
 ]);
@@ -63,7 +65,9 @@ export async function POST(req: Request) {
         throw new HttpError(400, parsed.error.issues[0]?.message || 'Please check the form.');
       const existing = await db.reviewer.findUnique({ where: { email: parsed.data.email } });
       if (existing) throw new HttpError(409, 'That email address is already on the list.');
-      const r = await db.reviewer.create({ data: { ...parsed.data, source: 'admin' } });
+      const r = await db.reviewer.create({
+        data: { ...parsed.data, source: 'admin', track: b.track },
+      });
       await log('reviewer.add', r.id, { email: r.email });
       try {
         return Response.json({ ok: true, ...(await issue(r.id, b.send)) });
@@ -90,6 +94,11 @@ export async function POST(req: Request) {
           'A new link was made, but the email didn’t send. Copy the link instead.',
         );
       }
+    }
+    if (b.action === 'track') {
+      await db.reviewer.update({ where: { id: r.id }, data: { track: b.track } });
+      await log('reviewer.track', r.id, { track: b.track });
+      return Response.json({ ok: true });
     }
     if (b.action === 'delete') {
       await db.reviewer.delete({ where: { id: r.id } });

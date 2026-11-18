@@ -25,15 +25,29 @@ Opening a link sets the `lsu_reviewer` cookie (httpOnly, 90 days) and marks the 
 
 ## Feedback
 
-The Feedback button opens five guided questions (`FEEDBACK_QUESTIONS` in `src/lib/reviewers.ts`):
+Each reviewer is on a **track**: **Learner** (the default for public requests) or **Expert** (senior colleagues and academics). Choose it when you add someone, or switch it with **Make expert** / **Make learner**. Administrators get the expert questions.
+
+The Feedback button opens the questions for the reviewer's track (`FEEDBACK_QUESTIONS` in `src/lib/reviewers.ts`).
+
+**Learners (5)**
 
 1. How clear was this page? (1–5)
 2. Was the level right for you? (Too basic / About right / Too advanced)
 3. Did you spot anything inaccurate or out of step with lab practice? (No / Yes, with where and what)
 4. Did the diagrams and interactives help? (A lot / Somewhat / Not really / None on this page)
-5. What one change would make this page more useful? (free text)
+5. What one change would make this page more useful?
 
-Answers are saved with the reviewer and page path. Read them under **Admin → Reviewers → Feedback**, tick **Dealt with**, or **Export all feedback (CSV)**. To change a question's wording, edit its `label`; to add a question, give it a new `id` and add it to `feedbackSchema`.
+**Experts (7)**
+
+1. How clear would this page be for a student? (1–5)
+2. Did you spot anything inaccurate or out of step with lab practice? (No / Yes, with where and what)
+3. Is anything out of date against current guidelines, standards or practice? (No / Yes, with what changed and where it's published)
+4. Do the references support the claims they are attached to? (Yes / Some don't, with which / Didn't check)
+5. Is the depth right for a laboratory science student or early-career scientist? (Too shallow / About right / Too deep)
+6. Do the diagrams and interactives help, and are they scientifically sound? (A lot / Somewhat / Not really / None on this page)
+7. What would you change? Include anything a learner could misapply at the bench.
+
+Clarity, accuracy, visuals and the change question share ids across tracks, so learner and expert answers line up in the CSV. Read feedback under **Admin → Reviewers → Feedback**, tick **Dealt with**, or **Export all feedback (CSV)**. To change wording, edit a question's `label`; give a question with a new meaning a new `id`.
 
 ## Turning it off
 

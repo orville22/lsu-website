@@ -70,83 +70,197 @@ export const reviewerRequestSchema = z.object({
   note: z.string().trim().max(1000, 'Please keep this under 1,000 characters.').default(''),
 });
 
-/**
- * The guided questions shown by the feedback button. Ids are stored with each
- * answer, so change wording freely but add new ids rather than reusing old ones.
- */
-export const FEEDBACK_QUESTIONS = [
-  {
-    id: 'clarity',
-    type: 'scale',
-    label: 'How clear was this page?',
-    low: 'Hard to follow',
-    high: 'Very clear',
-  },
-  {
-    id: 'level',
-    type: 'choice',
-    label: 'Was the level right for you?',
-    options: ['Too basic', 'About right', 'Too advanced'],
-  },
-  {
-    id: 'accuracy',
-    type: 'choice',
-    label: 'Did you spot anything inaccurate or out of step with lab practice?',
-    options: ['No', 'Yes'],
-    detail: {
-      when: 'Yes',
-      label: 'Where, and what should it say?',
-      placeholder: 'e.g. Second paragraph under “Osmolal gap”: the reference interval…',
-    },
-  },
-  {
-    id: 'visuals',
-    type: 'choice',
-    label: 'Did the diagrams and interactives help?',
-    options: ['A lot', 'Somewhat', 'Not really', 'None on this page'],
-  },
-  {
-    id: 'change',
-    type: 'text',
-    label: 'What one change would make this page more useful?',
-    placeholder: 'Anything unclear, missing or worth adding. Anything else is welcome here too.',
-  },
-] as const;
+export const REVIEWER_TRACKS = ['learner', 'expert'] as const;
+export type ReviewerTrack = (typeof REVIEWER_TRACKS)[number];
+export const TRACK_LABELS: Record<ReviewerTrack, string> = {
+  learner: 'Learner',
+  expert: 'Expert',
+};
 
-const choice = (options: readonly string[]) =>
-  z
-    .string()
-    .refine((v) => options.includes(v), 'Choose one of the options.')
-    .optional();
+type Detail = { when: string; label: string; placeholder: string };
+export type FeedbackQuestion =
+  | { id: string; type: 'scale'; label: string; low: string; high: string }
+  | { id: string; type: 'choice'; label: string; options: readonly string[]; detail?: Detail }
+  | { id: string; type: 'text'; label: string; placeholder: string };
+
+/*
+ * The guided questions shown by the feedback button, one set per track.
+ * Answers are stored keyed by question id (and `<id>Detail` for follow-up
+ * boxes), so change wording freely but give a changed meaning a new id.
+ * A question shared by both tracks keeps the same id, so answers can be
+ * compared across learners and experts.
+ */
+const clarity = (label: string): FeedbackQuestion => ({
+  id: 'clarity',
+  type: 'scale',
+  label,
+  low: 'Hard to follow',
+  high: 'Very clear',
+});
+const accuracy: FeedbackQuestion = {
+  id: 'accuracy',
+  type: 'choice',
+  label: 'Did you spot anything inaccurate or out of step with lab practice?',
+  options: ['No', 'Yes'],
+  detail: {
+    when: 'Yes',
+    label: 'Where, and what should it say?',
+    placeholder: 'e.g. Second paragraph under “Osmolal gap”: the reference interval…',
+  },
+};
+const visuals = (label: string): FeedbackQuestion => ({
+  id: 'visuals',
+  type: 'choice',
+  label,
+  options: ['A lot', 'Somewhat', 'Not really', 'None on this page'],
+});
+
+export const FEEDBACK_QUESTIONS: Record<ReviewerTrack, readonly FeedbackQuestion[]> = {
+  learner: [
+    clarity('How clear was this page?'),
+    {
+      id: 'level',
+      type: 'choice',
+      label: 'Was the level right for you?',
+      options: ['Too basic', 'About right', 'Too advanced'],
+    },
+    accuracy,
+    visuals('Did the diagrams and interactives help?'),
+    {
+      id: 'change',
+      type: 'text',
+      label: 'What one change would make this page more useful?',
+      placeholder: 'Anything unclear, missing or worth adding. Anything else is welcome here too.',
+    },
+  ],
+  expert: [
+    clarity('How clear would this page be for a student?'),
+    accuracy,
+    {
+      id: 'currency',
+      type: 'choice',
+      label: 'Is anything out of date against current guidelines, standards or practice?',
+      options: ['No', 'Yes'],
+      detail: {
+        when: 'Yes',
+        label: 'What has changed, and where is it published?',
+        placeholder: 'e.g. The 2024 guideline now recommends…',
+      },
+    },
+    {
+      id: 'references',
+      type: 'choice',
+      label: 'Do the references support the claims they are attached to?',
+      options: ['Yes', 'Some don’t', 'Didn’t check'],
+      detail: {
+        when: 'Some don’t',
+        label: 'Which references, and what is wrong?',
+        placeholder: 'e.g. Reference 7 is about serum, but the claim is about urine…',
+      },
+    },
+    {
+      id: 'depth',
+      type: 'choice',
+      label: 'Is the depth right for a laboratory science student or early-career scientist?',
+      options: ['Too shallow', 'About right', 'Too deep'],
+    },
+    visuals('Do the diagrams and interactives help, and are they scientifically sound?'),
+    {
+      id: 'change',
+      type: 'text',
+      label: 'What would you change? Include anything a learner could misapply at the bench.',
+      placeholder: 'Corrections, missing caveats, practical pitfalls or anything else.',
+    },
+  ],
+};
+
+/** Every question across both tracks, once each, in a stable order (for CSV). */
+export const ALL_FEEDBACK_COLUMNS = (() => {
+  const seen = new Map<string, FeedbackQuestion>();
+  for (const t of REVIEWER_TRACKS)
+    for (const q of FEEDBACK_QUESTIONS[t]) if (!seen.has(q.id)) seen.set(q.id, q);
+  return [...seen.values()];
+})();
+
+export type FeedbackAnswers = Record<string, string | number | undefined>;
+
 const text = z.string().trim().max(2000, 'Please keep each answer under 2,000 characters.');
 
-export const feedbackSchema = z
-  .object({
-    path: z
-      .string()
-      .max(300)
-      .regex(/^\/[^\s]*$/, 'Invalid page.'),
-    answers: z.object({
-      clarity: z.number().int().min(1).max(5).optional(),
-      level: choice(FEEDBACK_QUESTIONS[1].options),
-      accuracy: choice(FEEDBACK_QUESTIONS[2].options),
-      accuracyDetail: text.optional(),
-      visuals: choice(FEEDBACK_QUESTIONS[3].options),
-      change: text.optional(),
-    }),
-  })
-  .refine((f) => Object.values(f.answers).some((v) => v !== undefined && v !== ''), {
-    message: 'Answer at least one question before sending.',
-  })
-  .refine((f) => f.answers.accuracy !== 'Yes' || !!f.answers.accuracyDetail, {
-    message: 'Tell us where the problem is so we can fix it.',
-  });
+/** Validates answers against the question set for the reviewer's track. */
+export function feedbackSchema(track: ReviewerTrack) {
+  const qs = FEEDBACK_QUESTIONS[track];
+  const shape: Record<string, z.ZodType> = {};
+  for (const q of qs) {
+    if (q.type === 'scale') shape[q.id] = z.number().int().min(1).max(5).optional();
+    else if (q.type === 'text') shape[q.id] = text.optional();
+    else {
+      shape[q.id] = z
+        .string()
+        .refine((v) => q.options.includes(v), 'Choose one of the options.')
+        .optional();
+      if (q.detail) shape[`${q.id}Detail`] = text.optional();
+    }
+  }
+  return z
+    .object({
+      path: z
+        .string()
+        .max(300)
+        .regex(/^\/[^\s]*$/, 'Invalid page.'),
+      answers: z.object(shape).strict(),
+    })
+    .transform((f) => {
+      // Drop follow-up text whose trigger answer wasn't chosen, and empty strings.
+      const answers: FeedbackAnswers = {};
+      for (const [k, v] of Object.entries(f.answers as FeedbackAnswers))
+        if (v !== undefined && v !== '') answers[k] = v;
+      for (const q of qs)
+        if (q.type === 'choice' && q.detail && answers[q.id] !== q.detail.when)
+          delete answers[`${q.id}Detail`];
+      return { path: f.path, answers };
+    })
+    .refine((f) => Object.keys(f.answers).length > 0, {
+      message: 'Answer at least one question before sending.',
+    })
+    .refine(
+      (f) =>
+        qs.every(
+          (q) =>
+            q.type !== 'choice' ||
+            !q.detail ||
+            f.answers[q.id] !== q.detail.when ||
+            !!f.answers[`${q.id}Detail`],
+        ),
+      { message: 'Please add the details for the issue you flagged so we can fix it.' },
+    );
+}
 
-export type FeedbackAnswers = z.infer<typeof feedbackSchema>['answers'];
+const SHORT: Record<string, string> = {
+  accuracy: 'Accuracy',
+  currency: 'Out of date',
+  references: 'References',
+};
 
-/** The free-text answers joined into one string, for the list view and CSV. */
+/** The free-text answers joined into one string, for search and CSV. */
 export function feedbackComment(a: FeedbackAnswers) {
-  return [a.accuracyDetail && `Accuracy: ${a.accuracyDetail}`, a.change]
+  return [
+    ...Object.keys(SHORT)
+      .filter((id) => a[`${id}Detail`])
+      .map((id) => `${SHORT[id]}: ${a[`${id}Detail`]}`),
+    a.change,
+  ]
     .filter(Boolean)
     .join('\n\n');
 }
+
+/** Short column labels for the admin view and CSV. */
+export const FEEDBACK_SHORT_LABELS: Record<string, string> = {
+  clarity: 'Clarity',
+  level: 'Level',
+  accuracy: 'Inaccuracy',
+  currency: 'Out of date',
+  references: 'References',
+  depth: 'Depth',
+  visuals: 'Visuals helped',
+  change: 'Change',
+};

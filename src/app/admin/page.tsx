@@ -9,7 +9,13 @@ import { lessonUrl } from '@/lib/content';
 import { ImportPanel } from '@/components/import-panel';
 import { TaxonomyForm } from '@/components/taxonomy-form';
 import { AddReviewerForm, ResolveToggle, ReviewerActions } from '@/components/review';
-import { comingSoonEnabled, type FeedbackAnswers } from '@/lib/reviewers';
+import {
+  FEEDBACK_QUESTIONS,
+  FEEDBACK_SHORT_LABELS,
+  TRACK_LABELS,
+  comingSoonEnabled,
+  type FeedbackAnswers,
+} from '@/lib/reviewers';
 import { emailSettings } from '@/lib/subscribers';
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Administration', robots: { index: false, follow: false } };
@@ -249,8 +255,13 @@ async function Reviewers({ params }: { params: Params }) {
       <div className="stats-grid">
         {[
           ['Requests waiting', n('REQUESTED')],
-          ['Invited', n('INVITED')],
           ['Active reviewers', n('ACTIVE')],
+          [
+            'Experts',
+            reviewers.filter(
+              (r) => r.track === 'expert' && r.status !== 'REVOKED' && r.status !== 'DECLINED',
+            ).length,
+          ],
           ['Feedback to read', open],
         ].map(([label, value]) => (
           <div className="stat" key={label}>
@@ -281,7 +292,10 @@ async function Reviewers({ params }: { params: Params }) {
               {reviewers.map((r) => (
                 <tr key={r.id}>
                   <td>
-                    <strong>{r.name}</strong>
+                    <strong>{r.name}</strong>{' '}
+                    <span className={`track-pill ${r.track}`}>
+                      {TRACK_LABELS[r.track === 'expert' ? 'expert' : 'learner']}
+                    </span>
                     <br />
                     {r.email}
                     <br />
@@ -302,7 +316,12 @@ async function Reviewers({ params }: { params: Params }) {
                     </span>
                   </td>
                   <td>
-                    <ReviewerActions id={r.id} status={r.status} canEmail={canEmail} />
+                    <ReviewerActions
+                      id={r.id}
+                      status={r.status}
+                      track={r.track}
+                      canEmail={canEmail}
+                    />
                   </td>
                 </tr>
               ))}
@@ -346,6 +365,9 @@ async function Reviewers({ params }: { params: Params }) {
                   <strong>
                     {f.reviewer?.name ?? (f.actor ? `You (${f.actor})` : 'Removed reviewer')}
                   </strong>
+                  <span className={`track-pill ${f.track}`}>
+                    {TRACK_LABELS[f.track === 'expert' ? 'expert' : 'learner']}
+                  </span>
                   {f.reviewer?.role && <span>{f.reviewer.role}</span>}
                   <a className="text-link" href={f.path} target="_blank" rel="noreferrer">
                     {f.path}
@@ -354,19 +376,20 @@ async function Reviewers({ params }: { params: Params }) {
                   <ResolveToggle id={f.id} resolved={f.resolved} />
                 </div>
                 <dl className="feedback-answers">
-                  <dt>Clarity</dt>
-                  <dd>{a.clarity ? `${a.clarity} / 5` : '—'}</dd>
-                  <dt>Level</dt>
-                  <dd>{a.level || '—'}</dd>
-                  <dt>Inaccuracy</dt>
-                  <dd className={a.accuracy === 'Yes' ? 'flag' : ''}>
-                    {a.accuracy || '—'}
-                    {a.accuracyDetail ? `: ${a.accuracyDetail}` : ''}
-                  </dd>
-                  <dt>Visuals helped</dt>
-                  <dd>{a.visuals || '—'}</dd>
-                  <dt>One change</dt>
-                  <dd>{a.change || '—'}</dd>
+                  {FEEDBACK_QUESTIONS[f.track === 'expert' ? 'expert' : 'learner'].map((q) => {
+                    const v = a[q.id];
+                    const detail = a[`${q.id}Detail`];
+                    const flagged = q.type === 'choice' && q.detail && v === q.detail.when;
+                    return (
+                      <div key={q.id} style={{ display: 'contents' }}>
+                        <dt>{FEEDBACK_SHORT_LABELS[q.id] || q.id}</dt>
+                        <dd className={flagged ? 'flag' : ''}>
+                          {v === undefined ? '—' : q.type === 'scale' ? `${v} / 5` : String(v)}
+                          {detail ? `: ${detail}` : ''}
+                        </dd>
+                      </div>
+                    );
+                  })}
                 </dl>
               </article>
             );

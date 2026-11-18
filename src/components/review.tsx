@@ -3,7 +3,14 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Check, Copy, MessageSquareText, X } from 'lucide-react';
-import { FEEDBACK_QUESTIONS, REVIEWER_ROLES } from '@/lib/reviewers';
+import {
+  FEEDBACK_QUESTIONS,
+  REVIEWER_ROLES,
+  REVIEWER_TRACKS,
+  TRACK_LABELS,
+  type FeedbackQuestion,
+  type ReviewerTrack,
+} from '@/lib/reviewers';
 
 async function post(url: string, body: unknown) {
   const r = await fetch(url, {
@@ -118,16 +125,9 @@ export function ReviewerRequestForm() {
 /* Every page, for reviewers: the guided feedback form                 */
 /* ------------------------------------------------------------------ */
 
-type Answers = {
-  clarity?: number;
-  level?: string;
-  accuracy?: string;
-  accuracyDetail?: string;
-  visuals?: string;
-  change?: string;
-};
+type Answers = Record<string, string | number>;
 
-export function FeedbackButton() {
+export function FeedbackButton({ track }: { track: ReviewerTrack }) {
   const path = usePathname();
   const dialog = useRef<HTMLDialogElement>(null);
   const [answers, setAnswers] = useState<Answers>({});
@@ -139,7 +139,9 @@ export function FeedbackButton() {
     setAnswers({});
     setState({ kind: 'idle' });
   }, [path]);
-  const set = (k: keyof Answers, v: string | number) => setAnswers((a) => ({ ...a, [k]: v }));
+  if (path.startsWith('/admin')) return null;
+  const questions = FEEDBACK_QUESTIONS[track];
+  const set = (k: string, v: string | number) => setAnswers((a) => ({ ...a, [k]: v }));
   const open = () => {
     if (state.kind === 'done') {
       setAnswers({});
@@ -150,39 +152,89 @@ export function FeedbackButton() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setState({ kind: 'busy' });
-    const clean: Answers = { ...answers };
-    if (clean.accuracy !== 'Yes') delete clean.accuracyDetail;
     try {
-      await post('/api/feedback', { path, answers: clean });
+      await post('/api/feedback', { path, answers });
       setState({ kind: 'done' });
     } catch (err) {
       setState({ kind: 'error', msg: errorText(err) });
     }
   }
-  if (path.startsWith('/admin')) return null;
-  const [q1, q2, q3, q4, q5] = FEEDBACK_QUESTIONS;
-  const choice = (q: { id: string; label: string; options: readonly string[] }, n: number) => (
-    <fieldset className="fb-q" key={q.id}>
-      <legend>
-        <span className="fb-num">{n}</span>
-        {q.label}
-      </legend>
-      <div className="fb-options">
-        {q.options.map((o) => (
-          <label key={o} className={answers[q.id as keyof Answers] === o ? 'on' : ''}>
-            <input
-              type="radio"
-              name={q.id}
-              value={o}
-              checked={answers[q.id as keyof Answers] === o}
-              onChange={() => set(q.id as keyof Answers, o)}
-            />
-            {o}
-          </label>
-        ))}
-      </div>
-    </fieldset>
+  const legend = (n: number, label: string) => (
+    <>
+      <span className="fb-num">{n}</span>
+      {label}
+    </>
   );
+  const render = (q: FeedbackQuestion, i: number) => {
+    const n = i + 1;
+    if (q.type === 'text')
+      return (
+        <label className="field fb-q" key={q.id}>
+          <span className="fb-legend">{legend(n, q.label)}</span>
+          <textarea
+            value={answers[q.id] ?? ''}
+            onChange={(e) => set(q.id, e.target.value)}
+            maxLength={2000}
+            placeholder={q.placeholder}
+          />
+        </label>
+      );
+    if (q.type === 'scale')
+      return (
+        <fieldset className="fb-q" key={q.id}>
+          <legend>{legend(n, q.label)}</legend>
+          <div className="fb-scale">
+            {[1, 2, 3, 4, 5].map((v) => (
+              <label key={v} className={answers[q.id] === v ? 'on' : ''}>
+                <input
+                  type="radio"
+                  name={q.id}
+                  value={v}
+                  checked={answers[q.id] === v}
+                  onChange={() => set(q.id, v)}
+                />
+                {v}
+              </label>
+            ))}
+          </div>
+          <div className="fb-scale-ends" aria-hidden>
+            <span>{q.low}</span>
+            <span>{q.high}</span>
+          </div>
+        </fieldset>
+      );
+    return (
+      <fieldset className="fb-q" key={q.id}>
+        <legend>{legend(n, q.label)}</legend>
+        <div className="fb-options">
+          {q.options.map((o) => (
+            <label key={o} className={answers[q.id] === o ? 'on' : ''}>
+              <input
+                type="radio"
+                name={q.id}
+                value={o}
+                checked={answers[q.id] === o}
+                onChange={() => set(q.id, o)}
+              />
+              {o}
+            </label>
+          ))}
+        </div>
+        {q.detail && answers[q.id] === q.detail.when && (
+          <label className="field fb-detail">
+            <span>{q.detail.label}</span>
+            <textarea
+              value={answers[`${q.id}Detail`] ?? ''}
+              onChange={(e) => set(`${q.id}Detail`, e.target.value)}
+              maxLength={2000}
+              placeholder={q.detail.placeholder}
+              required
+            />
+          </label>
+        )}
+      </fieldset>
+    );
+  };
   return (
     <>
       <button type="button" className="fb-launch" onClick={open}>
@@ -192,9 +244,11 @@ export function FeedbackButton() {
       <dialog ref={dialog} className="fb-dialog" aria-labelledby="fb-title">
         <div className="fb-head">
           <div>
-            <h2 id="fb-title">Feedback on this page</h2>
+            <h2 id="fb-title">
+              {track === 'expert' ? 'Expert review of this page' : 'Feedback on this page'}
+            </h2>
             <p>
-              Five short questions. Answer any you like; every answer helps.
+              {questions.length} short questions. Answer any you like; every answer helps.
               <br />
               <code>{path}</code>
             </p>
@@ -219,57 +273,7 @@ export function FeedbackButton() {
           </div>
         ) : (
           <form onSubmit={submit} className="fb-form">
-            <fieldset className="fb-q">
-              <legend>
-                <span className="fb-num">1</span>
-                {q1.label}
-              </legend>
-              <div className="fb-scale">
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <label key={n} className={answers.clarity === n ? 'on' : ''}>
-                    <input
-                      type="radio"
-                      name="clarity"
-                      value={n}
-                      checked={answers.clarity === n}
-                      onChange={() => set('clarity', n)}
-                    />
-                    {n}
-                  </label>
-                ))}
-              </div>
-              <div className="fb-scale-ends" aria-hidden>
-                <span>{q1.low}</span>
-                <span>{q1.high}</span>
-              </div>
-            </fieldset>
-            {choice(q2, 2)}
-            {choice(q3, 3)}
-            {answers.accuracy === 'Yes' && (
-              <label className="field fb-detail">
-                <span>{q3.detail.label}</span>
-                <textarea
-                  value={answers.accuracyDetail || ''}
-                  onChange={(e) => set('accuracyDetail', e.target.value)}
-                  maxLength={2000}
-                  placeholder={q3.detail.placeholder}
-                  required
-                />
-              </label>
-            )}
-            {choice(q4, 4)}
-            <label className="field fb-q">
-              <span className="fb-legend">
-                <span className="fb-num">5</span>
-                {q5.label}
-              </span>
-              <textarea
-                value={answers.change || ''}
-                onChange={(e) => set('change', e.target.value)}
-                maxLength={2000}
-                placeholder={q5.placeholder}
-              />
-            </label>
+            {questions.map(render)}
             {state.kind === 'error' && (
               <div className="error-message" role="alert">
                 {state.msg}
@@ -345,6 +349,7 @@ export function AddReviewerForm({ canEmail }: { canEmail: boolean }) {
         name: f.get('name'),
         email: f.get('email'),
         role: f.get('role'),
+        track: f.get('track'),
         send: f.get('send') === 'on',
       });
       setResult({ link: data.link!, emailed: data.emailed });
@@ -367,6 +372,16 @@ export function AddReviewerForm({ canEmail }: { canEmail: boolean }) {
         <label className="field">
           <span>Email</span>
           <input name="email" type="email" required maxLength={254} />
+        </label>
+        <label className="field">
+          <span>Track</span>
+          <select name="track" defaultValue="expert">
+            {REVIEWER_TRACKS.map((t) => (
+              <option key={t} value={t}>
+                {TRACK_LABELS[t]}
+              </option>
+            ))}
+          </select>
         </label>
         <label className="field">
           <span>Role</span>
@@ -397,17 +412,19 @@ export function AddReviewerForm({ canEmail }: { canEmail: boolean }) {
 export function ReviewerActions({
   id,
   status,
+  track,
   canEmail,
 }: {
   id: string;
   status: string;
+  track: string;
   canEmail: boolean;
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState<{ link: string; emailed?: boolean } | null>(null);
-  async function act(action: string, send = false) {
+  async function act(action: string, send = false, extra: Record<string, string> = {}) {
     if (
       action === 'delete' &&
       !confirm('Delete this reviewer? Their feedback is kept without a name.')
@@ -416,7 +433,7 @@ export function ReviewerActions({
     setBusy(true);
     setError('');
     try {
-      const data = await post('/api/admin/reviewers', { action, id, send });
+      const data = await post('/api/admin/reviewers', { action, id, send, ...extra });
       if (data.link) setResult({ link: data.link, emailed: data.emailed });
       router.refresh();
     } catch (err) {

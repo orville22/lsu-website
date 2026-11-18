@@ -2,6 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   comingSoonEnabled,
+  ALL_FEEDBACK_COLUMNS,
+  FEEDBACK_QUESTIONS,
   feedbackComment,
   feedbackSchema,
   gateFor,
@@ -78,21 +80,25 @@ test('reviewer requests are validated and normalised', () => {
   );
 });
 
-test('feedback needs at least one answer and a location for a reported error', () => {
-  assert.equal(feedbackSchema.safeParse({ path: '/learn', answers: {} }).success, false);
+test('learner feedback needs an answer and details for a reported error', () => {
+  const learner = feedbackSchema('learner');
+  assert.equal(learner.safeParse({ path: '/learn', answers: {} }).success, false);
+  assert.equal(learner.safeParse({ path: '/learn', answers: { accuracy: 'Yes' } }).success, false);
+  assert.equal(learner.safeParse({ path: '/learn', answers: { clarity: 6 } }).success, false);
   assert.equal(
-    feedbackSchema.safeParse({ path: '/learn', answers: { accuracy: 'Yes' } }).success,
+    learner.safeParse({ path: '/learn', answers: { level: 'Very hard' } }).success,
+    false,
+  );
+  // Expert-only questions are refused on the learner form.
+  assert.equal(
+    learner.safeParse({ path: '/learn', answers: { depth: 'About right' } }).success,
     false,
   );
   assert.equal(
-    feedbackSchema.safeParse({ path: '/learn', answers: { clarity: 6 } }).success,
+    learner.safeParse({ path: 'https://evil.test', answers: { clarity: 3 } }).success,
     false,
   );
-  assert.equal(
-    feedbackSchema.safeParse({ path: '/learn', answers: { level: 'Very hard' } }).success,
-    false,
-  );
-  const f = feedbackSchema.parse({
+  const f = learner.parse({
     path: '/learn/x',
     answers: {
       clarity: 4,
@@ -102,8 +108,30 @@ test('feedback needs at least one answer and a location for a reported error', (
     },
   });
   assert.equal(feedbackComment(f.answers), 'Accuracy: Units in table 2\n\nMore cases');
+  // A detail left behind after switching the answer back to "No" is dropped.
+  const g = learner.parse({ path: '/x', answers: { accuracy: 'No', accuracyDetail: 'stale' } });
+  assert.deepEqual(g.answers, { accuracy: 'No' });
+});
+
+test('expert feedback has its own questions and keeps the shared ones comparable', () => {
+  const ids = (t: 'learner' | 'expert') => FEEDBACK_QUESTIONS[t].map((q) => q.id);
+  for (const shared of ['clarity', 'accuracy', 'visuals', 'change'])
+    assert.ok(ids('learner').includes(shared) && ids('expert').includes(shared), shared);
+  assert.ok(ids('expert').includes('currency') && !ids('learner').includes('currency'));
+  const expert = feedbackSchema('expert');
   assert.equal(
-    feedbackSchema.safeParse({ path: 'https://evil.test', answers: { clarity: 3 } }).success,
+    expert.safeParse({ path: '/x', answers: { references: 'Some don’t' } }).success,
     false,
   );
+  const f = expert.parse({
+    path: '/x',
+    answers: {
+      currency: 'Yes',
+      currencyDetail: '2024 guideline',
+      references: 'Yes',
+      depth: 'Too shallow',
+    },
+  });
+  assert.equal(feedbackComment(f.answers), 'Out of date: 2024 guideline');
+  assert.equal(new Set(ALL_FEEDBACK_COLUMNS.map((q) => q.id)).size, ALL_FEEDBACK_COLUMNS.length);
 });
