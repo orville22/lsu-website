@@ -18,6 +18,32 @@ test('rich text renders paragraphs, lists and inline marks without raw HTML', ()
   assert.doesNotMatch(out, /<script>/);
 });
 
+test('practice answers are hidden behind a Check answer button', () => {
+  const out = html(
+    '**Q1 · multiple choice.** Which?\n- A. One\n- B. Two\n*Answer:* B. Because **two** [1].\nA second answer paragraph.\n**Q2 · short answer.** Why?\n*Model answer:* Reason.',
+  );
+  assert.equal((out.match(/<details class="answer-reveal">/g) ?? []).length, 2);
+  assert.match(out, /Check answer/);
+  assert.match(
+    out,
+    /<strong class="answer-label">Answer: <\/strong>B\. Because <strong>two<\/strong>/,
+  );
+  assert.match(out, /<p>A second answer paragraph\.<\/p><\/div><\/details><p><strong>Q2/);
+  assert.match(out, /<strong class="answer-label">Model answer: <\/strong>Reason\./);
+  assert.match(out, /<ul><li>A\. One<\/li><li>B\. Two<\/li><\/ul>/);
+});
+
+test('inline quick-check answers are split off and hidden', () => {
+  const out = html(
+    '**Quick check.** What happens? *Answer: the result falls; sodium is unchanged.*',
+  );
+  assert.match(
+    out,
+    /<p><strong>Quick check\.<\/strong> What happens\?<\/p><details class="answer-reveal">/,
+  );
+  assert.match(out, /Answer: <\/strong>the result falls; sodium is unchanged\./);
+});
+
 test('approximate-value tildes and asterisks with spaces stay literal', () => {
   const out = html('Roughly ~5 to ~10 mmol/L; 2 * 3 * 4.');
   assert.doesNotMatch(out, /<sub>|<em>/);
