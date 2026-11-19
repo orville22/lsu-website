@@ -19,6 +19,7 @@ import { CellTonicity } from './c1-2/cell-tonicity';
 import { GapBuilder } from './c1-2/gap-builder';
 import { GapTimeCourse } from './c1-2/gap-time-course';
 import { AdhWater } from './c1-1/adh-water';
+import { NephronAdh } from './c1-1/nephron-adh';
 import { WaterFollowsSodium } from './c1-1/water-follows-sodium';
 import { PlasmaLitre } from './c1-2/plasma-litre';
 import { CellVolume } from './c1-1/cell-volume';
@@ -39,6 +40,7 @@ export const interactives: Record<InteractiveKey, ComponentType> = {
   'c1-2-cell-tonicity': CellTonicity,
   'c1-2-gap-builder': GapBuilder,
   'c1-2-gap-time-course': GapTimeCourse,
+  'c1-1-nephron-adh': NephronAdh,
   'c1-1-adh-water': AdhWater,
   'c1-1-water-follows-sodium': WaterFollowsSodium,
   'c1-2-plasma-litre': PlasmaLitre,

@@ -17,6 +17,7 @@ export const interactiveKeys = [
   'c1-2-cell-tonicity',
   'c1-2-gap-builder',
   'c1-2-gap-time-course',
+  'c1-1-nephron-adh',
   'c1-1-adh-water',
   'c1-1-water-follows-sodium',
   'c1-2-plasma-litre',
