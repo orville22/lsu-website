@@ -61,6 +61,7 @@ Lesson diagrams and interactives are built into the site as components (`src/com
 | `c1-2-cell-tonicity`      | C1.2   | I2: effective and ineffective osmoles (a cell)        |
 | `c1-2-gap-builder`        | C1.2   | I1: the gap builder (presets, sliders, factor)        |
 | `c1-2-gap-time-course`    | C1.2   | Visual 2: osmolal gap and anion gap over time         |
+| `c1-1-nephron-adh`        | C1.1   | Loop of Henle and collecting duct, ADH high/low (animated) |
 | `c1-1-adh-water`          | C1.1   | How ADH gets water back (3-step, animated)            |
 | `c1-1-water-follows-sodium` | C1.1 | Water follows sodium (4-step, animated)               |
 | `c1-1-cell-volume`        | C1.1   | Cells swell and shrink (three panels)                 |

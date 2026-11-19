@@ -84,6 +84,8 @@ Most of the time the two systems work side by side without conflict. The highlig
 
 **How ADH works.** ADH binds V2 receptors on the principal cells of the collecting duct. This moves aquaporin-2 water channels from vesicles inside the cell into the membrane facing the urine [1,5]. An open channel only lets water move if something pulls it. The pull comes from the inner kidney: the loops of Henle pump salt into the tissue of the medulla, so it gets saltier with depth, from about 300 mmol/kg near the cortex to about 1,200 mmol/kg at the tip [22]. The collecting duct runs down through that salty tissue, so water leaves the urine through the open channels, crosses the cell and exits through aquaporin-3 and -4 on the blood side [5,22]. With ADH high, the urine becomes concentrated. With ADH suppressed, the channels are withdrawn and the kidney excretes dilute urine, clearing free water: water passed without extra solute, which dilutes the urine.
 
+@interactive(c1-1-nephron-adh "C1.1 visual · where the kidney takes water back")
+
 @interactive(c1-1-adh-water "C1.1 visual · how ADH gets water back")
 
 **How sensitive it is.** The system responds to changes in osmolality of only 1–2% [6,7]. In human studies ADH switches on at about 284 mmol/kg, with thirst starting at a similar point [8]. Because sodium and its partner anions make up most of osmolality (C1.2), the switch-on point can be put in sodium terms: ADH becomes detectable once plasma sodium rises above about 135 mmol/L, and by about 145 mmol/L the urine is maximally concentrated, near 1,200 mmol/kg [1]. That's the sodium reference interval, seen from the hormone's side.

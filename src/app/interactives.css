@@ -788,3 +788,35 @@
   font-size: var(--text-caption);
   line-height: 1.4;
 }
+
+/* Nephron visual: a bigger drawing beside its readout */
+.ix-row.ix-row-big {
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+}
+.ix-callouts {
+  list-style: none;
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+.ix-callouts li {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+}
+.ix-callouts b {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--ix-accent);
+  color: var(--ix-on-accent);
+  font-size: 11px;
+}
+@media (max-width: 560px) {
+  .ix-row.ix-row-big {
+    grid-template-columns: 1fr;
+  }
+}
