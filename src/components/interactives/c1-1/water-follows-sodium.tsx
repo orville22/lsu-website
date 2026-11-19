@@ -22,7 +22,7 @@ import {
 } from '../kit';
 import { LoopBar, useLoop } from '../loop';
 
-const PHASES = ['Start', 'Sodium kept', 'ADH and thirst', 'Water follows'];
+const PHASES = ['Baseline', 'Sodium retained', 'ADH and thirst', 'Water follows'];
 const DURATIONS = [2400, 2800, 2600, 4600];
 
 export const STATES = [
@@ -34,10 +34,10 @@ export const STATES = [
 export const conc = (i: number) => Math.round(STATES[i].na / STATES[i].litres);
 
 const TEXT = [
-  'A healthy extracellular fluid (ECF), the fluid around the cells: sodium 140 mmol/L.',
-  'Aldosterone makes the kidney keep extra sodium. The same water now holds more sodium, so the concentration and the osmolality edge up.',
+  'Baseline extracellular fluid (ECF), the fluid around the cells: sodium 140 mmol/L.',
+  'Aldosterone increases renal sodium reabsorption. The same volume of water now holds more sodium, so the sodium concentration and osmolality rise slightly.',
   'The osmoreceptors sense the higher osmolality. ADH rises and so does thirst.',
-  'The kidney keeps water and the person drinks. The ECF grows until the sodium concentration is back where it started: more sodium has become more volume, not a higher sodium result.',
+  'The kidney retains water and intake increases. The ECF expands until the sodium concentration returns to baseline: the retained sodium adds volume, not concentration.',
 ];
 
 /** A smooth organic outline with separate x and y radii. */
@@ -178,7 +178,7 @@ function Pool({
 const N: Record<string, Omit<NodeSpec, 'x' | 'y' | 'w'>> = {
   kidney: {
     title: 'Kidney',
-    body: ['aldosterone:', 'keeps sodium'],
+    body: ['aldosterone:', 'retains sodium'],
     hue: 'sodium',
     icon: 'kidney',
   },
@@ -190,7 +190,7 @@ const N: Record<string, Omit<NodeSpec, 'x' | 'y' | 'w'>> = {
   },
   water: {
     title: 'Water in',
-    body: ['kept by the kidney', 'and drunk'],
+    body: ['renal retention', 'and intake'],
     hue: 'water',
     icon: 'drop',
   },
@@ -273,9 +273,9 @@ export function WaterFollowsSodium() {
   const c = conc(p);
   return (
     <Frame
-      title="Keep sodium, and water follows: the ECF grows while the sodium result stays put"
-      keyText="The pool is the fluid around the cells. Orange balls are sodium; ringed ones are the sodium the kidney kept."
-      note="Teaching model: an ECF of 18 L, with the changes drawn larger than life. In the body these steps overlap, so the sodium result barely moves at all."
+      title="Sodium retention expands the ECF, and the serum sodium concentration is maintained"
+      keyText="The shaded area is the ECF around the cells. Dots are sodium; ringed dots are sodium retained by the kidney."
+      note="Teaching model: an ECF of 18 L, with the changes exaggerated for clarity. In vivo these steps overlap, so serum sodium barely changes."
       wide
     >
       <LoopBar labels={PHASES} {...loop} />
@@ -302,7 +302,7 @@ export function WaterFollowsSodium() {
             <dd className={p >= 3 ? 'ix-hot' : undefined}>{st.litres.toFixed(1)} L</dd>
           </div>
           <div>
-            <dt>Sodium result</dt>
+            <dt>Serum sodium</dt>
             <dd>{c} mmol/L</dd>
           </div>
         </dl>

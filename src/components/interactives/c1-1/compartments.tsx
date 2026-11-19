@@ -91,12 +91,12 @@ function Bilayer({ x1, y1, x2, y2 }: { x1: number; y1: number; x2: number; y2: n
 export function Compartments() {
   return (
     <Frame
-      title="Sodium lives outside cells, potassium inside, and water moves freely between them"
+      title="Sodium is mainly extracellular, potassium mainly intracellular, and water moves freely between them"
       keyText="Green dots are potassium, orange dots sodium. Total body water is about 60% of body weight in men and 50% in women."
     >
       <Responsive
         name="compartments"
-        label="Sodium lives outside cells, potassium inside, and water moves freely between them"
+        label="Sodium is mainly extracellular, potassium mainly intracellular, and water moves freely between them"
         wide={{
           w: 760,
           h: 300,
