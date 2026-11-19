@@ -805,7 +805,7 @@
 }
 @keyframes rs-pulse {
   50% {
-    transform: scale(1.35);
+    transform: scale(1.12);
   }
 }
 .rs-stretch {
@@ -833,15 +833,79 @@
   }
 }
 .rs-cut {
-  animation: rs-cut 2.4s ease-in-out infinite;
+  animation: rs-cut 3s ease-in-out infinite;
 }
 @keyframes rs-cut {
   0% {
-    transform: translate(18px, -16px);
+    transform: translate(0, -24px);
   }
-  40%,
+  35%,
   100% {
-    transform: translate(18px, -2px);
+    transform: translate(0, 40px);
+  }
+}
+/* the freed angiotensin I tail slides away after the cut */
+.rs-free {
+  animation: rs-free 3s ease-in-out infinite;
+}
+@keyframes rs-free {
+  0%,
+  40% {
+    transform: translate(0, 0);
+  }
+  85%,
+  100% {
+    transform: translate(60px, 0);
+  }
+}
+/* angiotensin I fades as angiotensin II lifts off */
+.rs-fade {
+  animation: rs-fade 3s ease-in-out infinite;
+}
+@keyframes rs-fade {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  65%,
+  100% {
+    opacity: 0.15;
+  }
+}
+.rs-free2 {
+  animation: rs-free2 3s ease-in-out infinite;
+}
+@keyframes rs-free2 {
+  0%,
+  45% {
+    opacity: 0;
+    transform: translate(0, 88px);
+  }
+  85%,
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+.rs-beat {
+  animation: rs-beat 0.9s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes rs-beat {
+  15% {
+    transform: scale(1.08);
+  }
+  30% {
+    transform: scale(1);
+  }
+}
+.rs-stage {
+  animation: rs-stage 0.45s ease-out both;
+}
+@keyframes rs-stage {
+  from {
+    opacity: 0;
   }
 }
 .rs-pop {
@@ -870,6 +934,11 @@
   .rs-stretch,
   .rs-snip,
   .rs-cut,
+  .rs-free,
+  .rs-fade,
+  .rs-free2,
+  .rs-beat,
+  .rs-stage,
   .rs-pop {
     animation: none;
   }

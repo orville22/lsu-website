@@ -1,21 +1,18 @@
 'use client';
 /*
- * C1.1 visual 5 · the RAAS cascade, as one illustrated scene (redrawn after
- * Orville's review, 19 Nov 2026). The circulation is a loop; the organs sit on
- * it. Each step animates what that organ does:
- *   1 Reduced EABV: less pressure reaches the kidney; JG cells sense it.
- *   2 Renin: JG cells release renin into the blood.
- *   3 Angiotensin I: the liver releases angiotensinogen; renin cuts it.
- *   4 Angiotensin II: ACE on the vessel lining (much of it in the lungs) clips it.
- *   5 Aldosterone: angiotensin II reaches the adrenal cortex; aldosterone goes out.
- *   6 ENaC: aldosterone adds sodium channels to the collecting-duct cell.
- *   7 Sodium kept: sodium moves from urine to blood, potassium the other way,
- *     water follows (with ADH and thirst) and filling recovers.
- *   8 Counterweight: a stretched heart releases ANP/BNP, and the kidney lets sodium go.
- * Glyphs: renin = a cutting wedge; angiotensinogen / angiotensin I / II =
- * chains of 14 / 10 / 8 beads; aldosterone = hexagon; ANP/BNP = diamond.
- * Teaching model: positions are schematic, chain lengths are a reminder of
- * the cuts, not a structure.
+ * C1.1 visual 5 · the RAAS cascade (redrawn twice after Orville's review,
+ * 19 Nov 2026). Two parts:
+ *   - a small body map (left, or top on phones) with recognisable organs in
+ *     their places, lighting up where each step happens;
+ *   - a large stage showing the step itself, close up and animated.
+ * Steps: low EABV sensed by the JG cells · renin released · renin cuts the
+ * angiotensin I tail off angiotensinogen · ACE on the vessel lining clips two
+ * more off, giving angiotensin II · angiotensin II makes the adrenal cortex
+ * release aldosterone · aldosterone adds ENaC to the duct cell · sodium in,
+ * potassium out, water follows · the counterweight: ANP/BNP from a stretched
+ * heart make the kidney excrete sodium.
+ * Teaching model: shapes are schematic and not to scale; bead counts stand
+ * for the 10 and 8 amino acids of angiotensin I and II.
  */
 import type { CSSProperties, ReactNode } from 'react';
 import { Arrow, C, Droplet, Frame, Ion, Responsive, type Layout } from '../kit';
@@ -35,119 +32,47 @@ const PHASES = [
 const TEXT = [
   'The effective arterial blood volume (EABV) falls: the arteries are underfilled, less pressure reaches the kidney, less salt reaches the macula densa, and the sympathetic nerves fire. The juxtaglomerular (JG) cells in the wall of the afferent arteriole sense it.',
   'Juxtaglomerular cells in the afferent arteriole release renin into the blood.',
-  'The liver releases angiotensinogen into the blood all the time. Renin cuts it, freeing angiotensin I.',
-  'Angiotensin-converting enzyme (ACE) on the lining of blood vessels, much of it in the lungs, clips angiotensin I into angiotensin II. Angiotensin II also constricts blood vessels and stimulates thirst and ADH.',
+  'The liver releases angiotensinogen into the blood all the time. Renin cuts a short tail off it: angiotensin I, 10 amino acids long.',
+  'Angiotensin-converting enzyme (ACE) on the lining of blood vessels clips two more amino acids off, giving angiotensin II. Angiotensin II also constricts blood vessels and stimulates thirst and ADH.',
   'Angiotensin II reaches the adrenal cortex, which releases aldosterone.',
-  'Aldosterone increases the activity of epithelial sodium channels (ENaC) in the principal cells of the collecting duct.',
+  'Aldosterone enters the principal cells of the collecting duct and increases the activity of epithelial sodium channels (ENaC) on the urine side.',
   'More sodium is reabsorbed from the urine and potassium is excreted in exchange. With ADH and thirst, water follows the sodium, and filling recovers.',
   'When too much volume stretches the heart’s chambers, they release ANP and BNP, which push the kidney to excrete sodium instead.',
 ];
-
-/* ---------- Scene geometry (760 × 430) ---------- */
-
-/* The circulation: a clockwise loop. Top track y = 96, bottom track y = 320. */
-const RING =
-  'M120 96 H640 A60 60 0 0 1 700 156 V260 A60 60 0 0 1 640 320 H120 A60 60 0 0 1 60 260 V156 A60 60 0 0 1 120 96 Z';
-const AT = { jg: 150, duct: 330, adrenal: 540, liver: 190, lungs: 400, heart: 600 };
-/* Legs of the loop, in the direction blood flows. */
-const LEG = {
-  jgToLiver: `M${AT.jg} 320 H120 A60 60 0 0 1 60 260 V156 A60 60 0 0 1 120 96 H${AT.liver}`,
-  liverToLungs: `M${AT.liver + 20} 96 H${AT.lungs}`,
-  lungsToAdrenal: `M${AT.lungs + 10} 96 H640 A60 60 0 0 1 700 156 V260 A60 60 0 0 1 640 320 H${AT.adrenal}`,
-  adrenalToDuct: `M${AT.adrenal} 320 H${AT.duct + 10}`,
-  heartToDuct: `M${AT.heart} 96 H640 A60 60 0 0 1 700 156 V260 A60 60 0 0 1 640 320 H${AT.duct + 10}`,
-};
-/* Where the narrow (phone) view centres for each step. */
-const FOCUS: [number, number][] = [
-  [160, 300],
-  [130, 220],
-  [230, 110],
-  [430, 120],
-  [560, 300],
-  [330, 330],
-  [330, 330],
-  [620, 200],
+const WHERE = [
+  'Kidney · afferent arteriole',
+  'Kidney · JG cells',
+  'Blood · angiotensinogen from the liver',
+  'Vessel lining · much of it in the lungs',
+  'Adrenal cortex',
+  'Kidney · collecting duct',
+  'Kidney · collecting duct',
+  'Heart, then kidney',
+];
+type Organ = 'kidney' | 'liver' | 'lungs' | 'adrenal' | 'heart';
+const LIT: Organ[][] = [
+  ['kidney'],
+  ['kidney'],
+  ['liver'],
+  ['lungs'],
+  ['adrenal'],
+  ['kidney'],
+  ['kidney'],
+  ['heart', 'kidney'],
 ];
 
 const S = {
   renin: 'var(--ix-solid-pink)',
-  chain: 'var(--ix-solid-mustard)',
+  angI: 'var(--ix-solid-mustard)',
   angII: 'var(--ix-solid-sodium)',
   aldo: 'var(--ix-solid-green)',
   anp: 'var(--ix-solid-water)',
+  jg: '#8f6bc0',
+  rbc: '#c94f4f',
+  k: '#7a62b3',
 };
 
-/* ---------- Glyphs ---------- */
-
-function Chain({ n, fill, fade = 0 }: { n: number; fill: string; fade?: number }) {
-  const x0 = -((n - 1) * 8) / 2;
-  return (
-    <g>
-      <path d={`M${x0} 0H${-x0}`} stroke={fill} strokeWidth={2} />
-      {Array.from({ length: n }, (_, i) => (
-        <circle
-          key={i}
-          cx={x0 + i * 8}
-          cy={0}
-          r={3.8}
-          fill={fill}
-          stroke={C.outline}
-          strokeWidth={0.8}
-          className={i >= n - fade ? 'rs-snip' : undefined}
-        />
-      ))}
-    </g>
-  );
-}
-function Renin() {
-  return (
-    <path d="M0 0 L9 -6 A11 11 0 1 0 9 6 Z" fill={S.renin} stroke={C.outline} strokeWidth={1} />
-  );
-}
-function Hex({ fill }: { fill: string }) {
-  return (
-    <path
-      d="M-7 0 L-3.5 -6 L3.5 -6 L7 0 L3.5 6 L-3.5 6 Z"
-      fill={fill}
-      stroke={C.outline}
-      strokeWidth={1}
-    />
-  );
-}
-function Diamond() {
-  return <path d="M0 -7 L6 0 L0 7 L-6 0 Z" fill={S.anp} stroke={C.outline} strokeWidth={1} />;
-}
-
-/** Glyphs travelling along a leg of the circulation, evenly spaced, looping. */
-function Travel({
-  path,
-  n,
-  dur,
-  children,
-}: {
-  path: string;
-  n: number;
-  dur: number;
-  children: ReactNode;
-}) {
-  return (
-    <>
-      {Array.from({ length: n }, (_, i) => (
-        <g key={i}>
-          <animateMotion
-            path={path}
-            dur={`${dur}s`}
-            begin={`-${(i * dur) / n}s`}
-            repeatCount="indefinite"
-          />
-          {children}
-        </g>
-      ))}
-    </>
-  );
-}
-
-const flow = (dx: number, dy: number, delay: number, dur = 2.2) =>
+const flow = (dx: number, dy: number, delay: number, dur = 2.4) =>
   ({
     '--dx': `${dx}px`,
     '--dy': `${dy}px`,
@@ -155,462 +80,780 @@ const flow = (dx: number, dy: number, delay: number, dur = 2.2) =>
     '--dur': `${dur}s`,
   }) as CSSProperties;
 
-/** A labelled organ; lit when it is the one acting in this step. */
-function Station({
-  x,
-  y,
-  label,
-  lit,
+function Flow({
+  dx,
+  dy,
+  delay,
+  dur,
   children,
 }: {
-  x: number;
-  y: number;
-  label: string;
-  lit: boolean;
+  dx: number;
+  dy: number;
+  delay: number;
+  dur?: number;
   children: ReactNode;
 }) {
   return (
-    <g className={lit ? 'rs-lit' : 'rs-dim'}>
+    <g className="ix-flow" style={flow(dx, dy, delay, dur)}>
       {children}
-      <text
-        x={x}
-        y={y}
-        textAnchor="middle"
-        fontSize={11}
-        fontWeight={700}
-        fill={lit ? C.ink : C.muted}
+    </g>
+  );
+}
+
+/* ---------- Glyphs (stage size) ---------- */
+
+function Beads({
+  n,
+  fill,
+  r = 8,
+  gap = 19,
+  snip = 0,
+}: {
+  n: number;
+  fill: string;
+  r?: number;
+  gap?: number;
+  snip?: number;
+}) {
+  return (
+    <g>
+      <path d={`M0 0H${(n - 1) * gap}`} stroke={fill} strokeWidth={3} />
+      {Array.from({ length: n }, (_, i) => (
+        <circle
+          key={i}
+          cx={i * gap}
+          cy={0}
+          r={r}
+          fill={fill}
+          stroke={C.outline}
+          strokeWidth={1.2}
+          className={i >= n - snip ? 'rs-snip' : undefined}
+        />
+      ))}
+    </g>
+  );
+}
+function Renin({ s = 1 }: { s?: number }) {
+  return (
+    <g transform={`scale(${s})`}>
+      <path
+        d="M0 0 L16 -11 A19 19 0 1 0 16 11 Z"
+        fill={S.renin}
+        stroke={C.outline}
+        strokeWidth={1.4}
+      />
+      <circle cx={-6} cy={-6} r={2} fill={C.outline} />
+    </g>
+  );
+}
+function Hex({ s = 1 }: { s?: number }) {
+  return (
+    <path
+      transform={`scale(${s})`}
+      d="M-11 0 L-5.5 -9.5 L5.5 -9.5 L11 0 L5.5 9.5 L-5.5 9.5 Z"
+      fill={S.aldo}
+      stroke={C.outline}
+      strokeWidth={1.4}
+    />
+  );
+}
+function Diamond({ s = 1 }: { s?: number }) {
+  return (
+    <path
+      transform={`scale(${s})`}
+      d="M0 -10 L8 0 L0 10 L-8 0 Z"
+      fill={S.anp}
+      stroke={C.outline}
+      strokeWidth={1.4}
+    />
+  );
+}
+function Rbc({ x, y }: { x: number; y: number }) {
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <ellipse rx={13} ry={9} fill={S.rbc} opacity={0.85} />
+      <ellipse rx={6} ry={3.5} fill="#a43e3e" opacity={0.6} />
+    </g>
+  );
+}
+type Anchor = 'start' | 'middle' | 'end';
+function Tag({
+  x,
+  y,
+  children,
+  anchor = 'start',
+}: {
+  x: number;
+  y: number;
+  children: ReactNode;
+  anchor?: Anchor;
+}) {
+  return (
+    <text x={x} y={y} textAnchor={anchor} fontSize={13} fontWeight={700} fill={C.ink}>
+      {children}
+    </text>
+  );
+}
+function Sub({
+  x,
+  y,
+  children,
+  anchor = 'start',
+}: {
+  x: number;
+  y: number;
+  children: ReactNode;
+  anchor?: Anchor;
+}) {
+  return (
+    <text x={x} y={y} textAnchor={anchor} fontSize={11} fill={C.muted}>
+      {children}
+    </text>
+  );
+}
+
+/** A small EABV gauge for the stage corner. */
+function Gauge({ x, y, level }: { x: number; y: number; level: 'low' | 'normal' | 'high' }) {
+  const a = level === 'low' ? -55 : level === 'high' ? 50 : 0;
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <path
+        d="M-34 0 A34 34 0 0 1 34 0"
+        fill="none"
+        stroke={C.edge}
+        strokeWidth={7}
+        strokeLinecap="round"
+      />
+      <path
+        d="M-34 0 A34 34 0 0 1 -17 -29.4"
+        fill="none"
+        stroke="var(--ix-solid-sodium)"
+        strokeWidth={7}
+        strokeLinecap="round"
+      />
+      <path
+        d="M17 -29.4 A34 34 0 0 1 34 0"
+        fill="none"
+        stroke="var(--ix-solid-water)"
+        strokeWidth={7}
+        strokeLinecap="round"
+      />
+      <g
+        style={{
+          transform: `rotate(${a}deg)`,
+          transition: 'transform 1.2s cubic-bezier(.3,1.4,.5,1)',
+        }}
       >
-        {label}
+        <path d="M0 0 L0 -28" stroke={C.ink} strokeWidth={2.5} strokeLinecap="round" />
+      </g>
+      <circle r={4} fill={C.ink} />
+      <text y={16} textAnchor="middle" fontSize={10} fontWeight={700} fill={C.ink}>
+        EABV
       </text>
     </g>
   );
 }
 
-/* ---------- The scene ---------- */
+/* ---------- Body map (about 232 × 440) ---------- */
 
-function Scene({ id, p, reduced }: { id: string; p: number; reduced: boolean }) {
-  const low = p <= 5;
-  const needle = p === 7 ? 50 : p === 6 ? 0 : -55;
-  const move = !reduced;
+const LUNG =
+  'M96 70 C80 70 62 84 56 112 C50 140 50 170 58 186 C64 196 82 194 92 186 C100 180 104 168 104 152 L104 86 C104 76 102 70 96 70 Z';
+const KIDNEY =
+  'M86 262 C72 260 62 274 62 292 C62 312 74 326 88 324 C98 322 100 312 96 304 C93 298 93 290 96 284 C100 276 98 264 86 262 Z';
+const ADRENAL = 'M70 262 C74 250 84 244 92 250 C96 254 96 260 92 264 C84 262 76 262 70 262 Z';
+
+function BodyMap({ id, p }: { id: string; p: number }) {
+  const lit = (o: Organ) => LIT[p].includes(o);
+  const glow = (o: Organ) => (lit(o) ? `url(#${id}-glow)` : undefined);
+  const op = (o: Organ) => ({ opacity: lit(o) ? 1 : 0.45, transition: 'opacity .5s' });
   return (
     <g>
-      <defs>
-        <filter id={`${id}-glow`} x="-50%" y="-50%" width="200%" height="200%">
-          <feDropShadow
-            dx="0"
-            dy="0"
-            stdDeviation="4"
-            floodColor="var(--ix-accent)"
-            floodOpacity="0.55"
-          />
-        </filter>
-      </defs>
-
-      {/* Circulation */}
-      <path d={RING} fill="none" stroke={C.outline} strokeWidth={22} strokeLinejoin="round" />
       <path
-        d={RING}
-        fill="none"
-        stroke="var(--ix-tint-pink)"
-        strokeWidth={18}
-        strokeLinejoin="round"
+        d="M104 14 C104 6 128 6 128 14 L130 34 C150 40 186 44 196 70 C204 92 200 150 196 200 C192 260 196 330 182 380 C176 400 150 410 116 410 C82 410 56 400 50 380 C36 330 40 260 36 200 C32 150 28 92 36 70 C46 44 82 40 102 34 Z"
+        fill="var(--ix-node)"
+        stroke={C.outline}
+        strokeWidth={1.6}
       />
-      {move &&
-        Array.from({ length: low ? 10 : 18 }, (_, i) => {
-          const n = low ? 10 : 18;
-          const dur = low ? 16 : 10;
-          return (
-            <circle key={`b${i}-${n}`} r={3} fill="var(--ix-solid-pink)" opacity={0.55}>
-              <animateMotion
-                path={RING}
-                dur={`${dur}s`}
-                begin={`-${(i * dur) / n}s`}
-                repeatCount="indefinite"
-              />
-            </circle>
-          );
-        })}
-      <text
-        x={92}
-        y={212}
-        fontSize={10}
-        fontWeight={600}
-        fill={C.muted}
-        transform="rotate(-90 92 212)"
-        textAnchor="middle"
-      >
-        blood flow
-      </text>
-
-      {/* EABV gauge in the middle */}
-      <g transform="translate(380 236)">
+      {/* lungs and airway */}
+      <g style={op('lungs')} filter={glow('lungs')}>
         <path
-          d="M-70 0 A70 70 0 0 1 70 0"
+          d="M116 40 V78 M116 78 L102 92 M116 78 L130 92"
+          stroke="#b88a8a"
+          strokeWidth={5}
           fill="none"
-          stroke={C.edge}
-          strokeWidth={12}
           strokeLinecap="round"
         />
+        <path d={LUNG} fill="#e9a5a5" stroke={C.outline} strokeWidth={1.4} />
         <path
-          d="M-70 0 A70 70 0 0 1 -35 -60.6"
-          fill="none"
-          stroke="var(--ix-solid-sodium)"
-          strokeWidth={12}
-          strokeLinecap="round"
-          opacity={0.7}
-        />
-        <path
-          d="M35 -60.6 A70 70 0 0 1 70 0"
-          fill="none"
-          stroke="var(--ix-solid-water)"
-          strokeWidth={12}
-          strokeLinecap="round"
-          opacity={0.7}
-        />
-        <g
-          style={{
-            transform: `rotate(${needle}deg)`,
-            transition: 'transform 1.2s cubic-bezier(.3,1.4,.5,1)',
-          }}
-        >
-          <path d="M0 0 L0 -58" stroke={C.ink} strokeWidth={3} strokeLinecap="round" />
-        </g>
-        <circle r={6} fill={C.ink} />
-        <text y={26} textAnchor="middle" fontSize={11} fontWeight={700} fill={C.ink}>
-          Effective arterial blood volume
-        </text>
-        <text x={-92} y={4} textAnchor="middle" fontSize={10} fill={C.muted}>
-          low
-        </text>
-        <text x={92} y={4} textAnchor="middle" fontSize={10} fill={C.muted}>
-          high
-        </text>
-      </g>
-
-      {/* Liver */}
-      <Station x={AT.liver} y={20} label="Liver" lit={p === 2}>
-        <path
-          d="M140 50 C150 28 238 22 250 40 C258 54 232 74 196 74 C164 74 134 66 140 50 Z"
-          fill="#c98a5a"
-          opacity={0.85}
-          stroke={C.outline}
-          strokeWidth={1.6}
-          filter={p === 2 ? `url(#${id}-glow)` : undefined}
-        />
-      </Station>
-
-      {/* Lungs, with ACE on the vessel lining */}
-      <Station x={AT.lungs} y={20} label="Lungs (ACE on vessel lining)" lit={p === 3}>
-        <g filter={p === 3 ? `url(#${id}-glow)` : undefined}>
-          <ellipse
-            cx={AT.lungs - 18}
-            cy={52}
-            rx={16}
-            ry={22}
-            fill="var(--ix-tint-pink)"
-            stroke={C.outline}
-            strokeWidth={1.6}
-          />
-          <ellipse
-            cx={AT.lungs + 18}
-            cy={52}
-            rx={16}
-            ry={22}
-            fill="var(--ix-tint-pink)"
-            stroke={C.outline}
-            strokeWidth={1.6}
-          />
-          <path d={`M${AT.lungs} 30 V74`} stroke={C.outline} strokeWidth={3} />
-        </g>
-        {[-30, -10, 10, 30].map((dx) => (
-          <path
-            key={dx}
-            d={`M${AT.lungs + dx} 86 l0 -6 m-4 -3 l4 3 l4 -3`}
-            stroke="var(--ix-solid-mustard)"
-            strokeWidth={2}
-            fill="none"
-          />
-        ))}
-      </Station>
-
-      {/* Heart */}
-      <Station x={AT.heart} y={20} label="Heart" lit={p === 7}>
-        <path
-          d={`M${AT.heart} 74 C${AT.heart - 34} 54 ${AT.heart - 30} 26 ${AT.heart - 12} 30 C${AT.heart - 4} 32 ${AT.heart} 38 ${AT.heart} 44 C${AT.heart} 38 ${AT.heart + 4} 32 ${AT.heart + 12} 30 C${AT.heart + 30} 26 ${AT.heart + 34} 54 ${AT.heart} 74 Z`}
-          fill="var(--ix-solid-pink)"
-          opacity={0.75}
-          stroke={C.outline}
-          strokeWidth={1.6}
-          className={p === 7 ? 'rs-stretch' : undefined}
-          filter={p === 7 ? `url(#${id}-glow)` : undefined}
-        />
-      </Station>
-
-      {/* Kidney: afferent arteriole and JG cells */}
-      <Station x={AT.jg} y={420} label="Kidney: JG cells" lit={p <= 1}>
-        <path
-          d="M104 372 C100 342 130 336 150 344 C172 336 200 342 196 372 C192 404 160 410 150 396 C140 410 108 404 104 372 Z"
-          fill="#b4646e"
-          opacity={0.8}
-          stroke={C.outline}
-          strokeWidth={1.6}
-        />
-        <rect
-          x={AT.jg - 7}
-          y={330}
-          width={14}
-          height={22}
-          fill="var(--ix-tint-pink)"
+          d={LUNG}
+          transform="translate(232 0) scale(-1 1)"
+          fill="#e9a5a5"
           stroke={C.outline}
           strokeWidth={1.4}
         />
-        <g filter={p <= 1 ? `url(#${id}-glow)` : undefined}>
-          {[336, 346].map((y) =>
-            [-11, 11].map((dx) => (
-              <circle
-                key={`${y}${dx}`}
-                cx={AT.jg + dx}
-                cy={y}
-                r={4.5}
-                fill="#8f6bc0"
-                stroke={C.outline}
-                strokeWidth={0.8}
-                className={p === 0 ? 'rs-pulse' : undefined}
-              />
-            )),
-          )}
+      </g>
+      {/* heart, between the lungs, to the patient's left */}
+      <g style={op('heart')} filter={glow('heart')}>
+        <g className={lit('heart') ? 'rs-beat' : undefined}>
+          <path
+            d="M126 188 C108 176 100 156 108 142 C114 132 126 134 130 142 C134 132 148 130 154 140 C162 156 148 178 126 188 Z"
+            fill="#c4454f"
+            stroke={C.outline}
+            strokeWidth={1.4}
+          />
+          <path
+            d="M128 138 C128 126 134 120 142 118"
+            stroke="#c4454f"
+            strokeWidth={5}
+            fill="none"
+            strokeLinecap="round"
+          />
         </g>
-      </Station>
-
-      {/* Adrenal cortex */}
-      <Station x={AT.adrenal} y={420} label="Adrenal cortex" lit={p === 4}>
+      </g>
+      {/* liver, on the patient's right (viewer's left) */}
+      <g style={op('liver')} filter={glow('liver')}>
         <path
-          d={`M${AT.adrenal - 34} 392 L${AT.adrenal} 336 L${AT.adrenal + 34} 392 Z`}
-          fill="var(--ix-solid-mustard)"
-          opacity={0.75}
+          d="M44 214 C50 196 92 192 132 196 C160 198 180 200 176 210 C172 220 150 226 128 234 C100 244 64 248 50 238 C42 232 40 222 44 214 Z"
+          fill="#9c5a3c"
           stroke={C.outline}
-          strokeWidth={1.6}
-          strokeLinejoin="round"
-          filter={p === 4 ? `url(#${id}-glow)` : undefined}
+          strokeWidth={1.4}
         />
         <path
-          d={`M${AT.adrenal - 40} 400 Q${AT.adrenal} 384 ${AT.adrenal + 40} 400`}
-          stroke="#b4646e"
-          strokeWidth={8}
+          d="M112 200 C114 214 112 228 106 240"
+          stroke="#7d4630"
+          strokeWidth={1.4}
           fill="none"
-          strokeLinecap="round"
-          opacity={0.7}
         />
-      </Station>
+      </g>
+      {/* kidneys, with the adrenal glands on top */}
+      {[0, 1].map((side) => (
+        <g key={side} transform={side ? 'translate(232 0) scale(-1 1)' : undefined}>
+          <g style={op('kidney')} filter={glow('kidney')}>
+            <path d={KIDNEY} fill="#b4646e" stroke={C.outline} strokeWidth={1.4} />
+            <path
+              d="M96 300 C104 306 108 330 110 360"
+              stroke="#d9c26a"
+              strokeWidth={3}
+              fill="none"
+            />
+          </g>
+          <g style={op('adrenal')} filter={glow('adrenal')}>
+            <path d={ADRENAL} fill="var(--ix-solid-mustard)" stroke={C.outline} strokeWidth={1.2} />
+          </g>
+        </g>
+      ))}
+      <text x={116} y={432} textAnchor="middle" fontSize={11} fontWeight={700} fill={C.ink}>
+        {WHERE[p]}
+      </text>
+    </g>
+  );
+}
 
-      {/* Collecting duct: one principal cell between blood (top) and urine (bottom) */}
-      <Station x={AT.duct} y={420} label="Collecting duct cell" lit={p >= 5 && p <= 7}>
+/* ---------- Stage: one close-up per step (about 520 × 420) ---------- */
+
+/** The afferent arteriole, cut lengthways, with JG cells in its wall. */
+function Arteriole({ p, move }: { p: number; move: boolean }) {
+  const rbcs = p === 0 ? [60, 210, 380] : [60, 160, 260, 360, 460];
+  return (
+    <g>
+      <rect
+        x={20}
+        y={110}
+        width={480}
+        height={170}
+        rx={20}
+        fill="var(--ix-tint-pink)"
+        stroke={C.outline}
+        strokeWidth={2}
+      />
+      <rect x={20} y={110} width={480} height={26} fill="#e8c6c6" />
+      <rect x={20} y={254} width={480} height={26} fill="#e8c6c6" />
+      {[300, 344, 388].map((x) => (
+        <g key={x} className={p === 0 ? 'rs-pulse' : undefined}>
+          <rect
+            x={x}
+            y={102}
+            width={40}
+            height={40}
+            rx={12}
+            fill={S.jg}
+            stroke={C.outline}
+            strokeWidth={1.4}
+          />
+          {[8, 20, 32].map((d) => (
+            <circle key={d} cx={x + d} cy={128 - (d % 16)} r={3} fill="#d9c8f0" />
+          ))}
+        </g>
+      ))}
+      <Tag x={344} y={90}>
+        JG cells (renin granules)
+      </Tag>
+      <Sub x={60} y={302}>
+        Afferent arteriole, cut lengthways: blood flows left to right
+      </Sub>
+      {rbcs.map((x, i) =>
+        move ? (
+          <Flow key={i} dx={60} dy={0} delay={i * 0.4} dur={p === 0 ? 4 : 2.4}>
+            <Rbc x={x} y={196 + ((i * 23) % 40) - 20} />
+          </Flow>
+        ) : (
+          <Rbc key={i} x={x} y={196} />
+        ),
+      )}
+    </g>
+  );
+}
+
+function StepEabv({ id, move }: { id: string; move: boolean }) {
+  return (
+    <g>
+      <Arteriole p={0} move={move} />
+      <Arrow d="M150 60 V96" id={id} accent />
+      <Arrow d="M40 340 V292" id={id} accent />
+      <Tag x={164} y={70}>
+        Less pressure, less stretch
+      </Tag>
+      <Sub x={164} y={86}>
+        the JG cells sense it
+      </Sub>
+      <Gauge x={460} y={372} level="low" />
+    </g>
+  );
+}
+
+function StepRenin({ move }: { move: boolean }) {
+  return (
+    <g>
+      <Arteriole p={1} move={move} />
+      {[312, 356, 400].map((x, i) => (
+        <Flow key={x} dx={70} dy={70} delay={i * 0.6} dur={2.6}>
+          <g transform={`translate(${x + 8} 150)`}>
+            <Renin s={0.8} />
+          </g>
+        </Flow>
+      ))}
+      <Tag x={30} y={60}>
+        Renin is released into the blood
+      </Tag>
+      <Sub x={30} y={78}>
+        and carried away in the circulation
+      </Sub>
+    </g>
+  );
+}
+
+function StepAngI() {
+  return (
+    <g>
+      <rect
+        x={10}
+        y={60}
+        width={500}
+        height={300}
+        rx={24}
+        fill="var(--ix-tint-pink)"
+        opacity={0.6}
+      />
+      <path
+        d="M70 210 C60 170 90 140 130 146 C170 140 200 164 196 200 C202 240 170 268 128 262 C88 266 62 246 70 210 Z"
+        fill="var(--ix-tint-mustard)"
+        stroke={C.outline}
+        strokeWidth={1.8}
+      />
+      <Tag x={130} y={300} anchor="middle">
+        Angiotensinogen
+      </Tag>
+      <Sub x={130} y={316} anchor="middle">
+        made by the liver
+      </Sub>
+      <g className="rs-free">
+        <g transform="translate(210 204)">
+          <Beads n={10} fill={S.angI} />
+        </g>
+      </g>
+      <g className="rs-cut">
+        <g transform="translate(205 160)">
+          <Renin s={1.3} />
+        </g>
+      </g>
+      <Tag x={230} y={130}>
+        Renin cuts here
+      </Tag>
+      <Tag x={330} y={246} anchor="middle">
+        Angiotensin I
+      </Tag>
+      <Sub x={330} y={262} anchor="middle">
+        10 amino acids, released
+      </Sub>
+    </g>
+  );
+}
+
+function StepAngII() {
+  return (
+    <g>
+      <rect
+        x={10}
+        y={40}
+        width={500}
+        height={250}
+        rx={24}
+        fill="var(--ix-tint-pink)"
+        opacity={0.6}
+      />
+      <rect
+        x={10}
+        y={290}
+        width={500}
+        height={60}
+        rx={14}
+        fill="#f1d9cf"
+        stroke={C.outline}
+        strokeWidth={1.6}
+      />
+      {[50, 150, 250, 350, 450].map((x) => (
+        <ellipse key={x} cx={x} cy={322} rx={22} ry={10} fill="#d6a99a" />
+      ))}
+      {[120, 300].map((x) => (
+        <g key={x} transform={`translate(${x} 290)`}>
+          <path
+            d="M0 0 V-26 M0 -26 L-12 -40 M0 -26 L12 -40"
+            stroke="var(--ix-solid-mustard)"
+            strokeWidth={6}
+            strokeLinecap="round"
+            fill="none"
+          />
+        </g>
+      ))}
+      <Sub x={20} y={372}>
+        Lining of a blood vessel: ACE sits on its surface (much of it in the lungs)
+      </Sub>
+      <Tag x={160} y={212}>
+        ACE clips two off
+      </Tag>
+      <g className="rs-fade">
+        <g transform="translate(130 234)">
+          <Beads n={10} fill={S.angI} snip={2} />
+        </g>
+      </g>
+      <g className="rs-free2">
+        <g transform="translate(130 160)">
+          <Beads n={8} fill={S.angII} />
+        </g>
+      </g>
+      <Tag x={130} y={136}>
+        Angiotensin II (8 amino acids)
+      </Tag>
+      <g className="rs-pop">
         <rect
-          x={AT.duct - 40}
-          y={336}
-          width={80}
-          height={42}
-          rx={10}
-          fill="var(--ix-node)"
+          x={340}
+          y={56}
+          width={160}
+          height={28}
+          rx={14}
+          fill="var(--ix-tint-sodium)"
           stroke={C.outline}
-          strokeWidth={1.6}
-          filter={p === 5 || p === 6 ? `url(#${id}-glow)` : undefined}
         />
+        <Tag x={420} y={75} anchor="middle">
+          vessels constrict
+        </Tag>
         <rect
-          x={AT.duct - 52}
-          y={382}
-          width={104}
-          height={20}
-          rx={10}
+          x={340}
+          y={92}
+          width={160}
+          height={28}
+          rx={14}
+          fill="var(--ix-tint-water)"
+          stroke={C.outline}
+        />
+        <Tag x={420} y={111} anchor="middle">
+          thirst and ADH
+        </Tag>
+        <rect
+          x={340}
+          y={128}
+          width={160}
+          height={28}
+          rx={14}
+          fill="var(--ix-tint-green)"
+          stroke={C.outline}
+        />
+        <Tag x={420} y={147} anchor="middle">
+          aldosterone (next)
+        </Tag>
+      </g>
+    </g>
+  );
+}
+
+function StepAldo() {
+  return (
+    <g>
+      <g transform="translate(60 0)">
+        <path
+          d="M60 120 C80 70 250 60 300 100 C340 130 336 300 296 330 C250 364 90 360 64 320 C40 280 44 160 60 120 Z"
           fill="var(--ix-tint-mustard)"
+          stroke={C.outline}
+          strokeWidth={2}
+        />
+        <circle cx={180} cy={220} r={34} fill="#e6d3a0" stroke={C.outline} strokeWidth={1.4} />
+        <Tag x={180} y={384} anchor="middle">
+          Adrenal cortex cell
+        </Tag>
+        <path
+          d="M58 200 h-12 M58 230 h-12"
+          stroke={C.outline}
+          strokeWidth={4}
+          strokeLinecap="round"
+        />
+      </g>
+      {[0, 1].map((i) => (
+        <Flow key={i} dx={22} dy={0} delay={i * 1.1} dur={2.2}>
+          <g transform={`translate(4 ${200 + i * 30})`}>
+            <Beads n={8} fill={S.angII} r={4.5} gap={10} />
+          </g>
+        </Flow>
+      ))}
+      <Sub x={6} y={180}>
+        angiotensin II binds
+      </Sub>
+      {[0, 1, 2, 3].map((i) => (
+        <Flow key={i} dx={110} dy={(i - 1.5) * 40} delay={i * 0.55} dur={2.6}>
+          <g transform="translate(340 220)">
+            <Hex s={1.3} />
+          </g>
+        </Flow>
+      ))}
+      <Tag x={512} y={140} anchor="end">
+        Aldosterone
+      </Tag>
+      <Tag x={512} y={156} anchor="end">
+        released
+      </Tag>
+    </g>
+  );
+}
+
+/** A collecting-duct principal cell: blood on the left, urine on the right. */
+function DuctCell({ p }: { p: number }) {
+  const on = p >= 5;
+  return (
+    <g>
+      <rect
+        x={10}
+        y={40}
+        width={110}
+        height={320}
+        rx={16}
+        fill="var(--ix-tint-pink)"
+        opacity={0.7}
+      />
+      <Tag x={65} y={30} anchor="middle">
+        Blood
+      </Tag>
+      <rect
+        x={400}
+        y={40}
+        width={110}
+        height={320}
+        rx={16}
+        fill="var(--ix-tint-mustard)"
+        opacity={0.7}
+      />
+      <Tag x={455} y={30} anchor="middle">
+        Urine
+      </Tag>
+      <rect
+        x={130}
+        y={60}
+        width={260}
+        height={280}
+        rx={28}
+        fill="var(--ix-node)"
+        stroke={C.outline}
+        strokeWidth={2}
+      />
+      <circle cx={250} cy={200} r={42} fill="#d9d4ec" stroke={C.outline} strokeWidth={1.4} />
+      <Sub x={250} y={258} anchor="middle">
+        nucleus
+      </Sub>
+      <Tag x={260} y={384} anchor="middle">
+        Principal cell of the collecting duct
+      </Tag>
+      {on &&
+        [110, 170, 230, 290].map((y) => (
+          <g key={y} className="rs-pop">
+            <rect
+              x={384}
+              y={y - 12}
+              width={14}
+              height={24}
+              rx={4}
+              fill={S.angII}
+              stroke={C.outline}
+            />
+          </g>
+        ))}
+      {on && (
+        <Tag x={392} y={84} anchor="middle">
+          ENaC
+        </Tag>
+      )}
+      {[140, 260].map((y) => (
+        <circle
+          key={y}
+          cx={130}
+          cy={y}
+          r={12}
+          fill="#c9b6e6"
           stroke={C.outline}
           strokeWidth={1.2}
         />
-        <text x={AT.duct + 60} y={396} fontSize={10} fill={C.muted}>
-          urine
-        </text>
-        {p >= 5 &&
-          [-24, -8, 8, 24].map((dx) => (
-            <rect
-              key={dx}
-              x={AT.duct + dx - 3}
-              y={372}
-              width={6}
-              height={10}
-              rx={2}
-              fill={S.angII}
-              className="rs-pop"
-            />
-          ))}
-        {p >= 5 && (
-          <text
-            x={AT.duct - 60}
-            y={376}
-            textAnchor="end"
-            fontSize={10}
-            fontWeight={700}
-            fill={C.ink}
-          >
-            ENaC
-          </text>
-        )}
-      </Station>
+      ))}
+      <Sub x={146} y={300}>
+        Na⁺/K⁺ pump
+      </Sub>
+    </g>
+  );
+}
 
-      {/* ---------- Step animations ---------- */}
-
-      {p === 0 && (
-        <g>
-          <Arrow d={`M${AT.jg} 270 V300`} id={id} accent />
-          <text x={AT.jg + 14} y={286} fontSize={10} fontWeight={700} fill={C.ink}>
-            less pressure
-          </text>
-        </g>
-      )}
-
-      {p === 1 && move && (
-        <Travel path={LEG.jgToLiver} n={4} dur={4}>
-          <Renin />
-        </Travel>
-      )}
-
-      {p === 2 && (
-        <g>
-          {/* angiotensinogen leaves the liver; renin cuts it */}
-          <g transform={`translate(${AT.liver + 14} 96)`}>
-            <Chain n={14} fill={S.chain} fade={4} />
-            <g transform="translate(18 -2)" className="rs-cut">
-              <Renin />
-            </g>
+function StepEnac() {
+  return (
+    <g>
+      <DuctCell p={5} />
+      {[0, 1, 2].map((i) => (
+        <Flow key={i} dx={130} dy={(1 - i) * 30} delay={i * 0.7} dur={2.4}>
+          <g transform={`translate(70 ${170 + i * 30})`}>
+            <Hex />
           </g>
-          {move && (
-            <Travel path={LEG.liverToLungs} n={3} dur={3.6}>
-              <Chain n={10} fill={S.chain} />
-            </Travel>
-          )}
-        </g>
-      )}
+        </Flow>
+      ))}
+      <Sub x={20} y={140}>
+        aldosterone enters
+      </Sub>
+    </g>
+  );
+}
 
-      {p === 3 && (
-        <g>
-          <g transform={`translate(${AT.lungs} 96)`}>
-            <Chain n={10} fill={S.chain} fade={2} />
+function StepSodium() {
+  return (
+    <g>
+      <DuctCell p={6} />
+      {[110, 170, 230, 290].map((y, i) => (
+        <Flow key={`na${y}`} dx={-370} dy={0} delay={i * 0.5} dur={3}>
+          <Ion x={460} y={y} fill="var(--ix-solid-sodium)" r={7} />
+        </Flow>
+      ))}
+      {[150, 250].map((y, i) => (
+        <Flow key={`k${y}`} dx={370} dy={0} delay={i * 0.9 + 0.4} dur={3}>
+          <Ion x={70} y={y} fill={S.k} r={6} />
+        </Flow>
+      ))}
+      {[200, 320].map((y, i) => (
+        <Flow key={`w${y}`} dx={-370} dy={0} delay={i * 1.1 + 0.8} dur={3.4}>
+          <Droplet x={460} y={y} s={1} />
+        </Flow>
+      ))}
+      <g transform="translate(150 404)">
+        <Ion x={0} y={-4} fill="var(--ix-solid-sodium)" r={6} />
+        <Sub x={12} y={0}>
+          Na⁺ kept
+        </Sub>
+        <Ion x={90} y={-4} fill={S.k} r={6} />
+        <Sub x={102} y={0}>
+          K⁺ out
+        </Sub>
+        <Droplet x={176} y={-4} s={0.8} />
+        <Sub x={188} y={0}>
+          water follows
+        </Sub>
+      </g>
+    </g>
+  );
+}
+
+function StepCounter() {
+  return (
+    <g>
+      <g className="rs-stretch">
+        <path
+          d="M130 300 C70 262 50 196 74 160 C92 134 124 138 134 160 C144 134 182 128 198 154 C222 196 190 262 130 300 Z"
+          fill="#c4454f"
+          stroke={C.outline}
+          strokeWidth={2}
+        />
+      </g>
+      <Tag x={130} y={330} anchor="middle">
+        Stretched heart
+      </Tag>
+      {[0, 1, 2, 3].map((i) => (
+        <Flow key={i} dx={180} dy={(i - 1.5) * 18} delay={i * 0.5} dur={2.6}>
+          <g transform="translate(200 210)">
+            <Diamond s={1.3} />
           </g>
-          {move && (
-            <Travel path={LEG.lungsToAdrenal} n={4} dur={5}>
-              <Chain n={8} fill={S.angII} />
-            </Travel>
-          )}
-          <g className="rs-pop">
-            <rect
-              x={500}
-              y={124}
-              width={150}
-              height={22}
-              rx={11}
-              fill="var(--ix-tint-sodium)"
-              stroke={C.outline}
-            />
-            <text x={575} y={139} textAnchor="middle" fontSize={10} fontWeight={700} fill={C.ink}>
-              vessels constrict
-            </text>
-            <rect
-              x={500}
-              y={152}
-              width={150}
-              height={22}
-              rx={11}
-              fill="var(--ix-tint-water)"
-              stroke={C.outline}
-            />
-            <text x={575} y={167} textAnchor="middle" fontSize={10} fontWeight={700} fill={C.ink}>
-              thirst and ADH
-            </text>
-          </g>
-        </g>
-      )}
+        </Flow>
+      ))}
+      <Tag x={290} y={150} anchor="middle">
+        ANP and BNP
+      </Tag>
+      <path
+        d="M420 140 C396 138 380 166 380 200 C380 240 398 270 424 268 C442 266 446 248 438 234 C432 224 432 210 438 200 C448 186 446 142 420 140 Z"
+        fill="#b4646e"
+        stroke={C.outline}
+        strokeWidth={2}
+      />
+      {[0, 1, 2].map((i) => (
+        <Flow key={i} dx={0} dy={90} delay={i * 0.6} dur={2.4}>
+          <Ion x={430 + (i - 1) * 12} y={276} fill="var(--ix-solid-sodium)" r={6} />
+        </Flow>
+      ))}
+      <Tag x={414} y={120} anchor="middle">
+        Kidney excretes sodium
+      </Tag>
+    </g>
+  );
+}
 
-      {p === 4 && (
-        <g>
-          <g transform={`translate(${AT.adrenal + 40} 320)`}>
-            <Chain n={8} fill={S.angII} />
-          </g>
-          {move && (
-            <Travel path={LEG.adrenalToDuct} n={4} dur={3.4}>
-              <Hex fill={S.aldo} />
-            </Travel>
-          )}
-        </g>
-      )}
-
-      {p === 5 && (
-        <g>
-          {[-20, 0, 20].map((dx, i) => (
-            <g key={dx} className="ix-flow" style={flow(0, 22, i * 0.5, 1.8)}>
-              <g transform={`translate(${AT.duct + dx} 318)`}>
-                <Hex fill={S.aldo} />
-              </g>
-            </g>
-          ))}
-        </g>
-      )}
-
-      {p === 6 && (
-        <g>
-          {[-24, -8, 8, 24].map((dx, i) => (
-            <g key={`na${dx}`} className="ix-flow" style={flow(0, -64, i * 0.45, 2.2)}>
-              <Ion x={AT.duct + dx} y={392} fill="var(--ix-solid-sodium)" r={4.5} />
-            </g>
-          ))}
-          {[-16, 16].map((dx, i) => (
-            <g key={`k${dx}`} className="ix-flow" style={flow(0, 60, i * 0.9 + 0.4, 2.4)}>
-              <Ion x={AT.duct + dx} y={330} fill="var(--ix-solid-potassium)" r={4} />
-            </g>
-          ))}
-          {[-34, 34].map((dx, i) => (
-            <g key={`w${dx}`} className="ix-flow" style={flow(0, -60, i * 0.7 + 0.8, 2.4)}>
-              <Droplet x={AT.duct + dx} y={394} s={0.7} />
-            </g>
-          ))}
-          <text x={AT.duct + 50} y={348} fontSize={10} fontWeight={700} fill={C.ink}>
-            Na⁺ in, K⁺ out
-          </text>
-        </g>
-      )}
-
-      {p === 7 && (
-        <g>
-          {move && (
-            <Travel path={LEG.heartToDuct} n={4} dur={4.4}>
-              <Diamond />
-            </Travel>
-          )}
-          {[-20, 0, 20].map((dx, i) => (
-            <g key={`out${dx}`} className="ix-flow" style={flow(0, 52, i * 0.5, 2.2)}>
-              <Ion x={AT.duct + dx} y={340} fill="var(--ix-solid-sodium)" r={4.5} />
-            </g>
-          ))}
-          <text x={AT.duct + 50} y={348} fontSize={10} fontWeight={700} fill={C.ink}>
-            sodium let go
-          </text>
-        </g>
-      )}
+function Stage({ id, p, move }: { id: string; p: number; move: boolean }) {
+  const level = p === 6 ? 'normal' : p === 7 ? 'high' : 'low';
+  return (
+    <g key={p} className="rs-stage">
+      {p === 0 && <StepEabv id={id} move={move} />}
+      {p === 1 && <StepRenin move={move} />}
+      {p === 2 && <StepAngI />}
+      {p === 3 && <StepAngII />}
+      {p === 4 && <StepAldo />}
+      {p === 5 && <StepEnac />}
+      {p === 6 && <StepSodium />}
+      {p === 7 && <StepCounter />}
+      {p > 0 && <Gauge x={470} y={404} level={level} />}
     </g>
   );
 }
 
 function Legend() {
   const items: [ReactNode, string][] = [
-    [<Renin key="r" />, 'renin'],
-    [<Chain key="c" n={4} fill={S.chain} />, 'angiotensinogen, angiotensin I'],
-    [<Chain key="a" n={4} fill={S.angII} />, 'angiotensin II'],
-    [<Hex key="h" fill={S.aldo} />, 'aldosterone'],
-    [<Diamond key="d" />, 'ANP, BNP'],
+    [<Renin key="r" s={0.55} />, 'renin'],
+    [
+      <g key="c" transform="translate(-12 0)">
+        <Beads n={3} fill={S.angI} r={5} gap={12} />
+      </g>,
+      'angiotensin I',
+    ],
+    [
+      <g key="a" transform="translate(-12 0)">
+        <Beads n={3} fill={S.angII} r={5} gap={12} />
+      </g>,
+      'angiotensin II',
+    ],
+    [<Hex key="h" s={0.75} />, 'aldosterone'],
+    [<Diamond key="d" s={0.8} />, 'ANP, BNP'],
   ];
   return (
     <ul className="ix-legend rs-legend">
       {items.map(([g, t]) => (
         <li key={t}>
-          <svg width="34" height="18" viewBox="-17 -9 34 18" aria-hidden="true">
+          <svg width="40" height="22" viewBox="-20 -11 40 22" aria-hidden="true">
             {g}
           </svg>
           {t}
@@ -620,31 +863,68 @@ function Legend() {
   );
 }
 
+function Glow({ id }: { id: string }) {
+  return (
+    <defs>
+      <filter id={`${id}-glow`} x="-60%" y="-60%" width="220%" height="220%">
+        <feDropShadow
+          dx="0"
+          dy="0"
+          stdDeviation="5"
+          floodColor="var(--ix-accent)"
+          floodOpacity="0.75"
+        />
+      </filter>
+    </defs>
+  );
+}
+
 export function RaasCascade() {
   const s = useSteps(PHASES.length, 4200);
   const p = s.step;
-  const reduced = useReducedMotion();
-  const wide: Layout = { w: 760, h: 430, draw: (id) => <Scene id={id} p={p} reduced={reduced} /> };
-  const [fx, fy] = FOCUS[p];
+  const move = !useReducedMotion();
+  const wide: Layout = {
+    w: 780,
+    h: 444,
+    draw: (id) => (
+      <g>
+        <Glow id={id} />
+        <BodyMap id={id} p={p} />
+        <line
+          x1={246}
+          y1={20}
+          x2={246}
+          y2={420}
+          stroke={C.edge}
+          strokeWidth={1.4}
+          strokeDasharray="4 5"
+        />
+        <g transform="translate(258 8)">
+          <Stage id={id} p={p} move={move} />
+        </g>
+      </g>
+    ),
+  };
   const narrow: Layout = {
     w: 360,
-    h: 300,
+    h: 484,
     draw: (id) => (
-      <g
-        style={{
-          transform: `translate(${180 - fx}px, ${150 - fy}px)`,
-          transition: 'transform 0.9s ease',
-        }}
-      >
-        <Scene id={id} p={p} reduced={reduced} />
+      <g>
+        <Glow id={id} />
+        <g transform="translate(131 0) scale(0.42)">
+          <BodyMap id={id} p={p} />
+        </g>
+        <g transform="translate(2 190) scale(0.685)">
+          <Stage id={id} p={p} move={move} />
+        </g>
       </g>
     ),
   };
   return (
     <Frame
       title="A fall in effective arterial blood volume sets off a cascade that ends with the kidney keeping sodium"
-      keyText="The loop is the circulation, and blood flows clockwise around it. Each step lights up the organ that acts and shows what it sends into the blood."
-      note="Teaching model: positions are schematic. Step through, or press Play to run it."
+      keyText="Left: where each step happens. Right: the step itself, close up."
+      note="Teaching model: shapes are schematic and not to scale. Step through, or press Play to run it."
       wide
     >
       <StepControls labels={PHASES} {...s} />
