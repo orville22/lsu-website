@@ -7,6 +7,11 @@ import { Fragment, type ReactNode } from 'react';
  * Blocks (one per line):
  *   - item / * item      bulleted list
  *   1. item              numbered list
+ *   *Answer:* …          answer to a practice question, hidden behind a
+ *   *Model answer:* …    "Check answer" button; following plain paragraphs
+ *                        (not starting with **) belong to the same answer;
+ *                        a paragraph ending "*Answer: …*" (quick checks) is
+ *                        split the same way
  *   any other line       paragraph
  *
  * Inline:
@@ -71,13 +76,35 @@ export function renderInline(text: string): ReactNode[] {
   return out;
 }
 
-type Chunk = { kind: 'p'; text: string } | { kind: 'ul' | 'ol'; items: string[] };
+type Chunk =
+  | { kind: 'p'; text: string }
+  | { kind: 'ul' | 'ol'; items: string[] }
+  | { kind: 'answer'; label: string; paras: string[] };
+
+const answerLine = /^\*(Answer|Model answer):\*\s*(.*)$/;
 
 export function parseBlocks(text: string): Chunk[] {
   const chunks: Chunk[] = [];
   for (const raw of text.split(/\r?\n/)) {
     const line = raw.trim();
     if (!line) continue;
+    // An inline quick-check answer at the end of a paragraph: "… *Answer: …*"
+    const inline = /^(.*\S)\s+\*Answer:\s+(.+)\*$/.exec(line);
+    if (inline && !inline[2].includes('*')) {
+      chunks.push({ kind: 'p', text: inline[1] });
+      chunks.push({ kind: 'answer', label: 'Answer', paras: [inline[2]] });
+      continue;
+    }
+    const answer = answerLine.exec(line);
+    if (answer) {
+      chunks.push({ kind: 'answer', label: answer[1], paras: [answer[2]] });
+      continue;
+    }
+    const prev0 = chunks.at(-1);
+    if (prev0?.kind === 'answer' && !/^([-*]\s|\d+[.)]\s|\*\*)/.test(line)) {
+      prev0.paras.push(line);
+      continue;
+    }
     const bullet = /^[-*]\s+(.*)$/.exec(line);
     const numbered = /^\d+[.)]\s+(.*)$/.exec(line);
     const kind = bullet ? 'ul' : numbered ? 'ol' : 'p';
@@ -97,6 +124,21 @@ export function RichText({ text }: { text: string }) {
       {parseBlocks(text).map((c, i) =>
         c.kind === 'p' ? (
           <p key={i}>{renderInline(c.text)}</p>
+        ) : c.kind === 'answer' ? (
+          <details key={i} className="answer-reveal">
+            <summary>
+              <span className="answer-show">Check answer</span>
+              <span className="answer-hide">Hide answer</span>
+            </summary>
+            <div className="answer-body">
+              {c.paras.map((t, j) => (
+                <p key={j}>
+                  {j === 0 && <strong className="answer-label">{c.label}: </strong>}
+                  {renderInline(t)}
+                </p>
+              ))}
+            </div>
+          </details>
         ) : c.kind === 'ul' ? (
           <ul key={i}>
             {c.items.map((item, j) => (

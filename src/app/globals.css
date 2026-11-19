@@ -3168,3 +3168,59 @@ th {
     bottom: 30px;
   }
 }
+
+/* Practice answers hidden behind a "Check answer" button */
+.answer-reveal {
+  margin: var(--space-3) 0 var(--space-6);
+}
+.answer-reveal > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 40px;
+  padding: var(--space-2) var(--space-5);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  list-style: none;
+  transition:
+    background var(--motion-fast),
+    border-color var(--motion-fast);
+}
+.answer-reveal > summary::-webkit-details-marker {
+  display: none;
+}
+.answer-reveal > summary::before {
+  content: '▸';
+  transition: transform var(--motion-fast);
+}
+.answer-reveal[open] > summary::before {
+  transform: rotate(90deg);
+}
+.answer-reveal > summary:hover {
+  border-color: var(--action);
+}
+.answer-reveal .answer-hide,
+.answer-reveal[open] .answer-show {
+  display: none;
+}
+.answer-reveal[open] .answer-hide {
+  display: inline;
+}
+.answer-body {
+  margin-top: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-left: 4px solid var(--action);
+  border-radius: var(--radius-small);
+  background: var(--surface);
+}
+.answer-body p {
+  margin: 0;
+}
+.answer-body p + p {
+  margin-top: var(--space-3);
+}
