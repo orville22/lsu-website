@@ -788,3 +788,89 @@
   font-size: var(--text-caption);
   line-height: 1.4;
 }
+
+/* RAAS scene */
+.rs-dim {
+  opacity: 0.55;
+  transition: opacity 0.5s ease;
+}
+.rs-lit {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+.rs-pulse {
+  animation: rs-pulse 1.4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes rs-pulse {
+  50% {
+    transform: scale(1.35);
+  }
+}
+.rs-stretch {
+  animation: rs-stretch 1.8s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes rs-stretch {
+  50% {
+    transform: scale(1.12);
+  }
+}
+.rs-snip {
+  animation: rs-snip 2.4s ease-in infinite;
+}
+@keyframes rs-snip {
+  0%,
+  45% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(10px, -14px);
+  }
+}
+.rs-cut {
+  animation: rs-cut 2.4s ease-in-out infinite;
+}
+@keyframes rs-cut {
+  0% {
+    transform: translate(18px, -16px);
+  }
+  40%,
+  100% {
+    transform: translate(18px, -2px);
+  }
+}
+.rs-pop {
+  animation: rs-pop 0.6s ease-out both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes rs-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+.rs-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+}
+.rs-legend li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+@media (prefers-reduced-motion: reduce) {
+  .rs-pulse,
+  .rs-stretch,
+  .rs-snip,
+  .rs-cut,
+  .rs-pop {
+    animation: none;
+  }
+}
