@@ -919,6 +919,17 @@
     transform: scale(0.6);
   }
 }
+/* On phones the stage is drawn at about 0.63 scale and the body map at 0.39;
+   these sizes keep every label at 9 px or more on screen. */
+svg.ix-narrow .rs-tag {
+  font-size: 14.5px;
+}
+svg.ix-narrow .rs-sub {
+  font-size: 14.3px;
+}
+svg.ix-narrow .rs-where {
+  font-size: 23.5px;
+}
 .rs-legend {
   display: flex;
   flex-wrap: wrap;

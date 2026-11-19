@@ -70,6 +70,8 @@ const S = {
   jg: '#8f6bc0',
   rbc: '#c94f4f',
   k: '#7a62b3',
+  /* sodium is amber here so it can't be mistaken for the red cells */
+  na: '#e8a33d',
 };
 
 const flow = (dx: number, dy: number, delay: number, dur = 2.4) =>
@@ -189,7 +191,15 @@ function Tag({
   anchor?: Anchor;
 }) {
   return (
-    <text x={x} y={y} textAnchor={anchor} fontSize={13} fontWeight={700} fill={C.ink}>
+    <text
+      x={x}
+      y={y}
+      className="rs-tag"
+      textAnchor={anchor}
+      fontSize={13}
+      fontWeight={700}
+      fill={C.ink}
+    >
       {children}
     </text>
   );
@@ -206,7 +216,7 @@ function Sub({
   anchor?: Anchor;
 }) {
   return (
-    <text x={x} y={y} textAnchor={anchor} fontSize={11} fill={C.muted}>
+    <text x={x} y={y} className="rs-sub" textAnchor={anchor} fontSize={11} fill={C.muted}>
       {children}
     </text>
   );
@@ -247,7 +257,14 @@ function Gauge({ x, y, level }: { x: number; y: number; level: 'low' | 'normal' 
         <path d="M0 0 L0 -28" stroke={C.ink} strokeWidth={2.5} strokeLinecap="round" />
       </g>
       <circle r={4} fill={C.ink} />
-      <text y={16} textAnchor="middle" fontSize={10} fontWeight={700} fill={C.ink}>
+      <text
+        className="rs-sub"
+        y={16}
+        textAnchor="middle"
+        fontSize={10}
+        fontWeight={700}
+        fill={C.ink}
+      >
         EABV
       </text>
     </g>
@@ -342,7 +359,15 @@ function BodyMap({ id, p }: { id: string; p: number }) {
           </g>
         </g>
       ))}
-      <text x={116} y={432} textAnchor="middle" fontSize={11} fontWeight={700} fill={C.ink}>
+      <text
+        className="rs-where"
+        x={116}
+        y={432}
+        textAnchor="middle"
+        fontSize={11}
+        fontWeight={700}
+        fill={C.ink}
+      >
         {WHERE[p]}
       </text>
     </g>
@@ -526,7 +551,7 @@ function StepAngII() {
         </g>
       ))}
       <Sub x={20} y={372}>
-        Lining of a blood vessel: ACE sits on its surface (much of it in the lungs)
+        Vessel lining: ACE sits on its surface
       </Sub>
       <Tag x={160} y={212}>
         ACE clips two off
@@ -541,7 +566,7 @@ function StepAngII() {
           <Beads n={8} fill={S.angII} />
         </g>
       </g>
-      <Tag x={130} y={136}>
+      <Tag x={20} y={136}>
         Angiotensin II (8 amino acids)
       </Tag>
       <g className="rs-pop">
@@ -614,8 +639,11 @@ function StepAldo() {
           </g>
         </Flow>
       ))}
-      <Sub x={6} y={180}>
-        angiotensin II binds
+      <Sub x={6} y={258}>
+        angiotensin II
+      </Sub>
+      <Sub x={6} y={274}>
+        binds
       </Sub>
       {[0, 1, 2, 3].map((i) => (
         <Flow key={i} dx={110} dy={(i - 1.5) * 40} delay={i * 0.55} dur={2.6}>
@@ -728,8 +756,11 @@ function StepEnac() {
           </g>
         </Flow>
       ))}
-      <Sub x={20} y={140}>
-        aldosterone enters
+      <Sub x={16} y={124}>
+        aldosterone
+      </Sub>
+      <Sub x={16} y={140}>
+        enters
       </Sub>
     </g>
   );
@@ -741,7 +772,7 @@ function StepSodium() {
       <DuctCell p={6} />
       {[110, 170, 230, 290].map((y, i) => (
         <Flow key={`na${y}`} dx={-370} dy={0} delay={i * 0.5} dur={3}>
-          <Ion x={460} y={y} fill="var(--ix-solid-sodium)" r={7} />
+          <Ion x={460} y={y} fill={S.na} r={7} />
         </Flow>
       ))}
       {[150, 250].map((y, i) => (
@@ -754,8 +785,8 @@ function StepSodium() {
           <Droplet x={460} y={y} s={1} />
         </Flow>
       ))}
-      <g transform="translate(150 404)">
-        <Ion x={0} y={-4} fill="var(--ix-solid-sodium)" r={6} />
+      <g transform="translate(136 404)">
+        <Ion x={0} y={-4} fill={S.na} r={6} />
         <Sub x={12} y={0}>
           Na⁺ kept
         </Sub>
@@ -804,7 +835,7 @@ function StepCounter() {
       />
       {[0, 1, 2].map((i) => (
         <Flow key={i} dx={0} dy={90} delay={i * 0.6} dur={2.4}>
-          <Ion x={430 + (i - 1) * 12} y={276} fill="var(--ix-solid-sodium)" r={6} />
+          <Ion x={430 + (i - 1) * 12} y={276} fill={S.na} r={6} />
         </Flow>
       ))}
       <Tag x={414} y={120} anchor="middle">
