@@ -41,7 +41,7 @@ function draw(
 
 export function HeartFailure() {
   return (
-    <Frame title="One trigger, two results: oedema and a low sodium arrive together">
+    <Frame title="Low arterial filling causes both oedema and a low sodium">
       <Responsive
         name="heart-failure"
         label="In heart failure the kidney keeps sodium and even more water, so oedema and a low sodium arrive together"

@@ -51,12 +51,12 @@ const BRANCH: [string, string][] = [
 export function SpotUrine() {
   return (
     <Frame
-      title="Three questions read the spot urine; our patient lands on low arterial filling"
+      title="Three questions interpret the spot urine; this patient's results indicate low arterial filling"
       keyText="Shaded boxes are questions; cut-offs from the European hyponatraemia guideline."
     >
       <Responsive
         name="spot-urine"
-        label="Three questions read the spot urine; our patient lands on low effective arterial blood volume"
+        label="Three questions interpret the spot urine; this patient's results indicate low effective arterial blood volume"
         wide={{
           w: 760,
           h: 384,

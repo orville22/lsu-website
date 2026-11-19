@@ -56,10 +56,10 @@ export function TwoSystems() {
   const nW = 156;
   const narrowRows = [84, 194, 304, 414];
   return (
-    <Frame title="Two loops control the body, and low arterial filling overrides the water loop">
+    <Frame title="Two control systems, with low arterial filling overriding the water system">
       <Responsive
         name="two-systems"
-        label="Two loops control sodium and water, and low arterial filling overrides the water loop"
+        label="Two control systems for sodium and water, with low arterial filling overriding the water system"
         wide={{
           w: 760,
           h: 396,

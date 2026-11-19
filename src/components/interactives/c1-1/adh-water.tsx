@@ -19,7 +19,7 @@ const TEXT = [
   'Plasma becomes more concentrated, and ADH is released into the blood.',
   'ADH binds its V2 receptor on the blood side of the cell. A signal (cyclic AMP) runs into the cell.',
   'The signal moves the vesicles to the urine side, and aquaporin-2 channels are inserted into the membrane.',
-  'Water now crosses the cell and leaves through aquaporin-3 and -4, drawn by the salty medulla around the duct. The urine concentrates, up to about 1,200 mmol/kg. When ADH falls, the channels are taken back in.',
+  'Water now crosses the cell and leaves through aquaporin-3 and -4, drawn by the hypertonic medulla around the duct. The urine concentrates, up to about 1,200 mmol/kg. When ADH falls, the channels are taken back in.',
 ];
 
 const flow = (dx: number, dy: number, delay: number, dur = 2.6) =>
@@ -449,7 +449,7 @@ export function AdhWater() {
   };
   return (
     <Frame
-      title="ADH opens water channels, and the salty inner kidney pulls the water out"
+      title="ADH inserts aquaporin-2 channels, and the hypertonic medulla draws water out of the collecting duct"
       keyText="Left: the collecting duct runs down through the medulla, which gets saltier with depth. Right: one cell of the duct wall, close up. Blue blocks are water channels (aquaporins, AQP)."
       note="Teaching model, not to scale. It plays on a loop; pause it or tap a stage to hold it."
       wide

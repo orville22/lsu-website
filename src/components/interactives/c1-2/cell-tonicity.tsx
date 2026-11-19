@@ -228,7 +228,7 @@ export function CellTonicity() {
   return (
     <Frame
       title="Only particles that stay outside the cell pull water out of it"
-      keyText="Add 60 mmol/kg of one solute to the fluid around a cell. Grey dots are the particles already there; the coloured balls are what you added."
+      keyText="Add 60 mmol/kg of one solute to the fluid around a cell. Grey dots are the particles already there; the coloured dots are the added solute."
       note="Teaching model: the cell is treated as a simple osmometer, and its drawn area is in proportion to its water."
     >
       <div className="ix-choices" role="group" aria-label="Solute to add">

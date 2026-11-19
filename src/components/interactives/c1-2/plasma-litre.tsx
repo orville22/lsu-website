@@ -211,7 +211,7 @@ export function PlasmaLitre() {
   const l = readings(0.8);
   return (
     <Frame
-      title="Sodium lives in plasma water, so less water per litre can fool the main analyser"
+      title="Sodium is confined to plasma water, so a lower water fraction makes indirect ISE read falsely low"
       keyText="Each tube is one litre of plasma. Orange dots are sodium, dissolved only in the water; yellow is lipid and green is protein."
       note="Teaching model: the water holds 150 mmol of sodium per litre of water in both samples, and the high-lipid sample is about 80% water. Real samples vary."
     >

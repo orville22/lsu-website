@@ -28,7 +28,7 @@ export function interpret(units: number, water: number) {
     return 'Low result from both directions: sodium lost and water gained.';
   }
   if (units <= 14) return 'High result without any extra sodium: water has been lost.';
-  if (water >= 1) return 'High result from extra sodium on board.';
+  if (water >= 1) return 'High result from additional body sodium.';
   return 'High result from both directions: sodium gained and water lost.';
 }
 
@@ -111,7 +111,7 @@ export function ConcentrationBeaker() {
   const flagged = na < 135 || na > 145;
   return (
     <Frame
-      title="Add water and the sodium result falls, even with more sodium on board"
+      title="Adding water lowers the sodium concentration, even when total body sodium rises"
       keyText="Each orange dot is a unit of sodium; the blue fill is body water. Move the sliders or pick a preset."
       note="Toy model: the result is amount ÷ volume, set so that 14 units in normal water reads 140 mmol/L."
     >

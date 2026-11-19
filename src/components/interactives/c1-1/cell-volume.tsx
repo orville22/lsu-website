@@ -190,8 +190,8 @@ const narrow: Layout = {
 export function CellVolume() {
   return (
     <Frame
-      title="Water moves towards the more crowded side, so cells swell in dilute plasma and shrink in concentrated plasma"
-      keyText="Orange balls are particles dissolved in the plasma; yellow ones are held inside the cell. Arrows show which way water moves. The dashed ring is the cell's normal size."
+      title="Water moves towards the higher solute concentration, so cells swell in dilute plasma and shrink in concentrated plasma"
+      keyText="Orange dots are particles dissolved in the plasma; yellow ones are held inside the cell. Arrows show which way water moves. The dashed ring is the cell's normal size."
       note="Not to scale, and slowed down. The arrows show net water movement; water crosses the membrane in both directions all the time."
       wide
     >
