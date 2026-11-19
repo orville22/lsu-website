@@ -1193,6 +1193,15 @@ textarea.input {
   top: 120px;
   align-self: start;
   font-size: var(--text-caption);
+  /* Scrolls on its own when the contents list is taller than the screen. */
+  max-height: calc(100vh - 144px);
+  max-height: calc(100dvh - 144px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+  padding-right: var(--space-3);
+  padding-bottom: var(--space-4);
 }
 .article-sidebar p {
   font-family: var(--font-mono);
